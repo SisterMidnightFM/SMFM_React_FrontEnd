@@ -13,7 +13,6 @@ export function ArtistCard({ artist }: ArtistCardProps) {
       params={{ slug: artist.Artist_Slug }}
       image={artist.ArtistImage}
       headerText={artist.ArtistName}
-      descriptiveText={artist.Real_Name || undefined}
       descriptiveText2={truncateText(artist.ArtistBio, 120)}
     />
   );

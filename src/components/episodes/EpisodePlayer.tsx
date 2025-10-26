@@ -9,7 +9,7 @@ interface EpisodePlayerProps {
   onClose: () => void;
 }
 
-export function EpisodePlayer({ type, url, episodeTitle, showName, onClose }: EpisodePlayerProps) {
+export function EpisodePlayer({ type, url, episodeTitle, onClose }: EpisodePlayerProps) {
   // Detect if mobile device
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 

@@ -17,7 +17,7 @@ export function TaggedEpisodes({ episodes, tagType, tagValue }: TaggedEpisodesPr
     theme: { displayName: 'Theme', className: 'tagged-episodes__tag--theme' }
   };
 
-  const { displayName, className } = tagTypeMap[tagType];
+  const { className } = tagTypeMap[tagType];
 
   return (
     <div className="tagged-episodes">

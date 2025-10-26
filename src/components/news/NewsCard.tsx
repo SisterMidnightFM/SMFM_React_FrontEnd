@@ -10,6 +10,8 @@ export function NewsCard({ news }: NewsCardProps) {
   // Handle both object and array formats for CoverImage
   const coverImage = Array.isArray(news.CoverImage) && news.CoverImage.length > 0
     ? news.CoverImage[0]
+    : Array.isArray(news.CoverImage)
+    ? null
     : news.CoverImage;
 
   // Format creation date
