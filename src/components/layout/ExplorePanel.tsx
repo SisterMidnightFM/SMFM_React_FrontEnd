@@ -1,0 +1,58 @@
+import React from 'react';
+import { Link } from '@tanstack/react-router';
+import { LuckyDipButton } from './LuckyDipButton';
+import './ExplorePanel.css';
+
+interface ExplorePanelProps {
+  onClose?: () => void;
+}
+
+export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
+  return (
+    <nav className="explore-panel">
+      <div className="explore-panel__home">
+        <Link to="/" className="explore-panel__home-button" onClick={onClose}>HOME</Link>
+      </div>
+
+      <div className="explore-panel__section">
+        <h2 className="explore-panel__heading">EXPLORE SMFM BY</h2>
+        <ul className="explore-panel__list">
+          <li><Link to="/episodes" className="explore-panel__link" onClick={onClose}>• LATEST EPISODES</Link></li>
+          <li><Link to="/staff-picks" className="explore-panel__link" onClick={onClose}>• STAFF PICKS</Link></li>
+          <li><Link to="/shows" className="explore-panel__link" onClick={onClose}>• SHOW</Link></li>
+          <li><Link to="/artists" className="explore-panel__link" onClick={onClose}>• ARTIST</Link></li>
+          <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
+          <li>
+            <LuckyDipButton className="explore-panel__link" onClose={onClose}>
+              • LUCKY DIP
+            </LuckyDipButton>
+          </li>
+        </ul>
+      </div>
+
+      <div className="explore-panel__section">
+        <ul className="explore-panel__main-links">
+          <li><Link to="/about" className="explore-panel__main-link" onClick={onClose}>ABOUT</Link></li>
+          <li><Link to="/schedule" className="explore-panel__main-link" onClick={onClose}>SCHEDULE</Link></li>
+          <li><Link to="/news" className="explore-panel__main-link" onClick={onClose}>NEWS</Link></li>
+          <li><Link to="/contact" className="explore-panel__main-link" onClick={onClose}>CONTACT</Link></li>
+          <li>
+            <a
+              href="https://www.sistermidnight.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="explore-panel__main-link"
+            >
+              SISTER MIDNIGHT ↗
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {/* Decorative graphic - visible on desktop */}
+      <div className="explore-panel__graphic" aria-hidden="true">
+        <img src="/Images/Cat_Light.webp" alt="" />
+      </div>
+    </nav>
+  );
+};

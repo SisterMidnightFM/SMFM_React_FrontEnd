@@ -1,0 +1,59 @@
+.content-type-toggle {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.content-type-toggle__button {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--Font1);
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  border: 2px solid var(--Colour1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.content-type-toggle__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.content-type-toggle__button--active {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-color: var(--Colour2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.content-type-toggle__button:focus {
+  outline: 2px solid var(--Colour1);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .content-type-toggle {
+    gap: 0.75rem;
+  }
+
+  .content-type-toggle__button {
+    min-width: 100px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-type-toggle__button {
+    flex: 1 1 100%;
+    min-width: auto;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}

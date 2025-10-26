@@ -1,0 +1,105 @@
+.side-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 350px;
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  z-index: 250;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar styling */
+.side-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.side-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.side-panel::-webkit-scrollbar-thumb {
+  background: var(--Colour1);
+  border-radius: 4px;
+}
+
+.side-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--Colour3);
+}
+
+.side-panel--left {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.side-panel--right {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.side-panel--open {
+  transform: translateX(0);
+}
+
+.side-panel__close {
+  position: absolute;
+  top: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--Colour1);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  z-index: 51;
+  transition: opacity 0.2s;
+}
+
+.side-panel__close--left {
+  right: 1rem;
+}
+
+.side-panel__close--right {
+  right: 1rem;
+}
+
+.side-panel__close:hover {
+  opacity: 0.7;
+}
+
+.side-panel__content {
+  padding: 2rem;
+  height: 100%;
+}
+
+/* Desktop: Up Next panel positioned in grid */
+@media (min-width: 1024px) {
+  .side-panel--right {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 30;
+    transform: translateX(100%);
+  }
+
+  .side-panel--right.side-panel--open {
+    transform: translateX(0);
+  }
+}
+
+/* Mobile: Both panels slide over content */
+@media (max-width: 1023px) {
+  .side-panel {
+    width: 85%;
+    max-width: 320px;
+    z-index: 250;
+  }
+
+  .side-panel__content {
+    padding: 1.5rem;
+    padding-top: calc(1.5rem + 100px); /* Add space for header */
+  }
+}

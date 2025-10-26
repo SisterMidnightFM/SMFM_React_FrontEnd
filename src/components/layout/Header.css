@@ -1,0 +1,272 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: var(--Colour1);
+  border-bottom: 2px solid var(--Colour2);
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.header__logo {
+  flex-shrink: 0;
+}
+
+.header__logo a {
+  display: block;
+  text-decoration: none;
+}
+
+.header__logo img {
+  height: 3rem;
+  width: auto;
+}
+
+.header__live-now {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  margin: 0 2rem;
+  min-width: 250px;
+}
+
+.header__live-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.header__show-name {
+  font-family: var(--Font1);
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--Colour2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header__play-button {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.header__play-button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.header__play-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.header__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.header__live-label {
+  font-family: var(--Font1);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--Colour2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__live-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--Colour2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.header__chat-button {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  font-family: var(--Font1);
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  flex-shrink: 0;
+  min-width: 120px;
+  transition: background-color 0.2s;
+}
+
+.header__chat-button:hover {
+  background-color: var(--Colour3);
+}
+
+/* Narrow desktop with Up Next panel - stack header to prevent overlap */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .app-container--up-next-open .header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .app-container--up-next-open .header__logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .app-container--up-next-open .header__logo img {
+    width: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    height: 2.5rem;
+  }
+
+  .app-container--up-next-open .header__live-now {
+    flex: 1;
+    margin: 0 1rem;
+  }
+
+  .app-container--up-next-open .header__show-name {
+    font-size: 0.9rem;
+  }
+
+  .app-container--up-next-open .header__chat-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Wide desktop with Up Next panel - keep inline, just make more compact */
+@media (min-width: 1200px) {
+  .app-container--up-next-open .header {
+    padding: 1rem 1.5rem;
+  }
+
+  .app-container--up-next-open .header__live-now {
+    margin: 0 1rem;
+  }
+
+  .app-container--up-next-open .header__logo img {
+    height: 2.5rem;
+  }
+
+  .app-container--up-next-open .header__show-name {
+    font-size: 0.9rem;
+  }
+
+  .app-container--up-next-open .header__chat-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Mobile responsive - stack layout */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .header__logo {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .header__logo img {
+    height: 2rem;
+    width: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .header__live-now {
+    margin: 0;
+    justify-content: center;
+  }
+
+  .header__show-name {
+    font-size: 0.875rem;
+  }
+
+  .header__chat-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.65rem;
+    align-self: center;
+  }
+
+  .header__play-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Tablet and small desktop - keep some stacking */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .header__logo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .header__logo img {
+    width: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .header__live-now {
+    flex: 1;
+    margin: 0 1rem;
+  }
+}

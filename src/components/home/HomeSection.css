@@ -1,0 +1,93 @@
+.home-section {
+  margin-bottom: 4rem;
+}
+
+.home-section__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.home-section__icon {
+  width: 2rem;
+  height: 2rem;
+  font-size: 2rem; /* Keep for backwards compatibility if other sections use emojis */
+}
+
+.home-section__title {
+  font-family: var(--Font2);
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--Colour2);
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.home-section__title-link {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.home-section__title-link:hover {
+  opacity: 0.7;
+}
+
+.home-section__cards {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-top: 4px;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar but keep functionality */
+.home-section__cards::-webkit-scrollbar {
+  height: 8px;
+}
+
+.home-section__cards::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.home-section__cards::-webkit-scrollbar-thumb {
+  background: var(--Colour2);
+  border-radius: 4px;
+}
+
+.home-section__cards::-webkit-scrollbar-thumb:hover {
+  background: var(--Colour3);
+}
+
+/* Mobile only section */
+.home-section--mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .home-section--mobile-only {
+    display: block;
+  }
+
+  .home-section {
+    margin-bottom: 3rem;
+  }
+
+  .home-section__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .home-section__title {
+    font-size: 1.5rem;
+  }
+
+  .home-section__cards {
+    gap: 1rem;
+  }
+}

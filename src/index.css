@@ -1,0 +1,84 @@
+/* Sets the default styling for the whole app */
+
+
+
+@font-face {
+  font-family: 'ReworkText-Bold';
+  src: url('./assets/fonts/Copy of ReworkText-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SisterMidnight-Regular';
+  src: url('./assets/fonts/SisterMidnight-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --Font1: 'ReworkText-Bold', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --Font2: 'SisterMidnight-Regular', system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  font-family: var(--Font1);
+  line-height: 1.5;
+  font-weight: 400;
+
+  background-color: var(--Colour1); /* Set deafult background to Colour1 */
+  color: var(--Colour2); /* Set default font color to Colour2 */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --Colour1: #C0B7AF;
+  --Colour2: #322824;
+  --Colour3: #000000;
+
+  /* Paper noise texture - encoded as data URI for zero HTTP requests */
+  --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+}
+
+/* Box sizing fix - makes sizing more predictable */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Make images responsive */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Paper texture overlay - applied to body for entire app */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Paper noise texture pseudo-element */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Allow clicks to pass through */
+  z-index: 9999; /* Always on top */
+  background-image: var(--noise-texture);
+  background-size: 200px 200px; /* Small tile size for performance */
+  background-repeat: repeat;
+  opacity: 0.4; /* Subtle paper texture */
+  mix-blend-mode: overlay; /* Blend with content below */
+
+  /* Hardware acceleration for smooth performance */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}

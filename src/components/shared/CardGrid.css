@@ -1,0 +1,71 @@
+/* Card Grid - Responsive grid for card layouts */
+
+/*
+  To adjust columns at different screen sizes, modify these variables:
+  - --min-card-width: minimum width before wrapping to new row
+  - Higher values = fewer columns, Lower values = more columns
+*/
+
+.card-grid {
+  --min-card-width: 500px;  /* Default: ~2 columns on desktop */
+  --grid-gap: 2rem;
+
+  display: grid;
+  gap: var(--grid-gap);
+  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--min-card-width)), 1fr));
+}
+
+/* Responsive Breakpoints - Adjust --min-card-width to control columns */
+
+@media (min-width: 1400px) {
+  .card-grid {
+    --min-card-width: 450px;  /* ~3 columns */
+  }
+}
+
+@media (min-width: 1189px) and (max-width: 1399px) {
+  .card-grid {
+    --min-card-width: 450px;  /* ~2 columns */
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1188px) {
+  .card-grid {
+    --min-card-width: 400px;  /* ~2 columns */
+  }
+}
+
+@media (min-width: 879px) and (max-width: 1023px) {
+  .card-grid {
+    --min-card-width: 350px;  /* ~2 columns */
+    --grid-gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 878px) {
+  .card-grid {
+    --min-card-width: 400px;  /* ~1-2 columns */
+    --grid-gap: 1.5rem;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);  /* 2 equal columns */
+    --grid-gap: 1.5rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .card-grid {
+    grid-template-columns: 1fr;  /* 1 equal column */
+    --grid-gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    --grid-gap: 1rem;
+  }
+}

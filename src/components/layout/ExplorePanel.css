@@ -1,0 +1,129 @@
+.explore-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  height: 100%;
+  padding-top: 3rem;
+}
+
+.explore-panel__home {
+  margin-bottom: -1rem;
+}
+
+.explore-panel__home-button {
+  font-family: var(--Font1);
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--Colour1);
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+
+.explore-panel__home-button:hover {
+  opacity: 0.7;
+}
+
+.explore-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.explore-panel__heading {
+  font-family: var(--Font1);
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--Colour1);
+  margin: 0 0 1rem 0;
+  letter-spacing: 0.05em;
+}
+
+.explore-panel__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.explore-panel__link {
+  font-family: var(--Font1);
+  font-size: 1.25rem;
+  color: var(--Colour1);
+  text-decoration: none;
+  display: block;
+  transition: opacity 0.2s;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.explore-panel__link:hover {
+  opacity: 0.7;
+}
+
+.explore-panel__main-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.explore-panel__main-link {
+  font-family: var(--Font1);
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--Colour1);
+  text-decoration: none;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.explore-panel__main-link:hover {
+  opacity: 0.7;
+}
+
+.explore-panel__graphic {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--Colour1);
+  opacity: 0.6;
+}
+
+.explore-panel__graphic svg {
+  width: 150px;
+  height: auto;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .explore-panel {
+    padding-top: 0;
+    gap: 2rem;
+  }
+
+  .explore-panel__heading {
+    font-size: 1.5rem;
+  }
+
+  .explore-panel__link {
+    font-size: 1.1rem;
+  }
+
+  .explore-panel__main-link {
+    font-size: 1.75rem;
+  }
+
+  .explore-panel__graphic {
+    display: none;
+  }
+}

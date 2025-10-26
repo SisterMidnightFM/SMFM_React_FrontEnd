@@ -1,0 +1,70 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import { EpisodeCard } from '../episodes/EpisodeCard';
+import { fetchStaffPickEpisodes } from '../../services/episodes';
+import type { Episode } from '../../types/episode';
+import './HomeSection.css';
+
+export const StaffPicks: React.FC = () => {
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(10);
+
+  useEffect(() => {
+    async function loadStaffPicks() {
+      try {
+        setIsLoading(true);
+        const data = await fetchStaffPickEpisodes();
+        setEpisodes(data);
+      } catch (err) {
+        console.error('Failed to load staff picks:', err);
+        setError('Failed to load staff picks');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadStaffPicks();
+  }, []);
+
+  useEffect(() => {
+    function updateVisibleCount() {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setVisibleCount(6);
+      } else if (width < 1200) {
+        setVisibleCount(8);
+      } else if (width < 1600) {
+        setVisibleCount(10);
+      } else {
+        setVisibleCount(12);
+      }
+    }
+
+    updateVisibleCount();
+    window.addEventListener('resize', updateVisibleCount);
+    return () => window.removeEventListener('resize', updateVisibleCount);
+  }, []);
+
+  return (
+    <section className="home-section">
+      <div className="home-section__header">
+        <img src="/Images/Hand1_Dark.webp" alt="" className="home-section__icon" />
+        <Link to="/staff-picks" className="home-section__title-link">
+          <h2 className="home-section__title">STAFF PICKS</h2>
+        </Link>
+      </div>
+      <div className="home-section__cards home-section__cards--scrollable">
+        {isLoading && <p>Loading staff picks...</p>}
+        {error && <p className="error">{error}</p>}
+        {!isLoading && !error && episodes.slice(0, visibleCount).map((episode) => (
+          <EpisodeCard
+            key={episode.id}
+            episode={episode}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};

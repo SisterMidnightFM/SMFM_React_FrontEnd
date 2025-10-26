@@ -1,0 +1,116 @@
+.search-results {
+  margin-top: 2rem;
+}
+
+.search-results__header {
+  margin-bottom: 2rem;
+}
+
+.search-results__title {
+  font-family: var(--Font1);
+  font-size: 1.75rem;
+  color: var(--Colour2);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.search-results__loading,
+.search-results__error,
+.search-results__empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 12px;
+}
+
+.search-results__loading {
+  font-family: var(--Font1);
+  font-size: 1.2rem;
+}
+
+.search-results__error {
+  font-family: var(--Font1);
+  font-size: 1.1rem;
+}
+
+.search-results__error p {
+  margin: 0.5rem 0;
+}
+
+.search-results__empty {
+  font-family: var(--Font1);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.search-results__empty p {
+  margin: 0.75rem 0;
+}
+
+.search-results__load-more {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.search-results__load-more-button {
+  padding: 1rem 2.5rem;
+  font-family: var(--Font1);
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-results__load-more-button:hover:not(:disabled) {
+  background-color: var(--Colour3);
+  border-color: var(--Colour3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.search-results__load-more-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.search-results__load-more-button:focus {
+  outline: 2px solid var(--Colour2);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .search-results__title {
+    font-size: 1.5rem;
+  }
+
+  .search-results__loading,
+  .search-results__error,
+  .search-results__empty {
+    padding: 2rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .search-results__load-more-button {
+    padding: 0.875rem 2rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-results__title {
+    font-size: 1.25rem;
+  }
+
+  .search-results__loading,
+  .search-results__error,
+  .search-results__empty {
+    padding: 1.5rem 1rem;
+    font-size: 0.95rem;
+  }
+}

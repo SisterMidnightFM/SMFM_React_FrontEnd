@@ -1,0 +1,79 @@
+/* Staff Picks Page Container */
+.staff-picks-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Header */
+.staff-picks-page__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.staff-picks-page__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.staff-picks-page__title {
+  font-family: var(--Font2);
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--Colour2);
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+/* Loading and Error States */
+.staff-picks-page__loading,
+.staff-picks-page__error {
+  font-family: var(--Font1);
+  font-size: 1.2rem;
+  color: var(--Colour2);
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.staff-picks-page__error {
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .staff-picks-page {
+    padding: 1.5rem;
+  }
+
+  .staff-picks-page__header {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .staff-picks-page {
+    padding: 1rem;
+  }
+
+  .staff-picks-page__header {
+    margin-bottom: 2rem;
+  }
+
+  .staff-picks-page__icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .staff-picks-page__title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .staff-picks-page {
+    padding: 0.75rem;
+  }
+}
