@@ -1,6 +1,7 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { Header } from '../components/layout/Header'
+import { Footer } from '../components/layout/Footer'
 import { SidePanel } from '../components/layout/SidePanel'
 import { ExplorePanel } from '../components/layout/ExplorePanel'
 import { UpNextPanel } from '../components/layout/UpNextPanel'
@@ -27,6 +28,8 @@ const getRandomStars = () => {
 }
 
 function RootComponent() {
+  const location = useLocation()
+  const isHomePage = location.pathname === '/'
   const [isExploreOpen, setIsExploreOpen] = useState(false)
   const [isUpNextOpen, setIsUpNextOpen] = useState(false)
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024)
@@ -37,17 +40,36 @@ function RootComponent() {
     const handleResize = () => {
       const desktop = window.innerWidth >= 1024
       setIsDesktop(desktop)
-      // Auto-open Up Next on desktop, auto-close on mobile
-      setIsUpNextOpen(desktop)
+      // Auto-open Up Next on desktop (unless homepage), auto-close on mobile
+      if (!isHomePage) {
+        setIsUpNextOpen(desktop)
+      }
     }
 
     handleResize() // Set initial state
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [isHomePage])
+
+  // Handle scroll behavior for Up Next panel on homepage
+  useEffect(() => {
+    if (!isHomePage || !isDesktop) return
+
+    const handleScroll = () => {
+      const scrollThreshold = window.innerHeight * 0.7
+      const shouldOpen = window.scrollY > scrollThreshold
+      setIsUpNextOpen(shouldOpen)
+    }
+
+    // Set initial state - closed on homepage
+    setIsUpNextOpen(false)
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHomePage, isDesktop])
 
   return (
-    <div className={`app-container ${isUpNextOpen && isDesktop ? 'app-container--up-next-open' : ''} ${isExploreOpen ? 'app-container--explore-open' : ''}`}>
+    <div className={`app-container ${isUpNextOpen && isDesktop ? 'app-container--up-next-open' : ''} ${isExploreOpen ? 'app-container--explore-open' : ''} ${isHomePage && !isUpNextOpen && isDesktop ? 'app-container--homepage-up-next-closed' : ''}`}>
       {/* SVG clip-path definitions for hand-drawn card borders */}
       <CardClipPaths />
 
@@ -75,6 +97,7 @@ function RootComponent() {
         {/* Main content area */}
         <main className="main-content">
           <Outlet />
+          <Footer />
         </main>
 
         {/* Up Next button - right side (only visible on mobile) */}

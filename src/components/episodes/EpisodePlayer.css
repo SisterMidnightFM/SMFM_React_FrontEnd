@@ -7,6 +7,15 @@
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
   z-index: 100;
   animation: slideUp 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+.episode-player--minimized {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.episode-player--closing {
+  animation: slideDown 0.3s ease-in forwards;
 }
 
 @keyframes slideUp {
@@ -18,10 +27,38 @@
   }
 }
 
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
 .episode-player__content {
   padding: 0.75rem 1.25rem;
   padding-right: 3.5rem;
   position: relative;
+}
+
+.episode-player--minimized .episode-player__content {
+  padding: 0.5rem 1.25rem;
+  padding-right: 5rem;
+}
+
+.episode-player__iframe-wrapper {
+  display: block;
+  transition: opacity 0.3s ease, height 0.3s ease;
+  opacity: 1;
+  height: auto;
+  overflow: hidden;
+}
+
+.episode-player__iframe-wrapper--hidden {
+  opacity: 0;
+  height: 0;
+  pointer-events: none;
 }
 
 .episode-player__content iframe {
@@ -31,6 +68,52 @@
   pointer-events: auto;
   touch-action: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.episode-player__minimized-content {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+}
+
+.episode-player__now-playing {
+  color: var(--Colour1);
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.episode-player__minimize {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: var(--Colour1);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  top: 3.5rem;
+  right: 0.75rem;
+  z-index: 10;
+}
+
+.episode-player--minimized .episode-player__minimize {
+  top: 0.75rem;
+  right: 3.25rem;
+}
+
+.episode-player__minimize:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
 }
 
 .episode-player__close {
@@ -43,7 +126,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
   flex-shrink: 0;
   width: 36px;
   height: 36px;
@@ -63,6 +146,27 @@
   .episode-player__content {
     padding: 0.6rem 1rem;
     padding-right: 3rem;
+  }
+
+  .episode-player--minimized .episode-player__content {
+    padding: 0.5rem 1rem;
+    padding-right: 4.5rem;
+  }
+
+  .episode-player__now-playing {
+    font-size: 0.9rem;
+  }
+
+  .episode-player__minimize {
+    width: 32px;
+    height: 32px;
+    top: 2.8rem;
+    right: 0.6rem;
+  }
+
+  .episode-player--minimized .episode-player__minimize {
+    top: 0.6rem;
+    right: 2.75rem;
   }
 
   .episode-player__close {

@@ -7,9 +7,19 @@
   justify-content: space-between;
   padding: 1rem 2rem;
   background-color: var(--Colour1);
-  border-bottom: 2px solid var(--Colour2);
   grid-column: 1;
   grid-row: 1;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(to bottom, var(--Colour1), transparent);
+  pointer-events: none;
 }
 
 .header__logo {

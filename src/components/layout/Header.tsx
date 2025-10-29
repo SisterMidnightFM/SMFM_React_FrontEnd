@@ -1,17 +1,27 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
+import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
 import './Header.css';
 
 export const Header: React.FC = () => {
   const { isPlaying, isLoading, isOnline, currentShow, toggle } = useAudioPlayer();
+  const { closePlayer } = useEpisodePlayer();
+
+  const handleToggle = () => {
+    // Close episode player when main radio is played
+    if (!isPlaying) {
+      closePlayer();
+    }
+    toggle();
+  };
 
   return (
     <header className="header">
       <div className="header__logo">
         <Link to="/">
           <img
-            src="/Images/Wide Logo.png"
+            src="/Images/Wide Logo Brown.webp"
             alt="Sister Midnight FM"
           />
         </Link>
@@ -20,7 +30,7 @@ export const Header: React.FC = () => {
       <div className="header__live-now">
         <button
           className="header__play-button"
-          onClick={toggle}
+          onClick={handleToggle}
           disabled={isLoading}
           aria-label={isPlaying ? 'Pause live stream' : 'Play live stream'}
         >

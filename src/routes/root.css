@@ -105,6 +105,11 @@
   .side-button--right {
     display: none;
   }
+
+  /* Show Up Next button on homepage when panel is closed */
+  .app-container--homepage-up-next-closed .side-button--right {
+    display: block;
+  }
 }
 
 .side-button__text {

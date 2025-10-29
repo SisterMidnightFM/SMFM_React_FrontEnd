@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './EpisodePlayer.css';
 
 interface EpisodePlayerProps {
@@ -10,6 +10,9 @@ interface EpisodePlayerProps {
 }
 
 export function EpisodePlayer({ type, url, episodeTitle, onClose }: EpisodePlayerProps) {
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
   // Detect if mobile device
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -30,35 +33,69 @@ export function EpisodePlayer({ type, url, episodeTitle, onClose }: EpisodePlaye
 
   const embedUrl = getEmbedUrl(type, url);
 
-  // Handle escape key to close
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
+
+  const handleClose = () => {
+    setIsClosing(true);
+    // Wait for animation to complete before actually closing
+    setTimeout(() => {
+      onClose();
+    }, 300); // Match the slideDown animation duration
+  };
+
+  // Handle escape key to close and M key to minimize
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        handleClose();
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleMinimize();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [onClose, isMinimized]);
 
   return (
-    <div className="episode-player">
+    <div className={`episode-player ${isMinimized ? 'episode-player--minimized' : ''} ${isClosing ? 'episode-player--closing' : ''}`}>
       <div className="episode-player__content">
-        <iframe
-          width="100%"
-          height="120"
-          scrolling="no"
-          frameBorder="no"
-          allow="autoplay; fullscreen; encrypted-media"
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-presentation"
-          src={embedUrl}
-          title={`${type} player for ${episodeTitle}`}
-          loading="lazy"
-        />
+        <div className={`episode-player__iframe-wrapper ${isMinimized ? 'episode-player__iframe-wrapper--hidden' : ''}`}>
+          <iframe
+            width="100%"
+            height="120"
+            scrolling="no"
+            frameBorder="no"
+            allow="autoplay; fullscreen; encrypted-media"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-presentation"
+            src={embedUrl}
+            title={`${type} player for ${episodeTitle}`}
+            loading="lazy"
+          />
+        </div>
+        {isMinimized && (
+          <div className="episode-player__minimized-content">
+            <span className="episode-player__now-playing">Now Playing: {episodeTitle}</span>
+          </div>
+        )}
+        <button
+          className="episode-player__minimize"
+          onClick={toggleMinimize}
+          aria-label={isMinimized ? "Expand player" : "Minimize player"}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            {isMinimized ? (
+              <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+            ) : (
+              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+            )}
+          </svg>
+        </button>
         <button
           className="episode-player__close"
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Close player"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
