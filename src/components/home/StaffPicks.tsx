@@ -12,20 +12,20 @@ export const StaffPicks: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(10);
 
   useEffect(() => {
-    async function loadStaffPicks() {
+    async function loadStationPicks() {
       try {
         setIsLoading(true);
         const data = await fetchStaffPickEpisodes();
         setEpisodes(data);
       } catch (err) {
-        console.error('Failed to load staff picks:', err);
-        setError('Failed to load staff picks');
+        console.error('Failed to load station picks:', err);
+        setError('Failed to load station picks');
       } finally {
         setIsLoading(false);
       }
     }
 
-    loadStaffPicks();
+    loadStationPicks();
   }, []);
 
   useEffect(() => {
@@ -52,11 +52,11 @@ export const StaffPicks: React.FC = () => {
       <div className="home-section__header">
         <img src="/Images/Hand1_Dark.webp" alt="" className="home-section__icon" />
         <Link to="/staff-picks" className="home-section__title-link">
-          <h2 className="home-section__title">STAFF PICKS</h2>
+          <h2 className="home-section__title">STATION PICKS</h2>
         </Link>
       </div>
       <div className="home-section__cards home-section__cards--scrollable">
-        {isLoading && <p>Loading staff picks...</p>}
+        {isLoading && <p>Loading station picks...</p>}
         {error && <p className="error">{error}</p>}
         {!isLoading && !error && episodes.slice(0, visibleCount).map((episode) => (
           <EpisodeCard

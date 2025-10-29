@@ -12,8 +12,8 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
       to="/episodes/$slug"
       params={{ slug: episode.EpisodeSlug }}
       image={episode.EpisodeImage}
-      headerText={episode.link_episode_to_show?.ShowName || 'Unknown Show'}
-      descriptiveText={episode.EpisodeTitle}
+      headerText={episode.EpisodeTitle}
+      descriptiveText={episode.link_episode_to_show?.ShowName || 'Unknown Show'}
       descriptiveText2={formatEpisodeDateTime(episode.BroadcastDateTime)}
       tags={episode.tag_genres?.map((g) => ({ id: g.id, label: g.Genre }))}
     />

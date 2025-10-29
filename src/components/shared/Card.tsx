@@ -10,11 +10,24 @@ export interface CardProps {
   // Image
   image?: StrapiImage | null;
   imagePlaceholder?: string;
+  circularImage?: boolean;
 
   // Text content
   headerText: string;
   descriptiveText?: string;
   descriptiveText2?: string;
+
+  // Location
+  location?: string;
+
+  // Badge
+  badge?: string;
+
+  // Footer link
+  footerLink?: {
+    text: string;
+    icon?: string;
+  };
 
   // Tags
   tags?: Array<{
@@ -116,9 +129,13 @@ export function Card({
   params,
   image,
   imagePlaceholder = 'IMAGE',
+  circularImage = false,
   headerText,
   descriptiveText,
   descriptiveText2,
+  location,
+  badge,
+  footerLink,
   tags,
   maxTags = 3,
   className = '',
@@ -141,8 +158,15 @@ export function Card({
     <Link
       to={to}
       params={params}
-      className={`card ${hasNoImage ? 'card--no-image' : ''} ${className}`}
+      className={`card ${hasNoImage ? 'card--no-image' : ''} ${circularImage ? 'card--circular-image' : ''} ${className}`}
     >
+      {/* Badge */}
+      {badge && (
+        <div className="card__badge">
+          {badge}
+        </div>
+      )}
+
       {/* Image Section */}
       <div className="card__image-container">
         {fullImageUrl ? (
@@ -163,6 +187,14 @@ export function Card({
         {/* Header Text */}
         <h3 className="card__header">{headerText}</h3>
 
+        {/* Location */}
+        {location && (
+          <div className="card__location">
+            <img src="/icons/location.svg" width="12" height="12" alt="" className="card__location-icon" />
+            <span>{location}</span>
+          </div>
+        )}
+
         {/* Descriptive Text */}
         {descriptiveText && (
           <div className="card__text">{descriptiveText}</div>
@@ -181,6 +213,16 @@ export function Card({
                 {tag.label}
               </span>
             ))}
+          </div>
+        )}
+
+        {/* Footer Link */}
+        {footerLink && (
+          <div className="card__footer-link">
+            <span>{footerLink.text}</span>
+            {footerLink.icon && (
+              <img src={footerLink.icon} width="12" height="12" alt="" className="card__footer-icon" />
+            )}
           </div>
         )}
       </div>

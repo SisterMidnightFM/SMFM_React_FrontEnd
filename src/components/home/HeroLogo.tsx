@@ -146,7 +146,7 @@ export const HeroLogo: React.FC = () => {
 
       {/* Main logo */}
       <img
-        src="/Images/Logo Brown.webp"
+        src="/Images/SMFM LOGO SVG.svg"
         alt="Sister Midnight FM"
         className={`hero-logo__image ${getImageClass()}`}
       />

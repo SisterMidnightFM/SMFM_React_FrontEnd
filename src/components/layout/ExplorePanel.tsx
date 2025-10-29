@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { LuckyDipButton } from './LuckyDipButton';
 import './ExplorePanel.css';
@@ -8,6 +8,12 @@ interface ExplorePanelProps {
 }
 
 export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
+  const [isArchiveExpanded, setIsArchiveExpanded] = useState(false);
+
+  const toggleArchive = () => {
+    setIsArchiveExpanded(!isArchiveExpanded);
+  };
+
   return (
     <nav className="explore-panel">
       <div className="explore-panel__home">
@@ -15,19 +21,28 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
       </div>
 
       <div className="explore-panel__section">
-        <h2 className="explore-panel__heading">EXPLORE SMFM BY</h2>
-        <ul className="explore-panel__list">
-          <li><Link to="/episodes" className="explore-panel__link" onClick={onClose}>• LATEST EPISODES</Link></li>
-          <li><Link to="/staff-picks" className="explore-panel__link" onClick={onClose}>• STAFF PICKS</Link></li>
-          <li><Link to="/shows" className="explore-panel__link" onClick={onClose}>• SHOW</Link></li>
-          <li><Link to="/artists" className="explore-panel__link" onClick={onClose}>• ARTIST</Link></li>
-          <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
-          <li>
-            <LuckyDipButton className="explore-panel__link" onClose={onClose}>
-              • LUCKY DIP
-            </LuckyDipButton>
-          </li>
-        </ul>
+        <button
+          className="explore-panel__heading explore-panel__heading--clickable"
+          onClick={toggleArchive}
+          aria-expanded={isArchiveExpanded}
+        >
+          <span>EXPLORE ARCHIVE</span>
+          <span className="explore-panel__heading-icon">{isArchiveExpanded ? '−' : '+'}</span>
+        </button>
+        {isArchiveExpanded && (
+          <ul className="explore-panel__list">
+            <li><Link to="/episodes" className="explore-panel__link" onClick={onClose}>• LATEST EPISODES</Link></li>
+            <li><Link to="/staff-picks" className="explore-panel__link" onClick={onClose}>• STATION PICKS</Link></li>
+            <li><Link to="/shows" className="explore-panel__link" onClick={onClose}>• SHOWS</Link></li>
+            <li><Link to="/artists" className="explore-panel__link" onClick={onClose}>• ARTISTS</Link></li>
+            <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
+            <li>
+              <LuckyDipButton className="explore-panel__link" onClose={onClose}>
+                • LUCKY DIP
+              </LuckyDipButton>
+            </li>
+          </ul>
+        )}
       </div>
 
       <div className="explore-panel__section">

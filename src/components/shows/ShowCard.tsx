@@ -23,6 +23,9 @@ export function ShowCard({ show }: ShowCardProps) {
       headerText={show.ShowName}
       descriptiveText={hostNames}
       descriptiveText2={truncateText(description, 120)}
+      footerLink={{
+        text: 'see episodes →'
+      }}
     />
   );
 }

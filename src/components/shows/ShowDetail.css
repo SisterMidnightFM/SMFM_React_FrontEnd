@@ -86,6 +86,12 @@
   letter-spacing: 1px;
 }
 
+.show-detail__hosts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .show-detail__host-link {
   text-decoration: none;
   align-self: flex-start;

@@ -22,8 +22,8 @@ export function ShowDetail({ show }: ShowDetailProps) {
     ? `${show.Broadcast_Day}s at ${show.Broadcast_Time}${show.Broadcast_AmPm}`
     : null;
 
-  // Main_Host is an array, get the first host
-  const mainHost = show.Main_Host && show.Main_Host.length > 0 ? show.Main_Host[0] : null;
+  // Main_Host is an array of hosts
+  const mainHosts = show.Main_Host && show.Main_Host.length > 0 ? show.Main_Host : [];
 
   return (
     <div className="show-detail">
@@ -55,27 +55,34 @@ export function ShowDetail({ show }: ShowDetailProps) {
             </div>
           )}
 
-          {/* Main Host */}
-          {mainHost && (
+          {/* Main Hosts */}
+          {mainHosts.length > 0 && (
             <div className="show-detail__host-section">
-              <span className="show-detail__host-label">Hosted by</span>
-              <Link
-                to="/artists/$slug"
-                params={{ slug: mainHost.Artist_Slug }}
-                className="show-detail__host-link"
-              >
-                <div className="show-detail__host-card">
-                  {mainHost.ArtistImage && (
-                    <div className="show-detail__host-image">
-                      <img
-                        src={`${STRAPI_URL}${mainHost.ArtistImage.formats?.small?.url || mainHost.ArtistImage.url}`}
-                        alt={mainHost.ArtistImage.alternativeText || mainHost.ArtistName}
-                      />
+              <span className="show-detail__host-label">
+                Hosted by
+              </span>
+              <div className="show-detail__hosts-grid">
+                {mainHosts.map((host) => (
+                  <Link
+                    key={host.id}
+                    to="/artists/$slug"
+                    params={{ slug: host.Artist_Slug }}
+                    className="show-detail__host-link"
+                  >
+                    <div className="show-detail__host-card">
+                      {host.ArtistImage && (
+                        <div className="show-detail__host-image">
+                          <img
+                            src={`${STRAPI_URL}${host.ArtistImage.formats?.small?.url || host.ArtistImage.url}`}
+                            alt={host.ArtistImage.alternativeText || host.ArtistName}
+                          />
+                        </div>
+                      )}
+                      <span className="show-detail__host-name">{host.ArtistName}</span>
                     </div>
-                  )}
-                  <span className="show-detail__host-name">{mainHost.ArtistName}</span>
-                </div>
-              </Link>
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
         </div>

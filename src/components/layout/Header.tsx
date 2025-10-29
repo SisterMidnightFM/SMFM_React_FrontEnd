@@ -69,7 +69,7 @@ export const Header: React.FC = () => {
         rel="noopener noreferrer"
         className="header__chat-button"
       >
-        <span>OPEN</span>
+
         <span>CHAT ROOM</span>
       </a>
     </header>

@@ -92,13 +92,13 @@ export async function fetchEpisodeBySlug(slug: string): Promise<Episode | null> 
 }
 
 /**
- * Fetch staff pick episodes
+ * Fetch station pick episodes
  */
 export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
   try {
     const url = new URL(`${STRAPI_URL}/api/episodes`);
 
-    // Filter for staff picks
+    // Filter for station picks
     url.searchParams.append('filters[StaffPick][$eq]', 'true');
 
     // Populate everything
@@ -107,7 +107,7 @@ export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
     // Sort by broadcast date (newest first)
     url.searchParams.append('sort', 'BroadcastDateTime:desc');
 
-    // Limit to recent staff picks
+    // Limit to recent station picks
     url.searchParams.append('pagination[limit]', '12');
 
     const response = await fetch(url.toString(), { headers });
@@ -115,13 +115,13 @@ export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Strapi error response:', errorText);
-      throw new Error(`Failed to fetch staff pick episodes: ${response.statusText}`);
+      throw new Error(`Failed to fetch station pick episodes: ${response.statusText}`);
     }
 
     const data: StrapiCollectionResponse<Episode> = await response.json();
     return data.data;
   } catch (error) {
-    console.error('Error fetching staff pick episodes:', error);
+    console.error('Error fetching station pick episodes:', error);
     throw error;
   }
 }

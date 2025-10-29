@@ -11,30 +11,30 @@ export function StaffPicksPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadStaffPicks() {
+    async function loadStationPicks() {
       try {
         setIsLoading(true);
         const data = await fetchStaffPickEpisodes();
         setEpisodes(data);
       } catch (err) {
-        console.error('Failed to load staff picks:', err);
-        setError('Failed to load staff picks');
+        console.error('Failed to load station picks:', err);
+        setError('Failed to load station picks');
       } finally {
         setIsLoading(false);
       }
     }
 
-    loadStaffPicks();
+    loadStationPicks();
   }, []);
 
   return (
     <div className="staff-picks-page">
       <div className="staff-picks-page__header">
         <img src="/Images/GuitarMan_Dark.webp" alt="" className="staff-picks-page__icon" />
-        <h1 className="staff-picks-page__title">STAFF PICKS</h1>
+        <h1 className="staff-picks-page__title">STATION PICKS</h1>
       </div>
 
-      {isLoading && <p className="staff-picks-page__loading">Loading staff picks...</p>}
+      {isLoading && <p className="staff-picks-page__loading">Loading station picks...</p>}
       {error && <p className="staff-picks-page__error">{error}</p>}
 
       {!isLoading && !error && (

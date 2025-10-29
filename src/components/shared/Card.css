@@ -81,10 +81,32 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
+/* Badge */
+.card__badge {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: right center;
+
+  font-family: var(--Font1);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.85rem;
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  border-radius: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  z-index: 10;
+
+  /* Position adjustment to align better with right edge */
+  margin-right: 0.5rem;
+}
+
 /* Image Section */
 .card__image-container {
   position: relative;
-  aspect-ratio: 4 / 5; 
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background-color: var(--Colour2);
 }
@@ -93,6 +115,28 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Circular image styling for artist cards */
+.card--circular-image .card__image-container {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.card--circular-image .card__image {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card--circular-image .card__placeholder {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
 }
 
 .card__placeholder {
@@ -138,6 +182,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
+}
+
+/* Location */
+.card__location {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--Font1);
+  font-size: 0.85rem;
+  color: var(--Colour1);
+  opacity: 0.85;
+}
+
+.card__location-icon {
+  flex-shrink: 0;
 }
 
 /* Descriptive Text */
@@ -186,10 +245,14 @@
 
 /* Tags Section */
 .card__tags {
-  margin-top: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+/* When there's no footer link, tags should be at the bottom */
+.card__content:not(:has(.card__footer-link)) .card__tags {
+  margin-top: auto;
 }
 
 .card__tag {
@@ -201,6 +264,23 @@
   border-radius: 16px;
   display: inline-block;
   font-weight: 500;
+}
+
+/* Footer Link */
+.card__footer-link {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--Font1);
+  font-size: 0.75rem;
+  color: var(--Colour1);
+  opacity: 0.8;
+}
+
+.card__footer-icon {
+  flex-shrink: 0;
 }
 
 /* Responsive adjustments */
