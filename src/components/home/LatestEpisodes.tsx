@@ -1,32 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { LatestShowCard } from './LatestShowCard';
-import { fetchEpisodes } from '../../services/episodes';
-import type { Episode } from '../../types/episode';
+import { useEpisodes } from '../../hooks/useEpisodes';
 import './HomeSection.css';
 
 export const LatestEpisodes: React.FC = () => {
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { episodes, isLoading, error } = useEpisodes();
   const [visibleCount, setVisibleCount] = useState(10);
-
-  useEffect(() => {
-    async function loadEpisodes() {
-      try {
-        setIsLoading(true);
-        const { episodes: data } = await fetchEpisodes(1, 30);
-        setEpisodes(data);
-      } catch (err) {
-        console.error('Failed to load latest episodes:', err);
-        setError('Failed to load episodes');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadEpisodes();
-  }, []);
 
   useEffect(() => {
     function updateVisibleCount() {
@@ -59,7 +39,7 @@ export const LatestEpisodes: React.FC = () => {
       </div>
       <div className="home-section__cards home-section__cards--scrollable">
         {isLoading && <p>Loading episodes...</p>}
-        {error && <p className="error">{error}</p>}
+        {error && <p className="error">{error.message}</p>}
         {!isLoading && !error && episodes.slice(0, visibleCount).map((episode) => (
           <LatestShowCard
             key={episode.id}

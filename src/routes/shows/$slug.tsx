@@ -1,8 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
-import { fetchShowBySlug } from '../../services/shows';
+import { useShowBySlug } from '../../hooks/useShowBySlug';
 import { ShowDetail } from '../../components/shows/ShowDetail';
-import type { Show } from '../../types/show';
 
 export const Route = createFileRoute('/shows/$slug')({
   component: ShowDetailPage,
@@ -10,31 +8,7 @@ export const Route = createFileRoute('/shows/$slug')({
 
 function ShowDetailPage() {
   const { slug } = Route.useParams();
-  const [show, setShow] = useState<Show | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    async function loadShow() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await fetchShowBySlug(slug);
-
-        if (!data) {
-          throw new Error('Show not found');
-        }
-
-        setShow(data);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to load show'));
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadShow();
-  }, [slug]);
+  const { data: show, isLoading, error } = useShowBySlug(slug);
 
   if (isLoading) {
     return (

@@ -1,8 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
-import { fetchEpisodeBySlug } from '../../services/episodes';
+import { useEpisodeBySlug } from '../../hooks/useEpisodeBySlug';
 import { EpisodeDetail } from '../../components/episodes/EpisodeDetail';
-import type { Episode } from '../../types/episode';
 
 export const Route = createFileRoute('/episodes/$slug')({
   component: EpisodeDetailPage,
@@ -10,31 +8,7 @@ export const Route = createFileRoute('/episodes/$slug')({
 
 function EpisodeDetailPage() {
   const { slug } = Route.useParams();
-  const [episode, setEpisode] = useState<Episode | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    async function loadEpisode() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await fetchEpisodeBySlug(slug);
-
-        if (!data) {
-          throw new Error('Episode not found');
-        }
-
-        setEpisode(data);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to load episode'));
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadEpisode();
-  }, [slug]);
+  const { data: episode, isLoading, error } = useEpisodeBySlug(slug);
 
   if (isLoading) {
     return (

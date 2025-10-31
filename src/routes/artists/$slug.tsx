@@ -1,8 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
-import { fetchArtistBySlug } from '../../services/artists';
+import { useArtistBySlug } from '../../hooks/useArtistBySlug';
 import { ArtistDetail } from '../../components/artists/ArtistDetail';
-import type { Artist } from '../../types/artist';
 
 export const Route = createFileRoute('/artists/$slug')({
   component: ArtistDetailPage,
@@ -10,31 +8,7 @@ export const Route = createFileRoute('/artists/$slug')({
 
 function ArtistDetailPage() {
   const { slug } = Route.useParams();
-  const [artist, setArtist] = useState<Artist | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    async function loadArtist() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await fetchArtistBySlug(slug);
-
-        if (!data) {
-          throw new Error('Artist not found');
-        }
-
-        setArtist(data);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to load artist'));
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadArtist();
-  }, [slug]);
+  const { data: artist, isLoading, error } = useArtistBySlug(slug);
 
   if (isLoading) {
     return (

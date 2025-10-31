@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestRouteImport } from './routes/test'
 import { Route as SmfmPicksRouteImport } from './routes/smfm-picks'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ScheduleRouteImport } from './routes/schedule'
@@ -26,11 +25,6 @@ import { Route as EpisodesSlugRouteImport } from './routes/episodes/$slug'
 import { Route as ArtistsSlugRouteImport } from './routes/artists/$slug'
 import { Route as TagsTypeValueRouteImport } from './routes/tags/$type.$value'
 
-const TestRoute = TestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SmfmPicksRoute = SmfmPicksRouteImport.update({
   id: '/smfm-picks',
   path: '/smfm-picks',
@@ -114,7 +108,6 @@ export interface FileRoutesByFullPath {
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
   '/smfm-picks': typeof SmfmPicksRoute
-  '/test': typeof TestRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/episodes/$slug': typeof EpisodesSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -132,7 +125,6 @@ export interface FileRoutesByTo {
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
   '/smfm-picks': typeof SmfmPicksRoute
-  '/test': typeof TestRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/episodes/$slug': typeof EpisodesSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -151,7 +143,6 @@ export interface FileRoutesById {
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
   '/smfm-picks': typeof SmfmPicksRoute
-  '/test': typeof TestRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/episodes/$slug': typeof EpisodesSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -171,7 +162,6 @@ export interface FileRouteTypes {
     | '/schedule'
     | '/search'
     | '/smfm-picks'
-    | '/test'
     | '/artists/$slug'
     | '/episodes/$slug'
     | '/news/$slug'
@@ -189,7 +179,6 @@ export interface FileRouteTypes {
     | '/schedule'
     | '/search'
     | '/smfm-picks'
-    | '/test'
     | '/artists/$slug'
     | '/episodes/$slug'
     | '/news/$slug'
@@ -207,7 +196,6 @@ export interface FileRouteTypes {
     | '/schedule'
     | '/search'
     | '/smfm-picks'
-    | '/test'
     | '/artists/$slug'
     | '/episodes/$slug'
     | '/news/$slug'
@@ -226,7 +214,6 @@ export interface RootRouteChildren {
   ScheduleRoute: typeof ScheduleRoute
   SearchRoute: typeof SearchRoute
   SmfmPicksRoute: typeof SmfmPicksRoute
-  TestRoute: typeof TestRoute
   ArtistsSlugRoute: typeof ArtistsSlugRoute
   EpisodesSlugRoute: typeof EpisodesSlugRoute
   NewsSlugRoute: typeof NewsSlugRoute
@@ -240,13 +227,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test': {
-      id: '/test'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/smfm-picks': {
       id: '/smfm-picks'
       path: '/smfm-picks'
@@ -362,7 +342,6 @@ const rootRouteChildren: RootRouteChildren = {
   ScheduleRoute: ScheduleRoute,
   SearchRoute: SearchRoute,
   SmfmPicksRoute: SmfmPicksRoute,
-  TestRoute: TestRoute,
   ArtistsSlugRoute: ArtistsSlugRoute,
   EpisodesSlugRoute: EpisodesSlugRoute,
   NewsSlugRoute: NewsSlugRoute,

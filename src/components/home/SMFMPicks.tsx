@@ -1,32 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { EpisodeCard } from '../episodes/EpisodeCard';
-import { fetchStaffPickEpisodes } from '../../services/episodes';
-import type { Episode } from '../../types/episode';
+import { useStaffPicks } from '../../hooks/useStaffPicks';
 import './HomeSection.css';
 
 export const SMFMPicks: React.FC = () => {
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: episodes, isLoading, error } = useStaffPicks();
   const [visibleCount, setVisibleCount] = useState(10);
-
-  useEffect(() => {
-    async function loadSMFMPicks() {
-      try {
-        setIsLoading(true);
-        const data = await fetchStaffPickEpisodes();
-        setEpisodes(data);
-      } catch (err) {
-        console.error('Failed to load SMFM picks:', err);
-        setError('Failed to load SMFM picks');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadSMFMPicks();
-  }, []);
 
   useEffect(() => {
     function updateVisibleCount() {
@@ -57,8 +37,8 @@ export const SMFMPicks: React.FC = () => {
       </div>
       <div className="home-section__cards home-section__cards--scrollable">
         {isLoading && <p>Loading SMFM picks...</p>}
-        {error && <p className="error">{error}</p>}
-        {!isLoading && !error && episodes.slice(0, visibleCount).map((episode) => (
+        {error && <p className="error">{error.message}</p>}
+        {!isLoading && !error && episodes && episodes.slice(0, visibleCount).map((episode) => (
           <EpisodeCard
             key={episode.id}
             episode={episode}

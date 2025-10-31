@@ -158,6 +158,18 @@ Small utility functions that make common tasks easier:
 ### **hooks/** - Custom React Hooks
 Reusable logic for managing state and side effects:
 
+**TanStack Query Hooks** (Data Fetching with Caching):
+- `useEpisodes.ts` - Fetches paginated episodes with infinite scroll support
+- `useEpisodeBySlug.ts` - Fetches a single episode by slug with automatic caching
+- `useStaffPicks.ts` - Fetches staff-picked episodes (10-minute cache)
+- `useShows.ts` - Fetches paginated shows with infinite scroll support
+- `useShowBySlug.ts` - Fetches a single show by slug with automatic caching
+- `useArtists.ts` - Fetches paginated artists with infinite scroll support
+- `useArtistBySlug.ts` - Fetches a single artist by slug with automatic caching
+- `useSearch.ts` - Performs searches with filters and caching
+- `useTags.ts` - Fetches all tags (genres, moods, themes) with 30-minute cache
+
+**Other Hooks**:
 - `useSearchParams.ts` - Manages search filters in URL query parameters for shareable search links
 
 ### **contexts/** - React Contexts
@@ -211,8 +223,19 @@ The search functionality provides comprehensive filtering across all content:
 
 This website is built with:
 
-- **React** - A JavaScript library for building user interfaces with components
-- **TypeScript** - Adds type checking to make the code more reliable
-- **Vite** - A fast build tool that bundles all the code and runs a development server
-- **TanStack Router** - Handles page navigation and web addresses
-- **Strapi** - The content management system (separate from this project) that stores all shows, episodes, and artists 
+- **React 19.1.1** - A JavaScript library for building user interfaces with components
+- **TypeScript 5.8.3** - Adds type checking to make the code more reliable
+- **Vite 7.1.7** - A fast build tool that bundles all the code and runs a development server
+- **TanStack Router 1.132.27** - Handles page navigation and web addresses
+- **TanStack Query 5.x** - Powerful data fetching with automatic caching, background updates, and request deduplication
+- **Strapi** - The content management system (separate from this project) that stores all shows, episodes, and artists
+
+### Data Fetching & Caching
+
+The website uses **TanStack Query** (React Query) for all API calls, providing:
+- **Automatic caching** - Data is cached for 5 minutes (episodes, shows, artists) to 30 minutes (tags)
+- **Background refetching** - Data automatically updates when you return to the browser tab
+- **Request deduplication** - Multiple components requesting the same data = single API call
+- **Instant navigation** - Cached data displays immediately when navigating back
+- **Optimistic updates** - UI feels fast and responsive
+- **DevTools** - Built-in debugging tools to inspect cache and queries 

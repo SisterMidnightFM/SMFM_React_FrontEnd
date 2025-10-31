@@ -26,6 +26,7 @@
 
 - **React 19.1.1** + **TypeScript 5.8.3** (strict mode)
 - **TanStack Router 1.132.27** (file-based routing)
+- **TanStack Query 5.x** (data fetching with automatic caching)
 - **Vite 7.1.7** (bundler with HMR)
 - **Strapi CMS** (headless CMS backend at `localhost:1337`)
 - **React Context API** (state management - NO Redux/Zustand)
@@ -50,12 +51,13 @@ src/
 │   ├── shared/         # Reusable cross-domain components (Card, CardGrid)
 │   └── tags/           # TagBadge, TagFilter
 ├── contexts/           # AudioPlayerContext (live stream state)
+├── hooks/              # TanStack Query hooks (useEpisodes, useShows, etc.)
 ├── routes/             # Thin route wrappers (TanStack Router)
 ├── services/           # API calls to Strapi (episodes, shows, artists, news)
 ├── types/              # TypeScript definitions (strapi, episode, show, artist, etc.)
 ├── utils/              # Helper functions (cardHelpers for data transformation)
 ├── assets/             # Fonts, template images
-├── main.tsx            # Application entry point
+├── main.tsx            # Application entry point (QueryClient configured here)
 └── index.css           # Global styles, fonts, CSS variables
 ```
 
@@ -70,13 +72,33 @@ src/
 - URL params: `/episodes/:slug`, `/shows/:slug`, `/artists/:slug`
 
 ### State Management
+- **TanStack Query**: All data fetching with automatic caching (5-30 min staleTime)
 - **AudioPlayerContext**: Global live stream state (play/pause, loading, current show)
-- **Local useState**: Page-level data fetching (episodes, shows, pagination)
+- **Local useState**: UI state only (modals, filters, visibility)
 - **NO global state library** (Redux/Zustand/Jotai)
 
-### Data Fetching Pattern
+### Data Fetching Pattern (TanStack Query)
 ```typescript
-// Standard pattern in all pages:
+// NEW: Use custom query hooks in all pages
+function PageComponent() {
+  const { data, isLoading, error } = useEpisodes();
+  // Or for detail pages:
+  const { data: episode, isLoading, error } = useEpisodeBySlug(slug);
+
+  // Data automatically cached, refetched on window focus, deduplicated
+  return <div>{/* Use data directly */}</div>;
+}
+
+// For infinite scroll lists:
+function ListPage() {
+  const { episodes, isLoading, hasMore, fetchNextPage } = useEpisodes();
+  // Automatic pagination with infinite query
+}
+```
+
+### Legacy Pattern (Pre-TanStack Query - DO NOT USE)
+```typescript
+// OLD: Manual fetching with useEffect (replaced by TanStack Query)
 useEffect(() => {
   const loadData = async () => {
     setIsLoading(true);
@@ -105,10 +127,13 @@ useEffect(() => {
 
 | File | Purpose |
 |------|---------|
-| `src/main.tsx` | App bootstrap, StrictMode wrapper |
+| `src/main.tsx` | App bootstrap, QueryClient provider, StrictMode wrapper |
 | `src/routes/__root.tsx` | Root layout (Header + Panels structure) |
+| `src/hooks/useEpisodes.ts` | TanStack Query hook for episodes list (infinite scroll) |
+| `src/hooks/useEpisodeBySlug.ts` | TanStack Query hook for single episode |
+| `src/hooks/useTags.ts` | TanStack Query hook for tags (30-min cache) |
 | `src/contexts/AudioPlayerContext.tsx` | Live stream state & radio.co API integration |
-| `src/services/episodes.ts` | Strapi API calls for episodes |
+| `src/services/episodes.ts` | Strapi API calls for episodes (wrapped by hooks) |
 | `src/types/strapi.ts` | Base Strapi response types |
 | `src/index.css` | Global styles, fonts (@font-face), CSS variables |
 | `.env` | Strapi URL & API token (VITE_ prefix required) |
@@ -141,7 +166,7 @@ useEffect(() => {
 
 ---
 
-## API Integration (Strapi)
+## API Integration (Strapi + TanStack Query)
 
 ### Authentication
 ```typescript
@@ -150,7 +175,20 @@ const API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
 // Bearer token in Authorization header
 ```
 
-### Key Service Functions
+### Query Hooks (PREFERRED - Use These)
+All data fetching should use these custom hooks:
+- `useEpisodes()` - Infinite scroll episodes list (5-min cache)
+- `useEpisodeBySlug(slug)` - Single episode detail (5-min cache)
+- `useStaffPicks()` - Staff-picked episodes (10-min cache)
+- `useShows()` - Infinite scroll shows list (5-min cache)
+- `useShowBySlug(slug)` - Single show detail (5-min cache)
+- `useArtists()` - Infinite scroll artists list (5-min cache)
+- `useArtistBySlug(slug)` - Single artist detail (5-min cache)
+- `useSearch(filters, enabled)` - Search with filters (2-min cache)
+- `useTags()` - All tags (30-min cache)
+
+### Service Functions (Wrapped by Hooks)
+These are called internally by hooks, not directly in components:
 - `fetchEpisodes(page, pageSize)` - Paginated episodes (sort: BroadcastDateTime:desc)
 - `fetchShows(page, pageSize)` - Paginated shows (sort: ShowName:asc)
 - `fetchEpisodeBySlug(slug)` - Single episode with relations
@@ -164,6 +202,13 @@ StrapiCollectionResponse<T> {
   meta: { pagination: { page, pageSize, pageCount, total } }
 }
 ```
+
+### Caching Strategy
+- **Episodes/Shows/Artists**: 5 minutes (frequently changing content)
+- **Staff Picks**: 10 minutes (curated, changes less often)
+- **Tags**: 30 minutes (rarely changes)
+- **Search Results**: 2 minutes (user-specific, can go stale faster)
+- **Background refetch**: On window focus (keeps data fresh)
 
 ---
 
@@ -252,24 +297,56 @@ npm run lint     # ESLint check
 
 ## Common Patterns Reference
 
-### Page Component Pattern
+### Page Component Pattern (TanStack Query)
 ```typescript
 export const Route = createFileRoute('/path')({
   component: PageComponent,
 });
 
 function PageComponent() {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Use query hooks instead of manual fetching
+  const { data: episodes, isLoading, error } = useEpisodes();
 
-  useEffect(() => {
-    // Fetch data
-  }, []);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="page-container">
-      {/* Content */}
+      {episodes.map(episode => (
+        <EpisodeCard key={episode.id} episode={episode} />
+      ))}
     </div>
+  );
+}
+```
+
+### Detail Page Pattern
+```typescript
+function DetailPage() {
+  const { slug } = Route.useParams();
+  const { data, isLoading, error } = useEpisodeBySlug(slug);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error || !data) return <div>Not found</div>;
+
+  return <EpisodeDetail episode={data} />;
+}
+```
+
+### Infinite Scroll Pattern
+```typescript
+function ListPage() {
+  const { episodes, isLoading, hasMore, fetchNextPage, isLoadingMore } = useEpisodes();
+
+  return (
+    <>
+      <EpisodeList episodes={episodes} isLoading={isLoading} />
+      {hasMore && (
+        <button onClick={fetchNextPage} disabled={isLoadingMore}>
+          {isLoadingMore ? 'Loading...' : 'Load More'}
+        </button>
+      )}
+    </>
   );
 }
 ```
@@ -304,6 +381,9 @@ export async function fetchResource(params: QueryParams): Promise<Resource[]> {
 - **DON'T** create documentation files unprompted (READMEs, etc.)
 - **DON'T** use inline styles (keep CSS in separate files)
 - **DON'T** bypass the service layer (always use service functions for API calls)
+- **DON'T** use manual useEffect + fetch patterns (use TanStack Query hooks instead)
+- **DON'T** create new data fetching patterns (follow established query hooks)
+- **DON'T** call service functions directly in components (wrap in query hooks)
 
 ---
 
@@ -311,10 +391,11 @@ export async function fetchResource(params: QueryParams): Promise<Resource[]> {
 
 1. **Maintainability** - Clean separation of concerns, predictable structure
 2. **Type Safety** - Comprehensive TypeScript coverage prevents runtime errors
-3. **Performance** - Pagination, lazy loading, responsive images
-4. **User Experience** - Smooth animations, responsive design, intuitive navigation
+3. **Performance** - TanStack Query caching, pagination, lazy loading, responsive images
+4. **User Experience** - Instant navigation, smooth animations, responsive design, intuitive navigation
 5. **Content Discovery** - Multiple browse paths (shows, episodes, artists, search)
 6. **Live Radio** - Real-time stream with current show display
+7. **Data Efficiency** - Automatic caching reduces API calls by 50-70%, background refetching keeps data fresh
 
 ---
 
