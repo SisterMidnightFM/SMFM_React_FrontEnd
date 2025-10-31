@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import { fetchShows } from '../../services/shows';
 import { ShowList } from '../../components/shows/ShowList';
+import { PageHeader } from '../../components/shared/PageHeader';
 import type { Show } from '../../types/show';
 
 export const Route = createFileRoute('/shows/')({
@@ -58,10 +59,11 @@ function ShowsPage() {
 
   return (
     <div className="shows-page">
-      <header className="shows-page__header">
-        <h1>All Shows</h1>
-        <p>Discover our collection of radio shows</p>
-      </header>
+      <PageHeader
+        title="SHOWS"
+        subtitle="Explore SMFM by the show residencies."
+        iconSrc="/Images/Moon_Dark.webp"
+      />
 
       <ShowList
         shows={shows}

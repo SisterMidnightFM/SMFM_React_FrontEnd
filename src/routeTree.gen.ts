@@ -10,7 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
-import { Route as StaffPicksRouteImport } from './routes/staff-picks'
+import { Route as SmfmPicksRouteImport } from './routes/smfm-picks'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -31,9 +31,9 @@ const TestRoute = TestRouteImport.update({
   path: '/test',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StaffPicksRoute = StaffPicksRouteImport.update({
-  id: '/staff-picks',
-  path: '/staff-picks',
+const SmfmPicksRoute = SmfmPicksRouteImport.update({
+  id: '/smfm-picks',
+  path: '/smfm-picks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -113,7 +113,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
-  '/staff-picks': typeof StaffPicksRoute
+  '/smfm-picks': typeof SmfmPicksRoute
   '/test': typeof TestRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/episodes/$slug': typeof EpisodesSlugRoute
@@ -131,7 +131,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
-  '/staff-picks': typeof StaffPicksRoute
+  '/smfm-picks': typeof SmfmPicksRoute
   '/test': typeof TestRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/episodes/$slug': typeof EpisodesSlugRoute
@@ -150,7 +150,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
-  '/staff-picks': typeof StaffPicksRoute
+  '/smfm-picks': typeof SmfmPicksRoute
   '/test': typeof TestRoute
   '/artists/$slug': typeof ArtistsSlugRoute
   '/episodes/$slug': typeof EpisodesSlugRoute
@@ -170,7 +170,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/schedule'
     | '/search'
-    | '/staff-picks'
+    | '/smfm-picks'
     | '/test'
     | '/artists/$slug'
     | '/episodes/$slug'
@@ -188,7 +188,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/schedule'
     | '/search'
-    | '/staff-picks'
+    | '/smfm-picks'
     | '/test'
     | '/artists/$slug'
     | '/episodes/$slug'
@@ -206,7 +206,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/schedule'
     | '/search'
-    | '/staff-picks'
+    | '/smfm-picks'
     | '/test'
     | '/artists/$slug'
     | '/episodes/$slug'
@@ -225,7 +225,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ScheduleRoute: typeof ScheduleRoute
   SearchRoute: typeof SearchRoute
-  StaffPicksRoute: typeof StaffPicksRoute
+  SmfmPicksRoute: typeof SmfmPicksRoute
   TestRoute: typeof TestRoute
   ArtistsSlugRoute: typeof ArtistsSlugRoute
   EpisodesSlugRoute: typeof EpisodesSlugRoute
@@ -247,11 +247,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/staff-picks': {
-      id: '/staff-picks'
-      path: '/staff-picks'
-      fullPath: '/staff-picks'
-      preLoaderRoute: typeof StaffPicksRouteImport
+    '/smfm-picks': {
+      id: '/smfm-picks'
+      path: '/smfm-picks'
+      fullPath: '/smfm-picks'
+      preLoaderRoute: typeof SmfmPicksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -361,7 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ScheduleRoute: ScheduleRoute,
   SearchRoute: SearchRoute,
-  StaffPicksRoute: StaffPicksRoute,
+  SmfmPicksRoute: SmfmPicksRoute,
   TestRoute: TestRoute,
   ArtistsSlugRoute: ArtistsSlugRoute,
   EpisodesSlugRoute: EpisodesSlugRoute,

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ScheduleView } from '../components/schedule/ScheduleView';
+import { PageHeader } from '../components/shared/PageHeader';
 
 export const Route = createFileRoute('/schedule')({
   component: SchedulePage,
@@ -8,9 +9,11 @@ export const Route = createFileRoute('/schedule')({
 function SchedulePage() {
   return (
     <div className="schedule-page">
-      <header className="schedule-page__header">
-        <h1>Radio Schedule</h1>
-      </header>
+      <PageHeader
+        title="Radio Schedule"
+        subtitle="Explore the schedule today, in the past, or upcoming."
+        iconSrc="/Images/Sun1_Dark.webp"
+      />
 
       <ScheduleView />
     </div>

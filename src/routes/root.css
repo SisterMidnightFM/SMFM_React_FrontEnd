@@ -188,3 +188,32 @@
     padding-right: 1.8rem;
   }
 }
+
+/* Page header styles */
+.page-header {
+  font-family: var(--Font1);
+  font-size: 2.5rem;
+  color: var(--Colour2);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+}
+
+.page-subtitle {
+  font-family: var(--Font1);
+  font-size: 1.1rem;
+  color: var(--Colour2);
+  opacity: 0.8;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    font-size: 1.75rem;
+  }
+}

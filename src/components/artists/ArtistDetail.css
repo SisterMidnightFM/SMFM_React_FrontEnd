@@ -114,10 +114,11 @@
 
 .artist-detail__section-title {
   font-family: var(--Font1);
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: var(--Colour2);
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
 }
 
 .artist-detail__bio {

@@ -1,4 +1,8 @@
 .explore-panel {
+  --explore-font-family: var(--Font1);
+  --explore-font-size: 1.3rem;
+  --explore-font-color: var(--Colour1);
+
   display: flex;
   flex-direction: column;
   gap: 3rem;
@@ -11,10 +15,10 @@
 }
 
 .explore-panel__home-button {
-  font-family: var(--Font1);
-  font-size: 1.3rem;
+  font-family: var(--explore-font-family);
+  font-size: var(--explore-font-size);
   font-weight: bold;
-  color: var(--Colour1);
+  color: var(--explore-font-color);
   text-decoration: none;
   display: inline-block;
   transition: opacity 0.2s;
@@ -31,10 +35,10 @@
 }
 
 .explore-panel__heading {
-  font-family: var(--Font1);
-  font-size: 1.3rem;
+  font-family: var(--explore-font-family);
+  font-size: var(--explore-font-size);
   font-weight: bold;
-  color: var(--Colour1);
+  color: var(--explore-font-color);
   margin: 0 0 1rem 0;
   letter-spacing: 0.05em;
 }
@@ -57,7 +61,7 @@
 }
 
 .explore-panel__heading-icon {
-  font-size: 1.3rem;
+  font-size: var(--explore-font-size);
   font-weight: normal;
   line-height: 1;
   display: inline-flex;
@@ -76,9 +80,9 @@
 }
 
 .explore-panel__link {
-  font-family: var(--Font1);
-  font-size: 1.25rem;
-  color: var(--Colour1);
+  font-family: var(--explore-font-family);
+  font-size: calc(var(--explore-font-size) * 0.96);
+  color: var(--explore-font-color);
   text-decoration: none;
   display: block;
   transition: opacity 0.2s;
@@ -104,10 +108,10 @@
 }
 
 .explore-panel__main-link {
-  font-family: var(--Font1);
-  font-size: 1.3rem;
+  font-family: var(--explore-font-family);
+  font-size: var(--explore-font-size);
   font-weight: bold;
-  color: var(--Colour1);
+  color: var(--explore-font-color);
   text-decoration: none;
   display: block;
   transition: opacity 0.2s;
@@ -117,30 +121,14 @@
   opacity: 0.7;
 }
 
-.explore-panel__graphic {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--Colour1);
-  opacity: 0.6;
-}
-
-.explore-panel__graphic svg {
-  width: 120px;
-  height: auto;
-}
-
 /* Mobile */
 @media (max-width: 768px) {
   .explore-panel {
+    --explore-font-size: 1.5rem;
+
     padding-top: 0;
     gap: 2rem;
     max-width: calc(100% - 3rem); /* Prevent content from extending past the explore button */
-  }
-
-  .explore-panel__heading {
-    font-size: 1.5rem;
   }
 
   .explore-panel__heading--clickable {
@@ -148,11 +136,11 @@
   }
 
   .explore-panel__link {
-    font-size: 1.1rem;
+    font-size: calc(var(--explore-font-size) * 0.73);
   }
 
   .explore-panel__main-link {
-    font-size: 1.75rem;
+    font-size: calc(var(--explore-font-size) * 1.17);
   }
 
   .explore-panel__graphic {

@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import { fetchEpisodes } from '../../services/episodes';
 import { EpisodeList } from '../../components/episodes/EpisodeList';
+import { PageHeader } from '../../components/shared/PageHeader';
 import type { Episode } from '../../types/episode';
 
 export const Route = createFileRoute('/episodes/')({
@@ -59,10 +60,11 @@ function EpisodesPage() {
 
   return (
     <div className="episodes-page">
-      <header className="episodes-page__header">
-        <h1>All Episodes</h1>
-        <p>Explore our collection of radio episodes</p>
-      </header>
+      <PageHeader
+        title="EPISODES"
+        subtitle="Explore our full collection of radio broadcasts."
+        iconSrc="/Images/Plant1_Dark.webp"
+      />
 
       <EpisodeList
         episodes={episodes}

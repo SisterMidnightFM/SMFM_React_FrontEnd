@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import { fetchAllNews } from '../../services/news';
 import { NewsList } from '../../components/news/NewsList';
+import { PageHeader } from '../../components/shared/PageHeader';
 import type { News } from '../../types/news';
 
 export const Route = createFileRoute('/news/')({
@@ -58,9 +59,10 @@ function NewsListPage() {
 
   return (
     <div className="news-list-page">
-      <header className="news-list-page__header">
-        <h1>News</h1>
-      </header>
+      <PageHeader
+        title="News"
+        iconSrc="/Images/Cat_Dark.webp"
+      />
 
       <NewsList
         news={news}

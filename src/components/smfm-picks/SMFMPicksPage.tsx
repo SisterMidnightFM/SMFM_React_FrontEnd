@@ -1,41 +1,42 @@
 import { useEffect, useState } from 'react';
 import { EpisodeCard } from '../episodes/EpisodeCard';
 import { CardGrid } from '../shared/CardGrid';
+import { PageHeader } from '../shared/PageHeader';
 import { fetchStaffPickEpisodes } from '../../services/episodes';
 import type { Episode } from '../../types/episode';
-import './StaffPicksPage.css';
+import './SMFMPicksPage.css';
 
-export function StaffPicksPage() {
+export function SMFMPicksPage() {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadStationPicks() {
+    async function loadSMFMPicks() {
       try {
         setIsLoading(true);
         const data = await fetchStaffPickEpisodes();
         setEpisodes(data);
       } catch (err) {
-        console.error('Failed to load station picks:', err);
-        setError('Failed to load station picks');
+        console.error('Failed to load SMFM picks:', err);
+        setError('Failed to load SMFM picks');
       } finally {
         setIsLoading(false);
       }
     }
 
-    loadStationPicks();
+    loadSMFMPicks();
   }, []);
 
   return (
-    <div className="staff-picks-page">
-      <div className="staff-picks-page__header">
-        <img src="/Images/GuitarMan_Dark.webp" alt="" className="staff-picks-page__icon" />
-        <h1 className="staff-picks-page__title">STATION PICKS</h1>
-      </div>
+    <div className="smfm-picks-page">
+      <PageHeader
+        title="SMFM PICKS"
+        iconSrc="/Images/GuitarMan_Dark.webp"
+      />
 
-      {isLoading && <p className="staff-picks-page__loading">Loading station picks...</p>}
-      {error && <p className="staff-picks-page__error">{error}</p>}
+      {isLoading && <p className="smfm-picks-page__loading">Loading SMFM picks...</p>}
+      {error && <p className="smfm-picks-page__error">{error}</p>}
 
       {!isLoading && !error && (
         <CardGrid>

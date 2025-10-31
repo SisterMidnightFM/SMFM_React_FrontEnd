@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import { fetchArtists } from '../../services/artists';
 import { ArtistList } from '../../components/artists/ArtistList';
+import { PageHeader } from '../../components/shared/PageHeader';
 import type { Artist } from '../../types/artist';
 
 export const Route = createFileRoute('/artists/')({
@@ -58,10 +59,11 @@ function ArtistsPage() {
 
   return (
     <div className="artists-page">
-      <header className="artists-page__header">
-        <h1>All Artists</h1>
-        <p>Explore our community of artists and hosts</p>
-      </header>
+      <PageHeader
+        title="ARTISTS"
+        subtitle="Explore our community of artists and radio hosts."
+        iconSrc="/Images/Head1_Dark.webp"
+      />
 
       <ArtistList
         artists={artists}

@@ -6,6 +6,8 @@ import { DateRangePicker } from '../components/search/DateRangePicker';
 import { FilterDropdowns } from '../components/search/FilterDropdowns';
 import { SearchButton } from '../components/search/SearchButton';
 import { SearchResults } from '../components/search/SearchResults';
+import { LuckyDipButton } from '../components/search/LuckyDipButton';
+import { PageHeader } from '../components/shared/PageHeader';
 import { search } from '../services/search';
 import { fetchAllTags } from '../services/tags';
 import type { SearchFilters, SearchResultItem, ContentType } from '../types/search';
@@ -137,10 +139,11 @@ function SearchPage() {
 
   return (
     <div className="search-page">
-      <header className="search-page__header">
-        <h1>Search</h1>
-        <p>Find episodes, shows, and artists</p>
-      </header>
+      <PageHeader
+        title="Search"
+        subtitle="Find episodes, shows, and artists"
+        iconSrc="/Images/Hand1_Dark.webp"
+      />
 
       <div className="search-page__filters">
         {/* Text Search Bar */}
@@ -183,6 +186,13 @@ function SearchPage() {
         {/* Search Button */}
         <div className="search-page__filter-row">
           <SearchButton onClick={handleSearch} isLoading={isSearching} />
+        </div>
+
+        {/* Lucky Dip Button */}
+        <div className="search-page__filter-row">
+          <LuckyDipButton>
+            Lucky Dip
+          </LuckyDipButton>
         </div>
       </div>
 

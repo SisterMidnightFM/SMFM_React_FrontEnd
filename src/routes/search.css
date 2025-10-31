@@ -8,22 +8,6 @@
   margin-bottom: 2rem;
 }
 
-.search-page__header h1 {
-  font-family: var(--Font1);
-  font-size: 2.5rem;
-  color: var(--Colour2);
-  margin: 0 0 0.5rem 0;
-  text-transform: uppercase;
-}
-
-.search-page__header p {
-  font-family: var(--Font1);
-  font-size: 1.1rem;
-  color: var(--Colour2);
-  opacity: 0.8;
-  margin: 0;
-}
-
 .search-page__filters {
   background-color: var(--Colour2);
   padding: 2rem;
@@ -44,10 +28,6 @@
     padding: 1rem;
   }
 
-  .search-page__header h1 {
-    font-size: 2rem;
-  }
-
   .search-page__filters {
     padding: 1.5rem;
   }
@@ -58,10 +38,6 @@
 }
 
 @media (max-width: 480px) {
-  .search-page__header h1 {
-    font-size: 1.75rem;
-  }
-
   .search-page__filters {
     padding: 1rem;
   }

@@ -1,0 +1,56 @@
+@keyframes rainbow-border {
+  0% { border-color: #ff0000; }
+  16.66% { border-color: #ff7f00; }
+  33.33% { border-color: #ffff00; }
+  50% { border-color: #00ff00; }
+  66.66% { border-color: #0000ff; }
+  83.33% { border-color: #8b00ff; }
+  100% { border-color: #ff0000; }
+}
+
+.lucky-dip-button {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  font-family: var(--Font1);
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: transparent;
+  color: var(--Colour1);
+  border: 3px solid var(--Colour2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lucky-dip-button:hover {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: rainbow-border 1.5s linear infinite;
+}
+
+.lucky-dip-button:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.lucky-dip-button:focus {
+  outline: 3px solid var(--Colour1);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .lucky-dip-button {
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lucky-dip-button {
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+  }
+}

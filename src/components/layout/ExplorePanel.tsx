@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { LuckyDipButton } from './LuckyDipButton';
 import './ExplorePanel.css';
 
 interface ExplorePanelProps {
@@ -31,16 +30,11 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
         </button>
         {isArchiveExpanded && (
           <ul className="explore-panel__list">
-            <li><Link to="/episodes" className="explore-panel__link" onClick={onClose}>• LATEST EPISODES</Link></li>
-            <li><Link to="/staff-picks" className="explore-panel__link" onClick={onClose}>• STATION PICKS</Link></li>
+            <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose}>• SMFM PICKS</Link></li>
+            <li><Link to="/episodes" className="explore-panel__link" onClick={onClose}>• EPISODES</Link></li>
             <li><Link to="/shows" className="explore-panel__link" onClick={onClose}>• SHOWS</Link></li>
             <li><Link to="/artists" className="explore-panel__link" onClick={onClose}>• ARTISTS</Link></li>
             <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
-            <li>
-              <LuckyDipButton className="explore-panel__link" onClose={onClose}>
-                • LUCKY DIP
-              </LuckyDipButton>
-            </li>
           </ul>
         )}
       </div>
@@ -58,16 +52,12 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
               rel="noopener noreferrer"
               className="explore-panel__main-link"
             >
-              SISTER MIDNIGHT ↗
+              SISTER MIDNIGHT&nbsp;↗
             </a>
           </li>
         </ul>
       </div>
 
-      {/* Decorative graphic - visible on desktop */}
-      <div className="explore-panel__graphic" aria-hidden="true">
-        <img src="/Images/Cat_Light.webp" alt="" />
-      </div>
     </nav>
   );
 };

@@ -274,6 +274,8 @@
   font-weight: bold;
   color: var(--Colour2);
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
+
 }
 
 /* Guest Artists Grid */

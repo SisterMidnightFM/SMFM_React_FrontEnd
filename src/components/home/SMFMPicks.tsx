@@ -5,27 +5,27 @@ import { fetchStaffPickEpisodes } from '../../services/episodes';
 import type { Episode } from '../../types/episode';
 import './HomeSection.css';
 
-export const StaffPicks: React.FC = () => {
+export const SMFMPicks: React.FC = () => {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(10);
 
   useEffect(() => {
-    async function loadStationPicks() {
+    async function loadSMFMPicks() {
       try {
         setIsLoading(true);
         const data = await fetchStaffPickEpisodes();
         setEpisodes(data);
       } catch (err) {
-        console.error('Failed to load station picks:', err);
-        setError('Failed to load station picks');
+        console.error('Failed to load SMFM picks:', err);
+        setError('Failed to load SMFM picks');
       } finally {
         setIsLoading(false);
       }
     }
 
-    loadStationPicks();
+    loadSMFMPicks();
   }, []);
 
   useEffect(() => {
@@ -51,12 +51,12 @@ export const StaffPicks: React.FC = () => {
     <section className="home-section">
       <div className="home-section__header">
         <img src="/Images/Hand1_Dark.webp" alt="" className="home-section__icon" />
-        <Link to="/staff-picks" className="home-section__title-link">
-          <h2 className="home-section__title">STATION PICKS</h2>
+        <Link to="/smfm-picks" className="home-section__title-link">
+          <h2 className="home-section__title">SMFM PICKS</h2>
         </Link>
       </div>
       <div className="home-section__cards home-section__cards--scrollable">
-        {isLoading && <p>Loading station picks...</p>}
+        {isLoading && <p>Loading SMFM picks...</p>}
         {error && <p className="error">{error}</p>}
         {!isLoading && !error && episodes.slice(0, visibleCount).map((episode) => (
           <EpisodeCard

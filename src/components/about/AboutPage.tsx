@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchAboutPage } from '../../services/about';
 import { renderRichText } from '../../utils/renderRichText';
+import { PageHeader } from '../shared/PageHeader';
 import type { AboutPage as AboutPageType } from '../../types/about';
 import './AboutPage.css';
 
@@ -46,9 +47,10 @@ export function AboutPage() {
 
   return (
     <div className="about-page">
-      <div className="about-page__header">
-        <h1 className="about-page__title">ABOUT SMFM</h1>
-      </div>
+      <PageHeader
+        title="ABOUT SMFM"
+        iconSrc="/Images/Logo Brown.webp"
+      />
       <div className="about-page__content">
         {renderRichText(aboutData.AboutPageText)}
       </div>

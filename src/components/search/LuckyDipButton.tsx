@@ -2,13 +2,12 @@ import { useNavigate } from '@tanstack/react-router';
 import { fetchArtists } from '../../services/artists';
 import { fetchShows } from '../../services/shows';
 import { fetchEpisodes } from '../../services/episodes';
+import './LuckyDipButton.css';
 
 export const LuckyDipButton: React.FC<{
-  className?: string;
   children: React.ReactNode;
   onClose?: () => void;
 }> = ({
-  className,
   children,
   onClose
 }) => {
@@ -17,10 +16,8 @@ export const LuckyDipButton: React.FC<{
   const handleLuckyDip = async (e: React.MouseEvent) => {
     e.preventDefault();
 
-    // Close the panel immediately
-    if (onClose) {
-      onClose();
-    }
+    // Close the panel if onClose is provided
+    onClose?.();
 
     try {
       // Randomly choose between artists, shows, or episodes
@@ -60,7 +57,7 @@ export const LuckyDipButton: React.FC<{
   };
 
   return (
-    <button onClick={handleLuckyDip} className={className}>
+    <button onClick={handleLuckyDip} className="lucky-dip-button">
       {children}
     </button>
   );
