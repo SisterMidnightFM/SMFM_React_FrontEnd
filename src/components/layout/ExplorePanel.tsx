@@ -56,6 +56,10 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
         <Link to="/" className="explore-panel__home-button" onClick={onClose}>HOME</Link>
       </div>
 
+      <div className="explore-panel__home">
+        <Link to="/chatroom" className="explore-panel__home-button" onClick={onClose}>CHAT ROOM</Link>
+      </div>
+
       <div className="explore-panel__section">
         <button
           className="explore-panel__heading explore-panel__heading--clickable"
