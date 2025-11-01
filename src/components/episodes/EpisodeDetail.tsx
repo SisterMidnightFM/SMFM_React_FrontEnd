@@ -1,7 +1,10 @@
 import { Link } from '@tanstack/react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Episode } from '../../types/episode';
 import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
 import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
+import { fetchShowBySlug } from '../../services/shows';
+import { fetchArtistBySlug } from '../../services/artists';
 import './EpisodeDetail.css';
 
 interface EpisodeDetailProps {
@@ -11,6 +14,7 @@ interface EpisodeDetailProps {
 export function EpisodeDetail({ episode }: EpisodeDetailProps) {
   const { pause, isPlaying } = useAudioPlayer();
   const { openPlayer } = useEpisodePlayer();
+  const queryClient = useQueryClient();
 
   // Get episode image URL (from show or episode)
   const showImage = episode.link_episode_to_show?.ShowImage;
@@ -53,6 +57,24 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
 
     // Open global player
     openPlayer(type, url, episode.EpisodeTitle, episode.link_episode_to_show?.ShowName);
+  };
+
+  // Prefetch show on hover
+  const prefetchShow = (showSlug: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ['shows', showSlug],
+      queryFn: () => fetchShowBySlug(showSlug),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+  };
+
+  // Prefetch artist on hover
+  const prefetchArtist = (artistSlug: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ['artists', artistSlug],
+      queryFn: () => fetchArtistBySlug(artistSlug),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    });
   };
 
   return (
@@ -110,6 +132,7 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
               to="/shows/$slug"
               params={{ slug: episode.link_episode_to_show.ShowSlug }}
               className="episode-detail__show-button"
+              onMouseEnter={() => prefetchShow(episode.link_episode_to_show!.ShowSlug)}
             >
               View Show Page
             </Link>
@@ -189,6 +212,7 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
                 to="/artists/$slug"
                 params={{ slug: artist.Artist_Slug }}
                 className="episode-detail__guest-link"
+                onMouseEnter={() => prefetchArtist(artist.Artist_Slug)}
               >
                 <div className="episode-detail__guest-card">
                   <div className="episode-detail__guest-image">

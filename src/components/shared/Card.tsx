@@ -38,6 +38,9 @@ export interface CardProps {
 
   // Optional overrides
   className?: string;
+
+  // Event handlers
+  onMouseEnter?: () => void;
 }
 
 // SVG clip-path definitions for hand-drawn effect (rendered once globally)
@@ -139,6 +142,7 @@ export function Card({
   tags,
   maxTags = 3,
   className = '',
+  onMouseEnter,
 }: CardProps) {
   // Get image URL from Strapi image object
   const getImageUrl = (): string | null => {
@@ -159,6 +163,7 @@ export function Card({
       to={to}
       params={params}
       className={`card ${hasNoImage ? 'card--no-image' : ''} ${circularImage ? 'card--circular-image' : ''} ${className}`}
+      onMouseEnter={onMouseEnter}
     >
       {/* Badge */}
       {badge && (

@@ -1,6 +1,9 @@
 import { Link } from '@tanstack/react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import type { Artist } from '../../types/artist';
 import type { TagLocation } from '../../types/tag';
+import { fetchShowBySlug } from '../../services/shows';
+import { fetchEpisodeBySlug } from '../../services/episodes';
 import './ArtistDetail.css';
 
 interface ArtistDetailProps {
@@ -22,10 +25,29 @@ const getInstagramUrl = (handle: string): string => {
 };
 
 export function ArtistDetail({ artist }: ArtistDetailProps) {
+  const queryClient = useQueryClient();
   // Get artist image URL
   const imageUrl = artist.ArtistImage?.formats?.large?.url || artist.ArtistImage?.url;
   const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
   const fullImageUrl = imageUrl ? `${STRAPI_URL}${imageUrl}` : null;
+
+  // Prefetch show on hover
+  const prefetchShow = (showSlug: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ['shows', showSlug],
+      queryFn: () => fetchShowBySlug(showSlug),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+  };
+
+  // Prefetch episode on hover
+  const prefetchEpisode = (episodeSlug: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ['episodes', episodeSlug],
+      queryFn: () => fetchEpisodeBySlug(episodeSlug),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+  };
 
   return (
     <div className="artist-detail">
@@ -110,6 +132,7 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
                 to="/shows/$slug"
                 params={{ slug: show.ShowSlug }}
                 className="artist-detail__show-card"
+                onMouseEnter={() => prefetchShow(show.ShowSlug)}
               >
                 {show.ShowImage && (
                   <div className="artist-detail__show-image">
@@ -144,6 +167,7 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
                 to="/episodes/$slug"
                 params={{ slug: episode.EpisodeSlug }}
                 className="artist-detail__episode-card"
+                onMouseEnter={() => prefetchEpisode(episode.EpisodeSlug)}
               >
                 <div className="artist-detail__episode-info">
                   <div className="artist-detail__episode-show">
