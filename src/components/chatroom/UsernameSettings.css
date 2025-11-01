@@ -1,0 +1,132 @@
+.username-settings {
+  padding: 12px 16px;
+  background: var(--Colour2);
+  border-bottom: 2px solid var(--Colour1);
+}
+
+.username-settings__display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.username-settings__label {
+  color: var(--Colour1);
+  font-weight: 500;
+  font-family: var(--Font1);
+  opacity: 0.8;
+}
+
+.username-settings__name {
+  color: var(--Colour1);
+  font-weight: 600;
+  font-family: var(--Font1);
+}
+
+.username-settings__edit-btn {
+  margin-left: auto;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--Colour1);
+  color: var(--Colour1);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--Font1);
+  transition: all 0.2s;
+}
+
+.username-settings__edit-btn:hover {
+  background: var(--Colour1);
+  color: var(--Colour2);
+  border-color: var(--Colour1);
+}
+
+.username-settings--editing {
+  padding: 16px;
+}
+
+.username-settings__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.username-settings__input {
+  padding: 8px 12px;
+  background: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  color: var(--Colour2);
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: var(--Font2);
+  transition: border-color 0.2s;
+}
+
+.username-settings__input:focus {
+  outline: none;
+  border-color: var(--Colour2);
+  background: var(--Colour1);
+}
+
+.username-settings__input::placeholder {
+  color: var(--Colour2);
+  opacity: 0.5;
+}
+
+.username-settings__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.username-settings__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.username-settings__save-btn,
+.username-settings__cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--Font1);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.username-settings__save-btn {
+  background: var(--Colour1);
+  color: var(--Colour2);
+  flex: 1;
+  border: 2px solid var(--Colour1);
+}
+
+.username-settings__save-btn:hover:not(:disabled) {
+  background: var(--Colour2);
+  color: var(--Colour1);
+  border-color: var(--Colour1);
+}
+
+.username-settings__save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.username-settings__cancel-btn {
+  background: transparent;
+  color: var(--Colour1);
+  border: 2px solid var(--Colour1);
+}
+
+.username-settings__cancel-btn:hover:not(:disabled) {
+  background: var(--Colour1);
+  color: var(--Colour2);
+}
+
+.username-settings__cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -13,6 +13,7 @@ import { Route as SmfmPicksRouteImport } from './routes/smfm-picks'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ChatroomRouteImport } from './routes/chatroom'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShowsIndexRouteImport } from './routes/shows/index'
@@ -43,6 +44,11 @@ const ScheduleRoute = ScheduleRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatroomRoute = ChatroomRouteImport.update({
+  id: '/chatroom',
+  path: '/chatroom',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -104,6 +110,7 @@ const TagsTypeValueRoute = TagsTypeValueRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/chatroom': typeof ChatroomRoute
   '/contact': typeof ContactRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/chatroom': typeof ChatroomRoute
   '/contact': typeof ContactRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/chatroom': typeof ChatroomRoute
   '/contact': typeof ContactRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/chatroom'
     | '/contact'
     | '/schedule'
     | '/search'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/chatroom'
     | '/contact'
     | '/schedule'
     | '/search'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/chatroom'
     | '/contact'
     | '/schedule'
     | '/search'
@@ -210,6 +222,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ChatroomRoute: typeof ChatroomRoute
   ContactRoute: typeof ContactRoute
   ScheduleRoute: typeof ScheduleRoute
   SearchRoute: typeof SearchRoute
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chatroom': {
+      id: '/chatroom'
+      path: '/chatroom'
+      fullPath: '/chatroom'
+      preLoaderRoute: typeof ChatroomRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -338,6 +358,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ChatroomRoute: ChatroomRoute,
   ContactRoute: ContactRoute,
   ScheduleRoute: ScheduleRoute,
   SearchRoute: SearchRoute,

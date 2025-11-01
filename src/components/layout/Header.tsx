@@ -63,15 +63,12 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      <a
-        href="https://discord.gg/jEqUaYv2NE"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        to="/chatroom"
         className="header__chat-button"
       >
-
         <span>CHAT ROOM</span>
-      </a>
+      </Link>
     </header>
   );
 };

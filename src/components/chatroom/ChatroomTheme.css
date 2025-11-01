@@ -1,0 +1,550 @@
+/* Stream Chat Theme Overrides for SMFM */
+/* This file customizes the Stream Chat UI to match the app's design system */
+
+/* Main Chat Container */
+.chatroom-page__content .str-chat {
+  --str-chat__primary-color: var(--Colour2);
+  --str-chat__active-primary-color: var(--Colour2);
+  --str-chat__surface-color: var(--Colour1);
+  --str-chat__secondary-surface-color: var(--Colour2);
+  --str-chat__primary-surface-color: var(--Colour1);
+  --str-chat__primary-surface-color-low-emphasis: var(--Colour1);
+  --str-chat__border-radius-circle: 4px;
+}
+
+/* Channel Container */
+.chatroom-page__content .str-chat__channel {
+  background-color: var(--Colour1);
+}
+
+/* Message List */
+.chatroom-page__content .str-chat__list {
+  background-color: var(--Colour1);
+  padding: 1rem;
+}
+
+.chatroom-page__content .str-chat__ul {
+  background-color: var(--Colour1);
+}
+
+/* Messages */
+.chatroom-page__content .str-chat__message {
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__message-text {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  font-family: var(--Font1);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.chatroom-page__content .str-chat__message-text p {
+  color: var(--Colour1);
+  font-family: var(--Font1);
+}
+
+/* Message from current user (right side) */
+.chatroom-page__content .str-chat__message--me .str-chat__message-text {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+}
+
+/* Message from other users (left side) */
+.chatroom-page__content .str-chat__message--other .str-chat__message-text {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  opacity: 0.9;
+}
+
+/* Message metadata (username, timestamp) */
+.chatroom-page__content .str-chat__message-metadata {
+  font-family: var(--Font1);
+  color: var(--Colour2);
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.chatroom-page__content .str-chat__message-simple__actions__action--options {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+}
+
+/* Message sender name */
+.chatroom-page__content .str-chat__message-sender-name {
+  font-family: var(--Font1);
+  color: var(--Colour2);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Avatar */
+.chatroom-page__content .str-chat__avatar {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  font-family: var(--Font1);
+  border: 2px solid var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__avatar-fallback {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  font-family: var(--Font1);
+  font-weight: 600;
+}
+
+/* Message Input */
+.chatroom-page__content .str-chat__input-flat {
+  background-color: var(--Colour2);
+  border-top: 2px solid var(--Colour2);
+  padding: 1rem;
+}
+
+.chatroom-page__content .str-chat__message-input {
+  background-color: var(--Colour1);
+  padding: 0;
+}
+
+.chatroom-page__content .str-chat__message-input-inner {
+  background-color: var(--Colour1);
+  padding: 8px 12px;
+}
+
+.chatroom-page__content .str-chat__textarea {
+  background-color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.chatroom-page__content .str-chat__textarea:focus {
+  border-color: var(--Colour2);
+  box-shadow: 0 0 0 1px var(--Colour2);
+  background-color: var(--Colour1);
+}
+
+.chatroom-page__content .str-chat__textarea textarea {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__textarea textarea::placeholder {
+  color: var(--Colour2);
+  opacity: 0.5;
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__input textarea {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  background-color: transparent;
+}
+
+.chatroom-page__content .str-chat__input textarea::placeholder {
+  color: var(--Colour2);
+  opacity: 0.5;
+  font-family: var(--Font1);
+}
+
+/* Send Button */
+.chatroom-page__content .str-chat__send-button {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  border: 2px solid var(--Colour2);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-family: var(--Font1);
+  transition: all 0.2s;
+}
+
+.chatroom-page__content .str-chat__send-button:hover {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  border-color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__send-button svg {
+  fill: currentColor;
+}
+
+/* Emoji Picker Button */
+.chatroom-page__content .str-chat__input-flat-emojiselect {
+  color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__input-flat-emojiselect:hover {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 4px;
+}
+
+/* File Upload Button */
+.chatroom-page__content .str-chat__fileupload-wrapper button {
+  color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__fileupload-wrapper button:hover {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 4px;
+}
+
+/* Typing Indicator */
+.chatroom-page__content .str-chat__typing-indicator {
+  font-family: var(--Font1);
+  color: var(--Colour2);
+  font-size: 0.875rem;
+}
+
+.chatroom-page__content .str-chat__typing-indicator__dots {
+  background-color: var(--Colour2);
+}
+
+/* Date Separator */
+.chatroom-page__content .str-chat__date-separator {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  opacity: 0.6;
+}
+
+.chatroom-page__content .str-chat__date-separator-line {
+  background-color: var(--Colour2);
+  opacity: 0.2;
+}
+
+/* Scrollbar */
+.chatroom-page__content .str-chat__list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatroom-page__content .str-chat__list::-webkit-scrollbar-track {
+  background: var(--Colour1);
+}
+
+.chatroom-page__content .str-chat__list::-webkit-scrollbar-thumb {
+  background: var(--Colour2);
+  border-radius: 4px;
+}
+
+.chatroom-page__content .str-chat__list::-webkit-scrollbar-thumb:hover {
+  background: var(--Colour2);
+  opacity: 0.8;
+}
+
+/* Loading Indicator */
+.chatroom-page__content .str-chat__loading-indicator {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__loading-indicator-spinner {
+  border-color: var(--Colour2);
+  border-top-color: transparent;
+}
+
+/* Empty State */
+.chatroom-page__content .str-chat__empty-channel {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+}
+
+/* Reactions */
+.chatroom-page__content .str-chat__reaction-list {
+  background-color: var(--Colour1);
+  border: transparent;
+  position: relative;
+  bottom: auto;
+  top: auto;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.chatroom-page__content .str-chat__message-reactions {
+  position: relative;
+  bottom: auto;
+  top: auto;
+  margin-top: 4px;
+}
+
+.chatroom-page__content .str-chat__reaction-selector {
+  background-color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  position: relative;
+  bottom: auto;
+  top: auto;
+  margin-top: 4px;
+}
+
+.chatroom-page__content .str-chat__message--has-reactions .str-chat__message-inner {
+  position: relative;
+}
+
+.chatroom-page__content .str-chat__message-reactions-container {
+  position: relative;
+  bottom: auto;
+  top: auto;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Override any absolute positioning on reactions */
+.chatroom-page__content .str-chat__message-reaction {
+  position: relative !important;
+  bottom: auto !important;
+  top: auto !important;
+}
+
+.chatroom-page__content .str-chat__reaction {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 12px;
+  padding: 2px 8px;
+  margin: 2px;
+  border: 1px solid var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__reaction:hover {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  border-color: var(--Colour2);
+}
+
+/* Thread */
+.chatroom-page__content .str-chat__thread {
+  background-color: var(--Colour1);
+  border-left: 2px solid var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__thread-header {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  font-family: var(--Font1);
+  border-bottom: 2px solid var(--Colour2);
+}
+
+/* Message Actions */
+.chatroom-page__content .str-chat__message-actions-box {
+  background-color: var(--Colour2);
+  border: 2px solid var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__message-actions-box button {
+  color: var(--Colour1);
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__message-actions-box button:hover {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+}
+
+/* Links */
+.chatroom-page__content .str-chat__message-text a {
+  color: var(--Colour1);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.chatroom-page__content .str-chat__message-text a:hover {
+  opacity: 0.8;
+}
+
+/* Code blocks */
+.chatroom-page__content .str-chat__message-text pre {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  border: 1px solid var(--Colour2);
+  border-radius: 4px;
+  padding: 8px;
+  font-family: monospace;
+}
+
+.chatroom-page__content .str-chat__message-text code {
+  background-color: var(--Colour1);
+  color: var(--Colour2);
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-family: monospace;
+}
+
+/* Image attachments */
+.chatroom-page__content .str-chat__message-attachment {
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chatroom-page__content .str-chat__message-attachment--image {
+  border-radius: 8px;
+}
+
+/* File attachments */
+.chatroom-page__content .str-chat__message-attachment-file {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.chatroom-page__content .str-chat__message-attachment-file--item {
+  color: var(--Colour1);
+  font-family: var(--Font1);
+}
+
+/* Modal/Overlay */
+.chatroom-page__content .str-chat__modal {
+  background-color: rgba(50, 40, 36, 0.9);
+}
+
+.chatroom-page__content .str-chat__modal__inner {
+  background-color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+}
+
+.chatroom-page__content .str-chat__modal__close-button {
+  color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__modal__close-button:hover {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+}
+
+/* Additional Input Components */
+.chatroom-page__content .str-chat__input {
+  background-color: var(--Colour1);
+}
+
+.chatroom-page__content .str-chat__input-footer {
+  background-color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__message-input-tools {
+  color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__input-flat-wrapper {
+  background-color: var(--Colour2);
+}
+
+/* Message Status */
+.chatroom-page__content .str-chat__message-status {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  opacity: 0.6;
+}
+
+/* Message Simple Styles */
+.chatroom-page__content .str-chat__message-simple {
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__message-simple-text-inner {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__message-simple-name {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  font-weight: 600;
+}
+
+.chatroom-page__content .str-chat__message-simple-timestamp {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  opacity: 0.6;
+}
+
+/* Message Bubble */
+.chatroom-page__content .str-chat__message-bubble {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 8px;
+}
+
+/* Channel Header */
+.chatroom-page__content .str-chat__channel-header {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-bottom: 2px solid var(--Colour2);
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__header-livestream {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  font-family: var(--Font1);
+}
+
+/* Window */
+.chatroom-page__content .str-chat__main-panel {
+  background-color: var(--Colour1);
+}
+
+/* Composer */
+.chatroom-page__content .str-chat__composer {
+  background-color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+}
+
+.chatroom-page__content .str-chat__composer-input {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+  background-color: var(--Colour1);
+}
+
+/* Quoted Message Reply */
+.chatroom-page__content .str-chat__quoted-message-preview {
+  background-color: var(--Colour2);
+  border-left: 3px solid var(--Colour1);
+  color: var(--Colour1);
+  opacity: 0.8;
+}
+
+/* User Item in List */
+.chatroom-page__content .str-chat__user-item {
+  color: var(--Colour2);
+  font-family: var(--Font1);
+}
+
+.chatroom-page__content .str-chat__user-item:hover {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+}
+
+/* Notification */
+.chatroom-page__content .str-chat__notification {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  border-radius: 8px;
+  font-family: var(--Font1);
+}
+
+/* Suggestion List */
+.chatroom-page__content .str-chat__emojisearch {
+  background-color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+}
+
+.chatroom-page__content .str-chat__slash-command {
+  background-color: var(--Colour1);
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+}
+
+.chatroom-page__content .str-chat__slash-command:hover {
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+}

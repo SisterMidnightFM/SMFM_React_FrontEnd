@@ -15,7 +15,9 @@
     "@tanstack/react-router": "^1.132.27",
     "@tanstack/router": "^0.0.1-beta.53",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "stream-chat": "^9.25.0",
+    "stream-chat-react": "^13.10.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

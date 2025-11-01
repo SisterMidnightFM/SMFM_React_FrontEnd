@@ -1,0 +1,105 @@
+/* Chatroom Page Container */
+.chatroom-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Content */
+.chatroom-page__content {
+  margin-top: 2rem;
+  height: calc(100vh - 300px);
+  min-height: 500px;
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--Colour1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Loading State */
+.chatroom-page__loading {
+  font-family: var(--Font1);
+  font-size: 1.2rem;
+  color: var(--Colour2);
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+/* Error State */
+.chatroom-page__error {
+  font-family: var(--Font1);
+  font-size: 1.2rem;
+  color: var(--Colour2);
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 2px solid var(--Colour2);
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.chatroom-page__error-hint {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-family: var(--Font1);
+  opacity: 0.8;
+}
+
+/* Stream.io Theme Customization */
+.chatroom-page__content .str-chat {
+  font-family: var(--Font1);
+  flex: 1;
+  min-height: 0;
+}
+
+.chatroom-page__content .str-chat__channel {
+  background-color: var(--Colour1);
+}
+
+.chatroom-page__content .str-chat__message-text {
+  font-family: var(--Font1);
+  color: var(--Colour2);
+}
+
+.chatroom-page__content .str-chat__input-flat {
+  background-color: var(--Colour1);
+  border-top: 2px solid var(--Colour2);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .chatroom-page__content {
+    height: calc(100vh - 250px);
+  }
+}
+
+@media (max-width: 767px) {
+  .chatroom-page {
+    padding: 1.5rem;
+  }
+
+  .chatroom-page__content {
+    height: calc(100vh - 220px);
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatroom-page {
+    padding: 1rem;
+  }
+
+  .chatroom-page__content {
+    height: calc(100vh - 200px);
+    min-height: 350px;
+  }
+
+  .chatroom-page__loading,
+  .chatroom-page__error {
+    font-size: 1rem;
+    padding: 2rem 1rem;
+  }
+}
