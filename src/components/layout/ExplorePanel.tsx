@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
+import { useQueryClient } from '@tanstack/react-query';
+import { fetchEpisodes, fetchStaffPickEpisodes } from '../../services/episodes';
+import { fetchShows } from '../../services/shows';
+import { fetchArtists } from '../../services/artists';
 import './ExplorePanel.css';
 
 interface ExplorePanelProps {
@@ -8,9 +12,42 @@ interface ExplorePanelProps {
 
 export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
   const [isArchiveExpanded, setIsArchiveExpanded] = useState(false);
+  const queryClient = useQueryClient();
 
   const toggleArchive = () => {
     setIsArchiveExpanded(!isArchiveExpanded);
+  };
+
+  // Prefetch handlers for each route
+  const prefetchEpisodes = () => {
+    queryClient.prefetchInfiniteQuery({
+      queryKey: ['episodes'],
+      queryFn: () => fetchEpisodes(1, 10),
+      initialPageParam: 1,
+    });
+  };
+
+  const prefetchShows = () => {
+    queryClient.prefetchInfiniteQuery({
+      queryKey: ['shows'],
+      queryFn: () => fetchShows(1, 10),
+      initialPageParam: 1,
+    });
+  };
+
+  const prefetchArtists = () => {
+    queryClient.prefetchInfiniteQuery({
+      queryKey: ['artists'],
+      queryFn: () => fetchArtists(1, 10),
+      initialPageParam: 1,
+    });
+  };
+
+  const prefetchStaffPicks = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['episodes', 'staff-picks'],
+      queryFn: fetchStaffPickEpisodes,
+    });
   };
 
   return (
@@ -30,10 +67,10 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
         </button>
         {isArchiveExpanded && (
           <ul className="explore-panel__list">
-            <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose}>• SMFM PICKS</Link></li>
-            <li><Link to="/episodes" className="explore-panel__link" onClick={onClose}>• EPISODES</Link></li>
-            <li><Link to="/shows" className="explore-panel__link" onClick={onClose}>• SHOWS</Link></li>
-            <li><Link to="/artists" className="explore-panel__link" onClick={onClose}>• ARTISTS</Link></li>
+            <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchStaffPicks}>• SMFM PICKS</Link></li>
+            <li><Link to="/episodes" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchEpisodes}>• EPISODES</Link></li>
+            <li><Link to="/shows" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchShows}>• SHOWS</Link></li>
+            <li><Link to="/artists" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchArtists}>• ARTISTS</Link></li>
             <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
           </ul>
         )}
