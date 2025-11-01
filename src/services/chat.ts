@@ -145,7 +145,7 @@ export async function initializeChatClient() {
       });
 
       // Store the user ID and token for future sessions
-      if (response.me && client.tokenManager.token) {
+      if (response && 'me' in response && response.me && client.tokenManager.token) {
         storeGuestUser(response.me.id, client.tokenManager.token);
       }
 

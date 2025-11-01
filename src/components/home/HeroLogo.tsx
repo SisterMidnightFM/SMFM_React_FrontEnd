@@ -51,7 +51,7 @@ export const HeroLogo: React.FC = () => {
   const [starRotations, setStarRotations] = useState<number[]>([0, 0, 0]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const wasPlayingRef = useRef(false);
-  const intervalRef = useRef<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Track mobile/desktop breakpoint
   useEffect(() => {
