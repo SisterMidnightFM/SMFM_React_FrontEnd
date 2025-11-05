@@ -300,8 +300,33 @@
     aspect-ratio: 16 / 9;
   }
 
+  /* Circular image adjustments for mobile */
+  .card--circular-image .card__image-container {
+    aspect-ratio: 1 / 1;
+    max-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .card--circular-image .card__image {
+    width: 90%;
+    height: 90%;
+  }
+
+  .card--circular-image .card__placeholder {
+    width: 60%;
+    height: 60%;
+  }
+
   .card__content {
     padding: 1.25rem;
+    text-align: center;
+  }
+
+  .card__location {
+    justify-content: center;
   }
 
   .card__header {
