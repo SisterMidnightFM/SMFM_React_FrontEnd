@@ -30,14 +30,14 @@ export function UsernameSettings() {
     return (
       <div className="username-settings">
         <div className="username-settings__display">
-          <span className="username-settings__label">Chatting as:</span>
+          <span className="username-settings__label">CHATTING AS:</span>
           <span className="username-settings__name">{displayName}</span>
           <button
             className="username-settings__edit-btn"
             onClick={() => setIsEditing(true)}
             aria-label="Edit username"
           >
-            Edit Username
+            EDIT USERNAME
           </button>
         </div>
       </div>
