@@ -55,3 +55,17 @@ export function truncateText(text: string | null | undefined, maxLength: number)
 
   return text.substring(0, maxLength) + '...';
 }
+
+/**
+ * Check if a date is within the last 7 days
+ * @param dateString - ISO date string (e.g., "2024-11-01T15:30:00.000Z")
+ * @returns true if the date is within the last 7 days and not in the future
+ */
+export function isWithinLastWeek(dateString: string): boolean {
+  const date = new Date(dateString);
+  const now = new Date();
+  const daysDiff = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
+
+  // Must be past date (daysDiff >= 0) and within 7 days (daysDiff <= 7)
+  return daysDiff >= 0 && daysDiff <= 7;
+}

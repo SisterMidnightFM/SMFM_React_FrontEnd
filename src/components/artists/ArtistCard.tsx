@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '../shared/Card';
 import type { Artist } from '../../types/artist';
 import { truncateText } from '../../utils/cardHelpers';
+import { shouldShowArtistBadge } from '../../utils/badgeHelpers';
 import { fetchArtistBySlug } from '../../services/artists';
 
 interface ArtistCardProps {
@@ -32,6 +33,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
       headerText={artist.ArtistName}
       location={location}
       descriptiveText2={truncateText(artist.ArtistBio, 120)}
+      newBadge={shouldShowArtistBadge(artist)}
       onMouseEnter={handleMouseEnter}
     />
   );

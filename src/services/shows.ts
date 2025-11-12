@@ -16,8 +16,11 @@ export async function fetchShows(page: number = 1, pageSize: number = 10): Promi
   try {
     const url = new URL(`${STRAPI_URL}/api/shows`);
 
-    // Populate everything
-    url.searchParams.append('populate', '*');
+    // Populate all fields including episodes for badge logic
+    url.searchParams.append('populate[0]', 'ShowImage');
+    url.searchParams.append('populate[1]', 'Main_Host');
+    url.searchParams.append('populate[2]', 'Main_Host.ArtistImage');
+    url.searchParams.append('populate[3]', 'Show_Episodes');
 
     // Sort by show name
     url.searchParams.append('sort', 'ShowName:asc');

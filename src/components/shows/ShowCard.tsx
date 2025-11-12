@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '../shared/Card';
 import type { Show } from '../../types/show';
 import { extractRichText, truncateText } from '../../utils/cardHelpers';
+import { shouldShowShowBadge } from '../../utils/badgeHelpers';
 import { fetchShowBySlug } from '../../services/shows';
 
 interface ShowCardProps {
@@ -39,6 +40,7 @@ export function ShowCard({ show }: ShowCardProps) {
       footerLink={{
         text: 'see episodes →'
       }}
+      newBadge={shouldShowShowBadge(show)}
       onMouseEnter={handleMouseEnter}
     />
   );

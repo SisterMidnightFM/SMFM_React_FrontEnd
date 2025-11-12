@@ -6,5 +6,5 @@ interface LatestShowCardProps {
 }
 
 export function LatestShowCard({ episode }: LatestShowCardProps) {
-  return <EpisodeCard episode={episode} />;
+  return <EpisodeCard episode={episode} showNewBadge={false} />;
 }

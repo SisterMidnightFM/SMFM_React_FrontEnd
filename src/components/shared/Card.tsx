@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import type { StrapiImage } from '../../types/strapi';
+import { NewBadge } from './NewBadge';
 import './Card.css';
 
 export interface CardProps {
@@ -22,6 +23,7 @@ export interface CardProps {
 
   // Badge
   badge?: string;
+  newBadge?: boolean;
 
   // Footer link
   footerLink?: {
@@ -138,6 +140,7 @@ export function Card({
   descriptiveText2,
   location,
   badge,
+  newBadge,
   footerLink,
   tags,
   maxTags = 3,
@@ -159,18 +162,22 @@ export function Card({
   const hasNoImage = !fullImageUrl;
 
   return (
-    <Link
-      to={to}
-      params={params}
-      className={`card ${hasNoImage ? 'card--no-image' : ''} ${circularImage ? 'card--circular-image' : ''} ${className}`}
-      onMouseEnter={onMouseEnter}
-    >
-      {/* Badge */}
-      {badge && (
-        <div className="card__badge">
-          {badge}
-        </div>
-      )}
+    <div className="card-wrapper">
+      {/* New Badge (spiky circle) - Outside the Link to avoid clipping */}
+      {newBadge && <NewBadge />}
+
+      <Link
+        to={to}
+        params={params}
+        className={`card ${hasNoImage ? 'card--no-image' : ''} ${circularImage ? 'card--circular-image' : ''} ${className}`}
+        onMouseEnter={onMouseEnter}
+      >
+        {/* Badge (existing text badge) */}
+        {badge && (
+          <div className="card__badge">
+            {badge}
+          </div>
+        )}
 
       {/* Image Section */}
       <div className="card__image-container">
@@ -232,5 +239,6 @@ export function Card({
         )}
       </div>
     </Link>
+    </div>
   );
 }

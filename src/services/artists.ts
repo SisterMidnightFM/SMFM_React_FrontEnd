@@ -16,8 +16,12 @@ export async function fetchArtists(page: number = 1, pageSize: number = 10): Pro
   try {
     const url = new URL(`${STRAPI_URL}/api/artists`);
 
-    // Populate everything
-    url.searchParams.append('populate', '*');
+    // Populate all fields including episodes for badge logic
+    url.searchParams.append('populate[0]', 'ArtistImage');
+    url.searchParams.append('populate[1]', 'tag_locations');
+    url.searchParams.append('populate[2]', 'Main_host');
+    url.searchParams.append('populate[3]', 'Main_host.Show_Episodes');
+    url.searchParams.append('populate[4]', 'episodes_guest_featured');
 
     // Sort by artist name
     url.searchParams.append('sort', 'ArtistName:asc');

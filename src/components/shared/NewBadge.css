@@ -1,0 +1,61 @@
+/**
+ * NewBadge styles - spiky circular badge positioned in top-left corner
+ */
+
+.new-badge {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 70px;
+  height: 70px;
+  z-index: 20;
+  transform: rotate(-15deg);
+}
+
+.new-badge__svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.new-badge__text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  font-family: var(--Font1);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--Colour2); /* Dark brown text */
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .new-badge {
+    width: 70px;
+    height: 70px;
+    top: -8px;
+    left: -8px;
+  }
+
+  .new-badge__text {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-badge {
+    width: 60px;
+    height: 60px;
+    top: -6px;
+    left: -6px;
+  }
+
+  .new-badge__text {
+    font-size: 0.75rem;
+  }
+}
