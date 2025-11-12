@@ -90,11 +90,17 @@ GET /api/shows?pagination[page]=1&pagination[pageSize]=10
 - `BroadcastDateTime` (datetime, required, unique)
 - `EpisodeDescription` (text, required)
 - `EpisodeImage` (media)
-- `EpisodeTracklist` (blocks)
+- `Tracklist` (component, repeatable)
 - `SoundcloudLink` (string, required)
 - `MixCloudLink` (string, required, unique)
 - `StaffPick` (boolean)
 - `StaffPickComments` (string, conditional on StaffPick)
+
+#### Component: Tracklist
+
+Each Tracklist component contains:
+- `Artist` (string)
+- `Track_Title` (string)
 
 #### Relations
 
@@ -110,11 +116,14 @@ GET /api/shows?pagination[page]=1&pagination[pageSize]=10
 GET /api/episodes?populate=*
 GET /api/episodes?populate[link_episode_to_show]=*&populate[guest_artists]=*
 GET /api/episodes?populate[tag_genres]=*&populate[tag_mood_vibes]=*&populate[tag_themes]=*
+GET /api/episodes?populate[Tracklist]=*
 GET /api/episodes?filters[StaffPick][$eq]=true
 GET /api/episodes?sort=BroadcastDateTime:desc
 GET /api/episodes?filters[BroadcastDateTime][$gte]=2024-01-01
 GET /api/episodes?pagination[page]=1&pagination[pageSize]=20
 ```
+
+**Note**: The `Tracklist` component is repeatable, allowing multiple tracks per episode. To populate the tracklist, use: `?populate[Tracklist]=*`
 
 ---
 
@@ -638,4 +647,4 @@ GET /api/schedules?filters[Date][$gte]=2024-01-01&filters[Date][$lte]=2024-01-07
 This documentation was automatically generated based on the Strapi schema files located in:
 `/src/api/*/content-types/*/schema.json`
 
-Last Updated: 2025-10-22
+Last Updated: 2025-11-12

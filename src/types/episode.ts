@@ -7,6 +7,12 @@ import type { ShowReference } from './show';
 import type { ArtistReference } from './artist';
 import type { TagGenre, TagMoodVibe, TagTheme } from './tag';
 
+export interface TrackListItem {
+  id: number;
+  Artist: string;
+  Track_Title: string;
+}
+
 export interface Episode extends StrapiTimestamps {
   id: number;
 
@@ -17,7 +23,7 @@ export interface Episode extends StrapiTimestamps {
   BroadcastDateTime: string; // ISO datetime string
 
   // Content
-  EpisodeTracklist?: StrapiRichText;
+  Tracklist?: TrackListItem[];
   SoundcloudLink: string | null;
   MixCloudLink: string | null;
 

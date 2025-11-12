@@ -71,6 +71,7 @@ export async function fetchEpisodeBySlug(slug: string): Promise<Episode | null> 
     url.searchParams.append('populate[link_episode_to_show][populate][Main_Host][populate][0]', 'ArtistImage');
     url.searchParams.append('populate[guest_artists][populate][0]', 'ArtistImage');
     url.searchParams.append('populate[EpisodeImage]', 'true');
+    url.searchParams.append('populate[Tracklist]', 'true');
     url.searchParams.append('populate[tag_genres]', 'true');
     url.searchParams.append('populate[tag_mood_vibes]', 'true');
     url.searchParams.append('populate[tag_themes]', 'true');

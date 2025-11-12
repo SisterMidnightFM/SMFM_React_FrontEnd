@@ -38,15 +38,13 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
     hour12: true
   });
 
-  // Extract tracklist text from StrapiRichText
-  const tracklistText = episode.EpisodeTracklist?.map(paragraph =>
-    paragraph.children.map(child => child.text).join('')
-  ).join('\n\n');
-
   // Get all hosts from show and combine with guest artists
   const hosts = episode.link_episode_to_show?.Main_Host || [];
   const guests = episode.guest_artists || [];
   const allArtists = [...hosts, ...guests];
+
+  // Debug: Check what the API is returning for tracklist
+  console.log('Tracklist data:', episode.Tracklist);
 
   // Handle play button clicks
   const handlePlayClick = (type: 'soundcloud' | 'mixcloud', url: string) => {
@@ -244,10 +242,16 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
       )}
 
       {/* Tracklist Section */}
-      {tracklistText && (
+      {episode.Tracklist && episode.Tracklist.length > 0 && (
         <section className="episode-detail__section">
           <h2 className="episode-detail__section-title">Tracklist</h2>
-          <div className="episode-detail__tracklist">{tracklistText}</div>
+          <div className="episode-detail__tracklist">
+            {episode.Tracklist.map((track) => (
+              <div key={track.id}>
+                {track.Artist} - {track.Track_Title}
+              </div>
+            ))}
+          </div>
         </section>
       )}
     </div>
