@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Artist } from '../../types/artist';
 import { ArtistCard } from './ArtistCard';
 import { CardGrid } from '../shared/CardGrid';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import './ArtistList.css';
 
 interface ArtistListProps {
@@ -24,6 +25,7 @@ export function ArtistList({
   onLoadMore
 }: ArtistListProps) {
   const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
+  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore || false, hasMore || false);
 
   // Sort artists based on the current sort mode
   const sortedArtists = useMemo(() => {
@@ -132,17 +134,9 @@ export function ArtistList({
         ))}
       </CardGrid>
 
-      {/* Load More Button */}
+      {/* Infinite scroll sentinel */}
       {hasMore && onLoadMore && (
-        <div className="artist-list__load-more">
-          <button
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-            className="artist-list__load-more-btn"
-          >
-            {isLoadingMore ? 'Loading...' : 'Load More Artists'}
-          </button>
-        </div>
+        <div ref={sentinelRef} className="artist-list__sentinel" aria-hidden="true" />
       )}
 
       {/* Loading indicator for load more */}

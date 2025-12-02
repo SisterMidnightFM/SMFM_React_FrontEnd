@@ -4,10 +4,17 @@ interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
   onClear: () => void;
+  onSearch?: () => void;
   placeholder?: string;
 }
 
-export function SearchBar({ value, onChange, onClear, placeholder = 'Search shows, episodes, artists...' }: SearchBarProps) {
+export function SearchBar({ value, onChange, onClear, onSearch, placeholder = 'Search shows, episodes, artists...' }: SearchBarProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && onSearch) {
+      onSearch();
+    }
+  };
+
   return (
     <div className="search-bar">
       <input
@@ -15,6 +22,7 @@ export function SearchBar({ value, onChange, onClear, placeholder = 'Search show
         className="search-bar__input"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         aria-label="Search"
       />
@@ -25,7 +33,7 @@ export function SearchBar({ value, onChange, onClear, placeholder = 'Search show
           onClick={onClear}
           aria-label="Clear search"
         >
-          ×
+          âœ•
         </button>
       )}
     </div>

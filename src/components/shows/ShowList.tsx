@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Show } from '../../types/show';
 import { ShowCard } from './ShowCard';
 import { CardGrid } from '../shared/CardGrid';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import './ShowList.css';
 
 interface ShowListProps {
@@ -24,6 +25,7 @@ export function ShowList({
   onLoadMore
 }: ShowListProps) {
   const [sortMode, setSortMode] = useState<SortMode>('recent');
+  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore || false, hasMore || false);
 
   // Helper function to get the most recent episode date for a show
   const getMostRecentEpisodeDate = (show: Show): number => {
@@ -165,17 +167,9 @@ export function ShowList({
         ))}
       </CardGrid>
 
-      {/* Load More Button */}
+      {/* Infinite scroll sentinel */}
       {hasMore && onLoadMore && (
-        <div className="show-list__load-more">
-          <button
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-            className="show-list__load-more-btn"
-          >
-            {isLoadingMore ? 'Loading...' : 'Load More Shows'}
-          </button>
-        </div>
+        <div ref={sentinelRef} className="show-list__sentinel" aria-hidden="true" />
       )}
 
       {/* Loading indicator for load more */}

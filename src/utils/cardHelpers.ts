@@ -5,8 +5,8 @@
 import type { StrapiRichText } from '../types/strapi';
 
 /**
- * Format episode broadcast date and time
- * Returns formatted string like "Jan 15, 2024 3:30 PM"
+ * Format episode broadcast date
+ * Returns formatted string like "Jan 15, 2024"
  */
 export function formatEpisodeDateTime(dateString: string): string {
   const date = new Date(dateString);
@@ -14,8 +14,6 @@ export function formatEpisodeDateTime(dateString: string): string {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
   });
 }
 

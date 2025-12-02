@@ -5,6 +5,7 @@ import type { SearchFilters, SearchResults, SearchResultItem, ContentType } from
 import type { StrapiCollectionResponse } from '../types/strapi';
 import { buildEpisodeSearchQuery, buildShowSearchQuery, buildArtistSearchQuery } from '../utils/buildSearchQuery';
 import { calculateEpisodeRelevance, calculateShowRelevance, calculateArtistRelevance } from '../utils/calculateRelevance';
+import { fuzzySearchEpisodes, fuzzySearchShows, fuzzySearchArtists } from '../utils/fuzzySearch';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
 const API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -37,8 +38,14 @@ async function searchEpisodes(
 
     const data: StrapiCollectionResponse<Episode> = await response.json();
 
+    // Apply fuzzy search if there's a query
+    let episodes = data.data;
+    if (filters.query.trim()) {
+      episodes = fuzzySearchEpisodes(episodes, filters.query);
+    }
+
     // Calculate relevance scores for each episode
-    const items: SearchResultItem[] = data.data.map((episode) => ({
+    const items: SearchResultItem[] = episodes.map((episode) => ({
       type: 'episodes' as ContentType,
       data: episode,
       relevanceScore: calculateEpisodeRelevance(episode, filters),
@@ -46,7 +53,7 @@ async function searchEpisodes(
 
     return {
       items,
-      total: data.meta.pagination.total,
+      total: episodes.length,
       hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
     };
   } catch (error) {
@@ -78,8 +85,14 @@ async function searchShows(
 
     const data: StrapiCollectionResponse<Show> = await response.json();
 
+    // Apply fuzzy search if there's a query
+    let shows = data.data;
+    if (filters.query.trim()) {
+      shows = fuzzySearchShows(shows, filters.query);
+    }
+
     // Calculate relevance scores for each show
-    const items: SearchResultItem[] = data.data.map((show) => ({
+    const items: SearchResultItem[] = shows.map((show) => ({
       type: 'shows' as ContentType,
       data: show,
       relevanceScore: calculateShowRelevance(show, filters),
@@ -87,7 +100,7 @@ async function searchShows(
 
     return {
       items,
-      total: data.meta.pagination.total,
+      total: shows.length,
       hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
     };
   } catch (error) {
@@ -119,8 +132,14 @@ async function searchArtists(
 
     const data: StrapiCollectionResponse<Artist> = await response.json();
 
+    // Apply fuzzy search if there's a query
+    let artists = data.data;
+    if (filters.query.trim()) {
+      artists = fuzzySearchArtists(artists, filters.query);
+    }
+
     // Calculate relevance scores for each artist
-    const items: SearchResultItem[] = data.data.map((artist) => ({
+    const items: SearchResultItem[] = artists.map((artist) => ({
       type: 'artists' as ContentType,
       data: artist,
       relevanceScore: calculateArtistRelevance(artist, filters),
@@ -128,7 +147,7 @@ async function searchArtists(
 
     return {
       items,
-      total: data.meta.pagination.total,
+      total: artists.length,
       hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
     };
   } catch (error) {

@@ -59,8 +59,12 @@ export function ShowDetail({ show }: ShowDetailProps) {
               alt={show.ShowImage?.alternativeText || show.ShowName}
             />
           ) : (
-            <div className="show-detail__placeholder">
-              <span>SHOW IMAGE</span>
+            <div className="show-detail__placeholder show-detail__placeholder--logo">
+              <img
+                src="/Images/SMFM LOGO SVG.svg"
+                alt="SMFM Logo"
+                className="show-detail__placeholder-logo"
+              />
             </div>
           )}
         </div>

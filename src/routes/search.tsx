@@ -95,7 +95,7 @@ function SearchPage() {
       <div className="search-page__filters">
         {/* Text Search Bar */}
         <div className="search-page__filter-row">
-          <SearchBar value={filters.query} onChange={updateQuery} onClear={clearQuery} />
+          <SearchBar value={filters.query} onChange={updateQuery} onClear={clearQuery} onSearch={handleSearch} />
         </div>
 
         {/* Content Type Toggle */}

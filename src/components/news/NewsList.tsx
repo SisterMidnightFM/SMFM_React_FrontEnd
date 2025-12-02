@@ -1,6 +1,7 @@
 import type { News } from '../../types/news';
 import { NewsCard } from './NewsCard';
 import { CardGrid } from '../shared/CardGrid';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import './NewsList.css';
 
 interface NewsListProps {
@@ -20,6 +21,7 @@ export function NewsList({
   hasMore,
   onLoadMore
 }: NewsListProps) {
+  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore || false, hasMore || false);
 
   if (isLoading && news.length === 0) {
     return (
@@ -61,17 +63,9 @@ export function NewsList({
         ))}
       </CardGrid>
 
-      {/* Load More Button */}
+      {/* Infinite scroll sentinel */}
       {hasMore && onLoadMore && (
-        <div className="news-list__load-more">
-          <button
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-            className="news-list__load-more-btn"
-          >
-            {isLoadingMore ? 'Loading...' : 'Load More News'}
-          </button>
-        </div>
+        <div ref={sentinelRef} className="news-list__sentinel" aria-hidden="true" />
       )}
 
       {/* Loading indicator for load more */}

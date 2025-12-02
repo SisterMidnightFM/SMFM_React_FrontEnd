@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Episode } from '../../types/episode';
 import { EpisodeCard } from './EpisodeCard';
 import { CardGrid } from '../shared/CardGrid';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import './EpisodeList.css';
 
 interface EpisodeListProps {
@@ -24,6 +25,7 @@ export function EpisodeList({
   onLoadMore
 }: EpisodeListProps) {
   const [sortMode, setSortMode] = useState<SortMode>('recent');
+  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore || false, hasMore || false);
 
   // Sort episodes based on the current sort mode
   const sortedEpisodes = useMemo(() => {
@@ -152,17 +154,9 @@ export function EpisodeList({
         ))}
       </CardGrid>
 
-      {/* Load More Button */}
+      {/* Infinite scroll sentinel */}
       {hasMore && onLoadMore && (
-        <div className="episode-list__load-more">
-          <button
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-            className="episode-list__load-more-btn"
-          >
-            {isLoadingMore ? 'Loading...' : 'Load More Episodes'}
-          </button>
-        </div>
+        <div ref={sentinelRef} className="episode-list__sentinel" aria-hidden="true" />
       )}
 
       {/* Loading indicator for load more */}

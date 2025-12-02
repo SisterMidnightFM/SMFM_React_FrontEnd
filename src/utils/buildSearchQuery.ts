@@ -20,16 +20,14 @@ export function buildEpisodeSearchQuery(
   // Sort by broadcast date (newest first)
   params.append('sort', 'BroadcastDateTime:desc');
 
-  // Build OR filters array for text search
-  const orFilters: string[] = [];
-
-  // Text search: ShowName, EpisodeTitle, EpisodeDescription
+  // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    const searchText = filters.query.trim();
-    orFilters.push(`filters[$or][0][EpisodeTitle][$containsi]=${encodeURIComponent(searchText)}`);
-    orFilters.push(`filters[$or][1][EpisodeDescription][$containsi]=${encodeURIComponent(searchText)}`);
-    orFilters.push(`filters[$or][2][link_episode_to_show][ShowName][$containsi]=${encodeURIComponent(searchText)}`);
+    params.set('pagination[pageSize]', '50'); // Get more results for fuzzy matching
   }
+
+  // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
+  // This allows fuzzy matching to work on typos and partial matches
+  // (Server-side containsi filter would exclude results before fuzzy search sees them)
 
   // Date range filter (only for episodes)
   if (filters.dateRange.start) {
@@ -58,12 +56,6 @@ export function buildEpisodeSearchQuery(
     });
   }
 
-  // Add OR filters to params
-  orFilters.forEach((filter) => {
-    const [key, value] = filter.split('=');
-    params.append(key, decodeURIComponent(value));
-  });
-
   return params;
 }
 
@@ -87,21 +79,12 @@ export function buildShowSearchQuery(
   // Sort alphabetically
   params.append('sort', 'ShowName:asc');
 
-  // Build OR filters array for text search
-  const orFilters: string[] = [];
-
-  // Text search: ShowName, ShowDescription
+  // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    const searchText = filters.query.trim();
-    orFilters.push(`filters[$or][0][ShowName][$containsi]=${encodeURIComponent(searchText)}`);
-    orFilters.push(`filters[$or][1][ShowDescription][$containsi]=${encodeURIComponent(searchText)}`);
+    params.set('pagination[pageSize]', '50'); // Get more results for fuzzy matching
   }
 
-  // Add OR filters to params
-  orFilters.forEach((filter) => {
-    const [key, value] = filter.split('=');
-    params.append(key, decodeURIComponent(value));
-  });
+  // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
 
   return params;
 }
@@ -126,15 +109,12 @@ export function buildArtistSearchQuery(
   // Sort alphabetically
   params.append('sort', 'ArtistName:asc');
 
-  // Build OR filters array for text search
-  const orFilters: string[] = [];
-
-  // Text search: ArtistName, ArtistBio
+  // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    const searchText = filters.query.trim();
-    orFilters.push(`filters[$or][0][ArtistName][$containsi]=${encodeURIComponent(searchText)}`);
-    orFilters.push(`filters[$or][1][ArtistBio][$containsi]=${encodeURIComponent(searchText)}`);
+    params.set('pagination[pageSize]', '50'); // Get more results for fuzzy matching
   }
+
+  // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
 
   // Location filter (only for artists)
   if (filters.locationIds.length > 0) {

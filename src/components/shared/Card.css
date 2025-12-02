@@ -159,6 +159,17 @@
   font-weight: bold;
 }
 
+.card__placeholder--logo {
+  padding: 2rem;
+}
+
+.card__placeholder-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
 /* Content Section */
 .card__content {
   padding: 1.5rem;

@@ -6,6 +6,7 @@ import { EpisodeCard } from '../episodes/EpisodeCard';
 import { ShowCard } from '../shows/ShowCard';
 import { ArtistCard } from '../artists/ArtistCard';
 import { CardGrid } from '../shared/CardGrid';
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
 import './SearchResults.css';
 
 interface SearchResultsProps {
@@ -27,6 +28,8 @@ export function SearchResults({
   onLoadMore,
   hasSearched,
 }: SearchResultsProps) {
+  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore, hasMore);
+
   // Empty state - no search performed yet
   if (!hasSearched && !isLoading) {
     return (
@@ -95,15 +98,15 @@ export function SearchResults({
         })}
       </CardGrid>
 
+      {/* Infinite scroll sentinel */}
       {hasMore && (
-        <div className="search-results__load-more">
-          <button
-            className="search-results__load-more-button"
-            onClick={onLoadMore}
-            disabled={isLoadingMore}
-          >
-            {isLoadingMore ? 'Loading...' : 'Load More'}
-          </button>
+        <div ref={sentinelRef} className="search-results__sentinel" aria-hidden="true" />
+      )}
+
+      {/* Loading indicator */}
+      {isLoadingMore && (
+        <div className="search-results__loading-more">
+          <p>Loading more results...</p>
         </div>
       )}
     </div>

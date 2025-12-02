@@ -188,8 +188,12 @@ export function Card({
             className="card__image"
           />
         ) : (
-          <div className="card__placeholder">
-            <span>{imagePlaceholder}</span>
+          <div className="card__placeholder card__placeholder--logo">
+            <img
+              src="/Images/SMFM LOGO SVG.svg"
+              alt="SMFM Logo"
+              className="card__placeholder-logo"
+            />
           </div>
         )}
       </div>

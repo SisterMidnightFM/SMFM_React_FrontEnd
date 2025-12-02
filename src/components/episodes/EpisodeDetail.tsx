@@ -24,18 +24,13 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
   const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
   const fullImageUrl = imageUrl ? `${STRAPI_URL}${imageUrl}` : null;
 
-  // Format broadcast date and time
+  // Format broadcast date
   const broadcastDate = new Date(episode.BroadcastDateTime);
   const formattedDate = broadcastDate.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
     year: 'numeric'
-  });
-  const formattedTime = broadcastDate.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
   });
 
   // Get all hosts from show and combine with guest artists
@@ -87,8 +82,12 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
               alt={episodeImage?.alternativeText || episode.EpisodeTitle}
             />
           ) : (
-            <div className="episode-detail__placeholder">
-              <span>EPISODE IMAGE</span>
+            <div className="episode-detail__placeholder episode-detail__placeholder--logo">
+              <img
+                src="/Images/SMFM LOGO SVG.svg"
+                alt="SMFM Logo"
+                className="episode-detail__placeholder-logo"
+              />
             </div>
           )}
         </div>
@@ -118,10 +117,9 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
             </div>
           )}
 
-          {/* Broadcast Date/Time */}
+          {/* Broadcast Date */}
           <div className="episode-detail__broadcast">
             <div className="episode-detail__date">{formattedDate}</div>
-            <div className="episode-detail__time">{formattedTime}</div>
           </div>
 
           {/* View Show Page Button */}
