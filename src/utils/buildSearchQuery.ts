@@ -123,12 +123,6 @@ export function buildArtistSearchQuery(
     });
   }
 
-  // Add OR filters to params
-  orFilters.forEach((filter) => {
-    const [key, value] = filter.split('=');
-    params.append(key, decodeURIComponent(value));
-  });
-
   return params;
 }
 

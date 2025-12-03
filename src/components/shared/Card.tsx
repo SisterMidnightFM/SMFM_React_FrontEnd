@@ -133,7 +133,6 @@ export function Card({
   to,
   params,
   image,
-  imagePlaceholder = 'IMAGE',
   circularImage = false,
   headerText,
   descriptiveText,

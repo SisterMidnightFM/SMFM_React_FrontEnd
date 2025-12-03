@@ -1,4 +1,4 @@
-import Fuse from 'fuse.js';
+import Fuse, { type IFuseOptions } from 'fuse.js';
 import type { Episode } from '../types/episode';
 import type { Show } from '../types/show';
 import type { Artist } from '../types/artist';
@@ -6,7 +6,7 @@ import type { Artist } from '../types/artist';
 /**
  * Fuzzy search configuration for episodes
  */
-const episodeSearchOptions: Fuse.IFuseOptions<Episode> = {
+const episodeSearchOptions: IFuseOptions<Episode> = {
   includeScore: true,
   threshold: 0.4, // 0.0 = perfect match, 1.0 = match anything
   keys: [
@@ -19,7 +19,7 @@ const episodeSearchOptions: Fuse.IFuseOptions<Episode> = {
 /**
  * Fuzzy search configuration for shows
  */
-const showSearchOptions: Fuse.IFuseOptions<Show> = {
+const showSearchOptions: IFuseOptions<Show> = {
   includeScore: true,
   threshold: 0.6,
   keys: [
@@ -31,7 +31,7 @@ const showSearchOptions: Fuse.IFuseOptions<Show> = {
 /**
  * Fuzzy search configuration for artists
  */
-const artistSearchOptions: Fuse.IFuseOptions<Artist> = {
+const artistSearchOptions: IFuseOptions<Artist> = {
   includeScore: true,
   threshold: 0.6,
   keys: [
@@ -82,7 +82,7 @@ export function fuzzySearchArtists(artists: Artist[], query: string): Artist[] {
 /**
  * Calculate fuzzy match score for an item (0-100, higher is better)
  */
-export function calculateFuzzyScore<T>(item: T, query: string, options: Fuse.IFuseOptions<T>): number {
+export function calculateFuzzyScore<T>(item: T, query: string, options: IFuseOptions<T>): number {
   if (!query.trim()) {
     return 50; // Neutral score when no query
   }
