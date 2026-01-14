@@ -22,7 +22,7 @@ export function buildEpisodeSearchQuery(
 
   // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    params.set('pagination[pageSize]', '50'); // Get more results for fuzzy matching
+    params.set('pagination[pageSize]', '1000'); // Get many more results for fuzzy matching
   }
 
   // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
@@ -81,7 +81,7 @@ export function buildShowSearchQuery(
 
   // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    params.set('pagination[pageSize]', '50'); // Get more results for fuzzy matching
+    params.set('pagination[pageSize]', '1000'); // Get many more results for fuzzy matching
   }
 
   // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
@@ -111,7 +111,7 @@ export function buildArtistSearchQuery(
 
   // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    params.set('pagination[pageSize]', '50'); // Get more results for fuzzy matching
+    params.set('pagination[pageSize]', '1000'); // Get many more results for fuzzy matching
   }
 
   // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it

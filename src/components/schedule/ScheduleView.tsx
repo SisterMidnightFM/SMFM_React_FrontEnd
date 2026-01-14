@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
-import { fetchScheduleByDate } from '../../services/schedule';
-import type { Schedule } from '../../types/schedule';
+import { useSchedule } from '../../hooks/useSchedule';
 import './ScheduleView.css';
 
 /**
@@ -55,28 +54,12 @@ function isToday(dateString: string): boolean {
 
 export function ScheduleView() {
   const [selectedDate, setSelectedDate] = useState<string>(formatDateISO(new Date()));
-  const [schedule, setSchedule] = useState<Schedule | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { schedule, isLoading, error, prefetchAdjacentDays } = useSchedule(selectedDate);
 
-  // Load schedule when date changes
+  // Prefetch adjacent days when date changes
   useEffect(() => {
-    async function loadSchedule() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await fetchScheduleByDate(selectedDate);
-        setSchedule(data);
-      } catch (err) {
-        console.error('Failed to load schedule:', err);
-        setError('Failed to load schedule');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadSchedule();
-  }, [selectedDate]);
+    prefetchAdjacentDays(selectedDate);
+  }, [selectedDate, prefetchAdjacentDays]);
 
   // Navigation handlers
   const goToPreviousDay = () => {
@@ -135,7 +118,7 @@ export function ScheduleView() {
 
         {error && (
           <div className="schedule-view__error">
-            <p>{error}</p>
+            <p>Failed to load schedule</p>
           </div>
         )}
 

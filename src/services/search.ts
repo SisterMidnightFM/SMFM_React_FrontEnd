@@ -53,7 +53,7 @@ async function searchEpisodes(
 
     return {
       items,
-      total: episodes.length,
+      total: data.meta.pagination.total, // Use the total from Strapi, not filtered length
       hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
     };
   } catch (error) {
@@ -100,7 +100,7 @@ async function searchShows(
 
     return {
       items,
-      total: shows.length,
+      total: data.meta.pagination.total, // Use the total from Strapi, not filtered length
       hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
     };
   } catch (error) {
@@ -147,7 +147,7 @@ async function searchArtists(
 
     return {
       items,
-      total: artists.length,
+      total: data.meta.pagination.total, // Use the total from Strapi, not filtered length
       hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
     };
   } catch (error) {
