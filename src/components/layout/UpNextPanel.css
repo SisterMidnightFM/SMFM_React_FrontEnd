@@ -125,6 +125,27 @@
   opacity: 0.8;
 }
 
+.up-next-panel__next-show {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.up-next-panel__next-label {
+  font-family: var(--Font1);
+  font-size: 0.85rem;
+  color: var(--Colour1);
+  opacity: 0.8;
+}
+
+.up-next-panel__next-datetime {
+  font-family: var(--Font1);
+  font-size: 0.9rem;
+  color: var(--Colour1);
+  font-weight: bold;
+}
+
 .up-next-panel__loading,
 .up-next-panel__error {
   font-family: var(--Font1);

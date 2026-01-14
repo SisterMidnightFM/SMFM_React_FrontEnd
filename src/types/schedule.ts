@@ -19,3 +19,12 @@ export interface Schedule extends StrapiTimestamps {
   Date: string; // Date format: YYYY-MM-DD
   Show_Slots?: ShowSlot[];
 }
+
+// Upcoming show with date/time info for display
+export interface UpcomingShow {
+  showName: string;
+  showSlug?: string;
+  dateTime: Date;
+  formattedDate: string; // e.g., "Wed 23rd Jan"
+  formattedTime: string; // e.g., "4pm"
+}

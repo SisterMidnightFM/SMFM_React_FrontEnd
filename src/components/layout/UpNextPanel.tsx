@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { fetchRecentNews } from '../../services/news';
-import { fetchScheduleForToday } from '../../services/schedule';
+import { fetchScheduleForToday, fetchNextUpcomingShow } from '../../services/schedule';
 import type { News } from '../../types/news';
-import type { Schedule } from '../../types/schedule';
+import type { Schedule, UpcomingShow } from '../../types/schedule';
 import './UpNextPanel.css';
 
 /**
@@ -27,6 +27,7 @@ function formatTime(timeString: string): string {
 export const UpNextPanel: React.FC = () => {
   const [news, setNews] = useState<News[]>([]);
   const [schedule, setSchedule] = useState<Schedule | null>(null);
+  const [nextShow, setNextShow] = useState<UpcomingShow | null>(null);
   const [isLoadingNews, setIsLoadingNews] = useState(true);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(true);
   const [newsError, setNewsError] = useState<string | null>(null);
@@ -51,6 +52,12 @@ export const UpNextPanel: React.FC = () => {
         setIsLoadingSchedule(true);
         const data = await fetchScheduleForToday();
         setSchedule(data);
+
+        // If no schedule for today, fetch the next upcoming show
+        if (!data || !data.Show_Slots || data.Show_Slots.length === 0) {
+          const upcoming = await fetchNextUpcomingShow();
+          setNextShow(upcoming);
+        }
       } catch (err) {
         console.error('Failed to load schedule:', err);
         setScheduleError('Failed to load schedule');
@@ -101,7 +108,27 @@ export const UpNextPanel: React.FC = () => {
           </ul>
         ) : (
           !isLoadingSchedule && !scheduleError && (
-            <p className="up-next-panel__loading">No schedule available for today</p>
+            nextShow ? (
+              <div className="up-next-panel__next-show">
+                <span className="up-next-panel__next-label">Next live broadcast will be:</span>
+                {nextShow.showSlug ? (
+                  <Link
+                    to="/shows/$slug"
+                    params={{ slug: nextShow.showSlug }}
+                    className="up-next-panel__show-link"
+                  >
+                    <span className="up-next-panel__show">{nextShow.showName}</span>
+                  </Link>
+                ) : (
+                  <span className="up-next-panel__show">{nextShow.showName}</span>
+                )}
+                <span className="up-next-panel__next-datetime">
+                  {nextShow.formattedDate} {nextShow.formattedTime}
+                </span>
+              </div>
+            ) : (
+              <p className="up-next-panel__loading">No upcoming shows scheduled</p>
+            )
           )
         )}
       </section>

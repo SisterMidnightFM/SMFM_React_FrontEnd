@@ -124,7 +124,12 @@ export function ScheduleView() {
 
         {!isLoading && !error && !schedule && (
           <div className="schedule-view__empty">
-            <p>No schedule published for this date.</p>
+            <p>
+              SMFM broadcasts Tuesday to Thursday. There's nothing to see here but check out the{' '}
+              <Link to="/episodes" className="schedule-view__archive-link">
+                episode archive
+              </Link>
+            </p>
           </div>
         )}
 

@@ -176,6 +176,16 @@
   opacity: 0.7;
 }
 
+.schedule-view__archive-link {
+  color: var(--Colour2);
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.schedule-view__archive-link:hover {
+  opacity: 0.7;
+}
+
 /* Tablet */
 @media (max-width: 1024px) {
   .schedule-view__slot {
