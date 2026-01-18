@@ -48,7 +48,7 @@ export function UsernameSettings() {
     <div className="username-settings username-settings--editing">
       <div className="username-settings__form">
         <label htmlFor="username-input" className="username-settings__label">
-          Username:
+          USERNAME:
         </label>
         <input
           id="username-input"

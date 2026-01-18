@@ -68,7 +68,7 @@
   color: var(--Colour2);
   border-radius: 4px;
   font-size: 14px;
-  font-family: var(--Font2);
+  font-family: var(--Font1);
   transition: border-color 0.2s;
 }
 

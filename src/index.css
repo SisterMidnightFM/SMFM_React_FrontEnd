@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: 'SisterMidnight-Regular';
-  src: url('./assets/fonts/SisterMidnight-Regular.otf') format('opentype');
+  src: url('./assets/fonts/SisterMidnight-Regular.ttf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
