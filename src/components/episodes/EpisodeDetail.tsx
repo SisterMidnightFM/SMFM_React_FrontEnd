@@ -38,9 +38,6 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
   const guests = episode.guest_artists || [];
   const allArtists = [...hosts, ...guests];
 
-  // Debug: Check what the API is returning for tracklist
-  console.log('Tracklist data:', episode.Tracklist);
-
   // Handle play button clicks
   const handlePlayClick = (type: 'soundcloud' | 'mixcloud', url: string) => {
     // Pause radio if playing

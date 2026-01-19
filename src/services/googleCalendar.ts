@@ -51,7 +51,6 @@ export async function fetchCalendarEvents(
     }
 
     const data: GoogleCalendarListResponse = await response.json();
-    console.log('Google Calendar API response:', JSON.stringify(data, null, 2));
     return data.items || [];
   } catch (error) {
     console.error('Error fetching calendar events:', error);
