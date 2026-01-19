@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchAllTags } from '../services/tags';
 
 /**
- * Hook for fetching all tags (genres, moods, themes, locations)
+ * Hook for fetching all tags (genres, themes, locations)
  * Uses longer staleTime since tags rarely change
  */
 export function useTags() {

@@ -73,7 +73,6 @@ export async function fetchEpisodeBySlug(slug: string): Promise<Episode | null> 
     url.searchParams.append('populate[EpisodeImage]', 'true');
     url.searchParams.append('populate[Tracklist]', 'true');
     url.searchParams.append('populate[tag_genres]', 'true');
-    url.searchParams.append('populate[tag_mood_vibes]', 'true');
     url.searchParams.append('populate[tag_themes]', 'true');
 
     const response = await fetch(url.toString(), { headers });
@@ -131,7 +130,7 @@ export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
  * Fetch episodes filtered by a specific tag
  */
 export async function fetchEpisodesByTag(
-  tagType: 'genre' | 'mood' | 'theme',
+  tagType: 'genre' | 'theme',
   tagValue: string
 ): Promise<Episode[]> {
   try {
@@ -140,7 +139,6 @@ export async function fetchEpisodesByTag(
     // Map tag type to Strapi field name and filter accordingly
     const tagFieldMap = {
       genre: { relation: 'tag_genres', field: 'Genre' },
-      mood: { relation: 'tag_mood_vibes', field: 'Mood_or_Vibe' },
       theme: { relation: 'tag_themes', field: 'Theme' }
     };
 

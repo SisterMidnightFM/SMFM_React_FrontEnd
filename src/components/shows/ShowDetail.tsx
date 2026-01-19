@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { Show } from '../../types/show';
 import { fetchArtistBySlug } from '../../services/artists';
 import { fetchEpisodeBySlug } from '../../services/episodes';
+import { useNextBroadcast } from '../../hooks/useNextBroadcast';
 import './ShowDetail.css';
 
 interface ShowDetailProps {
@@ -11,6 +12,10 @@ interface ShowDetailProps {
 
 export function ShowDetail({ show }: ShowDetailProps) {
   const queryClient = useQueryClient();
+
+  // Fetch next broadcast for this show
+  const { data: nextBroadcast } = useNextBroadcast(show.ShowName, show.ShowSlug);
+
   // Get show image URL
   const imageUrl = show.ShowImage?.formats?.large?.url || show.ShowImage?.url;
   const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
@@ -78,6 +83,16 @@ export function ShowDetail({ show }: ShowDetailProps) {
             <div className="show-detail__schedule">
               <img src="/icons/calendar.svg" alt="" className="show-detail__schedule-icon" />
               {broadcastSchedule}
+            </div>
+          )}
+
+          {/* Next Broadcast */}
+          {nextBroadcast && (
+            <div className="show-detail__next-broadcast">
+              <span className="show-detail__next-broadcast-label">Next Broadcast</span>
+              <span className="show-detail__next-broadcast-datetime">
+                {nextBroadcast.formattedDate} at {nextBroadcast.formattedTime}
+              </span>
             </div>
           )}
 

@@ -5,7 +5,7 @@
 import type { StrapiTimestamps, StrapiImage, StrapiRichText } from './strapi';
 import type { ShowReference } from './show';
 import type { ArtistReference } from './artist';
-import type { TagGenre, TagMoodVibe, TagTheme } from './tag';
+import type { TagGenre, TagTheme } from './tag';
 
 export interface TrackListItem {
   id: number;
@@ -43,7 +43,6 @@ export interface Episode extends StrapiTimestamps {
 
   // Tags
   tag_genres?: TagGenre[];
-  tag_mood_vibes?: TagMoodVibe[];
   tag_themes?: TagTheme[];
 }
 

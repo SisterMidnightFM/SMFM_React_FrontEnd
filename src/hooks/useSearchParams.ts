@@ -35,10 +35,6 @@ export function useSearchParams() {
         ? (params.genres as string).split(',').map(Number).filter((n) => !isNaN(n))
         : defaultSearchFilters.genreIds,
 
-      moodIds: params.moods
-        ? (params.moods as string).split(',').map(Number).filter((n) => !isNaN(n))
-        : defaultSearchFilters.moodIds,
-
       themeIds: params.themes
         ? (params.themes as string).split(',').map(Number).filter((n) => !isNaN(n))
         : defaultSearchFilters.themeIds,
@@ -75,10 +71,6 @@ export function useSearchParams() {
 
       if (filters.genreIds.length > 0) {
         params.genres = filters.genreIds.join(',');
-      }
-
-      if (filters.moodIds.length > 0) {
-        params.moods = filters.moodIds.join(',');
       }
 
       if (filters.themeIds.length > 0) {

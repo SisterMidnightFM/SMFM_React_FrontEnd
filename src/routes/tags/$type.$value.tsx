@@ -15,8 +15,8 @@ function TaggedEpisodesPage() {
   const [error, setError] = useState<Error | null>(null);
 
   // Validate tag type
-  const isValidTagType = (t: string): t is 'genre' | 'mood' | 'theme' => {
-    return t === 'genre' || t === 'mood' || t === 'theme';
+  const isValidTagType = (t: string): t is 'genre' | 'theme' => {
+    return t === 'genre' || t === 'theme';
   };
 
   useEffect(() => {
@@ -67,7 +67,7 @@ function TaggedEpisodesPage() {
       <div className="tagged-episodes-page">
         <div className="tagged-episodes-page__error">
           <h3>Invalid tag type</h3>
-          <p>Tag type must be one of: genre, mood, or theme</p>
+          <p>Tag type must be one of: genre or theme</p>
         </div>
       </div>
     );

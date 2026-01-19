@@ -29,7 +29,6 @@ function SearchPage() {
   // Load tags using TanStack Query
   const { data: tagsData, isLoading: tagsLoading } = useTags();
   const genres = tagsData?.genres ?? [];
-  const moods = tagsData?.moods ?? [];
   const themes = tagsData?.themes ?? [];
 
   // Search query (only runs when hasSearched is true)
@@ -73,10 +72,6 @@ function SearchPage() {
     setFilters({ ...filters, genreIds });
   };
 
-  const updateMoods = (moodIds: number[]) => {
-    setFilters({ ...filters, moodIds });
-  };
-
   const updateThemes = (themeIds: number[]) => {
     setFilters({ ...filters, themeIds });
   };
@@ -118,13 +113,10 @@ function SearchPage() {
         <div className="search-page__filter-row">
           <FilterDropdowns
             genres={genres}
-            moods={moods}
             themes={themes}
             selectedGenreIds={filters.genreIds}
-            selectedMoodIds={filters.moodIds}
             selectedThemeIds={filters.themeIds}
             onGenreChange={updateGenres}
-            onMoodChange={updateMoods}
             onThemeChange={updateThemes}
             isLoading={tagsLoading}
           />

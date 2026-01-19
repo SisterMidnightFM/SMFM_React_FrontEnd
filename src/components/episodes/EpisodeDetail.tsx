@@ -148,16 +148,6 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
             {genre.Genre}
           </Link>
         ))}
-        {episode.tag_mood_vibes?.map((mood) => (
-          <Link
-            key={mood.id}
-            to="/tags/$type/$value"
-            params={{ type: 'mood', value: encodeURIComponent(mood.Mood_or_Vibe) }}
-            className="episode-detail__tag episode-detail__tag--mood"
-          >
-            {mood.Mood_or_Vibe}
-          </Link>
-        ))}
         {episode.tag_themes?.map((theme) => (
           <Link
             key={theme.id}

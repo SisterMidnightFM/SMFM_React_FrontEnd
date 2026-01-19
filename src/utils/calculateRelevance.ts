@@ -35,15 +35,6 @@ export function calculateEpisodeRelevance(
     score += matchCount * 3;
   }
 
-  // Mood tag matches
-  if (filters.moodIds.length > 0 && episode.tag_mood_vibes) {
-    const episodeMoodIds = episode.tag_mood_vibes.map((m) => m.id);
-    const matchCount = filters.moodIds.filter((id) =>
-      episodeMoodIds.includes(id)
-    ).length;
-    score += matchCount * 3;
-  }
-
   // Theme tag matches
   if (filters.themeIds.length > 0 && episode.tag_themes) {
     const episodeThemeIds = episode.tag_themes.map((t) => t.id);

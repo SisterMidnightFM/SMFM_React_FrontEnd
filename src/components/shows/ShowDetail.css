@@ -83,6 +83,34 @@
   color: var(--Colour2);
 }
 
+/* Next Broadcast */
+.show-detail__next-broadcast {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--Colour2);
+  border-radius: 12px;
+  align-self: flex-start;
+}
+
+.show-detail__next-broadcast-label {
+  font-family: var(--Font1);
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--Colour1);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.show-detail__next-broadcast-datetime {
+  font-family: var(--Font1);
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--Colour1);
+}
+
 .show-detail__host-section {
   display: flex;
   flex-direction: column;
@@ -230,6 +258,10 @@
 
   .show-detail__schedule {
     font-size: 1.1rem;
+  }
+
+  .show-detail__next-broadcast {
+    align-self: stretch;
   }
 
   .show-detail__section-title {

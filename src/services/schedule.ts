@@ -7,7 +7,7 @@ import type { Schedule, ShowSlot, UpcomingShow } from '../types/schedule';
 import type { ShowReference } from '../types/show';
 import type { GoogleCalendarEvent } from '../types/googleCalendar';
 import { fetchCalendarEventsForDate, fetchCalendarEvents } from './googleCalendar';
-import { buildShowLookup, findShowByName, findShowBySlug } from './showLookup';
+import { buildShowLookup, findShowByName, findShowBySlug, doesEventMatchShow } from './showLookup';
 
 /**
  * Get today's date in YYYY-MM-DD format
@@ -295,6 +295,77 @@ export async function fetchNextUpcomingShow(): Promise<UpcomingShow | null> {
     };
   } catch (error) {
     console.error('Error fetching next upcoming show:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch the next broadcast for a specific show
+ * Looks up to 5 weeks (35 days) ahead to find the next scheduled broadcast
+ * Uses the same fuzzy matching as the schedule page to find matching events
+ * @param showName - The name of the show to search for
+ * @param showSlug - The slug of the show (for exact extended property matching)
+ * @returns UpcomingShow if found, null if no upcoming broadcast
+ */
+export async function fetchNextBroadcastForShow(
+  showName: string,
+  showSlug: string
+): Promise<UpcomingShow | null> {
+  try {
+    const today = new Date();
+    const fiveWeeksLater = new Date(today);
+    fiveWeeksLater.setDate(today.getDate() + 35);
+
+    const startDate = getTodayDate();
+    const endDate = `${fiveWeeksLater.getFullYear()}-${String(fiveWeeksLater.getMonth() + 1).padStart(2, '0')}-${String(fiveWeeksLater.getDate()).padStart(2, '0')}`;
+
+    // Fetch calendar events and ensure show lookup is initialized (for fuzzy matching)
+    const [events] = await Promise.all([
+      fetchCalendarEvents(startDate, endDate),
+      buildShowLookup(), // Ensures fuseMatcher is initialized
+    ]);
+
+    if (!events || events.length === 0) {
+      return null;
+    }
+
+    // Find the first future event that matches this show
+    const now = new Date();
+
+    for (const event of events) {
+      const eventStart = new Date(event.start.dateTime);
+
+      // Skip past events
+      if (eventStart <= now) {
+        continue;
+      }
+
+      // Check 1: Exact slug match via extended properties
+      if (event.extendedProperties?.shared?.showSlug === showSlug) {
+        return {
+          showName: showName,
+          showSlug: showSlug,
+          dateTime: eventStart,
+          formattedDate: formatDateShort(eventStart),
+          formattedTime: formatTimeFromDate(eventStart),
+        };
+      }
+
+      // Check 2: Use the same fuzzy matching as the schedule page
+      if (event.summary && doesEventMatchShow(event.summary, showName, showSlug)) {
+        return {
+          showName: showName,
+          showSlug: showSlug,
+          dateTime: eventStart,
+          formattedDate: formatDateShort(eventStart),
+          formattedTime: formatTimeFromDate(eventStart),
+        };
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching next broadcast for show:', error);
     throw error;
   }
 }

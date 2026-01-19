@@ -105,6 +105,36 @@ export function findShowByName(
 }
 
 /**
+ * Check if a calendar event summary matches a specific show name
+ * Uses the same fuzzy matching logic as findShowByName but in reverse
+ * @param eventSummary - The calendar event summary/title
+ * @param showName - The show name to match against
+ * @param showSlug - The show slug (used for exact extended property matching)
+ * @returns true if the event matches the show
+ */
+export function doesEventMatchShow(
+  eventSummary: string,
+  showName: string,
+  showSlug: string
+): boolean {
+  // Exact name match (case-insensitive)
+  if (eventSummary.toLowerCase() === showName.toLowerCase()) {
+    return true;
+  }
+
+  // Use the existing fuseMatcher if available
+  if (fuseMatcher) {
+    const results = fuseMatcher.search(eventSummary);
+    if (results.length > 0 && results[0].score !== undefined && results[0].score < 0.3) {
+      // Check if the matched show is the one we're looking for
+      return results[0].item.ShowSlug === showSlug;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Clear the show lookup cache
  * Call this if shows are updated and you need fresh data
  */

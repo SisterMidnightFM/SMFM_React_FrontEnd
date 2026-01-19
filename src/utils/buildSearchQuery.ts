@@ -44,12 +44,6 @@ export function buildEpisodeSearchQuery(
     });
   }
 
-  if (filters.moodIds.length > 0) {
-    filters.moodIds.forEach((id, index) => {
-      params.append(`filters[tag_mood_vibes][id][$in][${index}]`, id.toString());
-    });
-  }
-
   if (filters.themeIds.length > 0) {
     filters.themeIds.forEach((id, index) => {
       params.append(`filters[tag_themes][id][$in][${index}]`, id.toString());

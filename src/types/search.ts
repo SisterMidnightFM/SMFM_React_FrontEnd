@@ -24,7 +24,6 @@ export interface SearchFilters {
 
   // Tag filters (multi-select)
   genreIds: number[];
-  moodIds: number[];
   themeIds: number[];
   locationIds: number[];
 }
@@ -54,7 +53,6 @@ export const defaultSearchFilters: SearchFilters = {
     end: null,
   },
   genreIds: [],
-  moodIds: [],
   themeIds: [],
   locationIds: [],
 };

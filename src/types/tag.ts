@@ -10,12 +10,6 @@ export interface TagGenre extends StrapiTimestamps {
   Genre: string; // e.g., "bass", "Club", "Breakbeat", "House", "Techno", "Jazz", "Spiritual", "Baile Funk"
 }
 
-// Mood/Vibe tags
-export interface TagMoodVibe extends StrapiTimestamps {
-  id: number;
-  Mood_or_Vibe: string; // e.g., "Energetic", "Sunny", "Chill", "Downtempo"
-}
-
 // Theme tags
 export interface TagTheme extends StrapiTimestamps {
   id: number;
@@ -32,6 +26,5 @@ export interface TagLocation extends StrapiTimestamps {
 // Combined tag interface for episodes
 export interface EpisodeTags {
   tag_genres?: TagGenre[];
-  tag_mood_vibes?: TagMoodVibe[];
   tag_themes?: TagTheme[];
 }

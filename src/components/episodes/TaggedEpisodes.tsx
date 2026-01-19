@@ -5,7 +5,7 @@ import './TaggedEpisodes.css';
 
 interface TaggedEpisodesProps {
   episodes: Episode[];
-  tagType: 'genre' | 'mood' | 'theme';
+  tagType: 'genre' | 'theme';
   tagValue: string;
 }
 
@@ -13,7 +13,6 @@ export function TaggedEpisodes({ episodes, tagType, tagValue }: TaggedEpisodesPr
   // Map tag type to display name and CSS class
   const tagTypeMap = {
     genre: { displayName: 'Genre', className: 'tagged-episodes__tag--genre' },
-    mood: { displayName: 'Mood/Vibe', className: 'tagged-episodes__tag--mood' },
     theme: { displayName: 'Theme', className: 'tagged-episodes__tag--theme' }
   };
 

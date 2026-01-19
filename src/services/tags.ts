@@ -1,4 +1,4 @@
-import type { TagGenre, TagMoodVibe, TagTheme, TagLocation } from '../types/tag';
+import type { TagGenre, TagTheme, TagLocation } from '../types/tag';
 import type { StrapiCollectionResponse } from '../types/strapi';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
@@ -34,35 +34,6 @@ export async function fetchGenreTags(): Promise<TagGenre[]> {
     return data.data;
   } catch (error) {
     console.error('Error fetching genre tags:', error);
-    throw error;
-  }
-}
-
-/**
- * Fetch all mood/vibe tags from Strapi
- */
-export async function fetchMoodTags(): Promise<TagMoodVibe[]> {
-  try {
-    const url = new URL(`${STRAPI_URL}/api/mood-vibe-tags`);
-
-    // Sort alphabetically
-    url.searchParams.append('sort', 'Mood_or_Vibe:asc');
-
-    // Get all tags (no pagination)
-    url.searchParams.append('pagination[limit]', '100');
-
-    const response = await fetch(url.toString(), { headers });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Strapi error response:', errorText);
-      throw new Error(`Failed to fetch mood tags: ${response.statusText}`);
-    }
-
-    const data: StrapiCollectionResponse<TagMoodVibe> = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error('Error fetching mood tags:', error);
     throw error;
   }
 }
@@ -130,19 +101,17 @@ export async function fetchLocationTags(): Promise<TagLocation[]> {
  */
 export async function fetchAllTags(): Promise<{
   genres: TagGenre[];
-  moods: TagMoodVibe[];
   themes: TagTheme[];
   locations: TagLocation[];
 }> {
   try {
-    const [genres, moods, themes, locations] = await Promise.all([
+    const [genres, themes, locations] = await Promise.all([
       fetchGenreTags(),
-      fetchMoodTags(),
       fetchThemeTags(),
       fetchLocationTags(),
     ]);
 
-    return { genres, moods, themes, locations };
+    return { genres, themes, locations };
   } catch (error) {
     console.error('Error fetching all tags:', error);
     throw error;

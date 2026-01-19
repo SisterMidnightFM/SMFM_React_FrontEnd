@@ -1,31 +1,25 @@
 import { useState, useRef, useEffect } from 'react';
-import type { TagGenre, TagMoodVibe, TagTheme } from '../../types/tag';
+import type { TagGenre, TagTheme } from '../../types/tag';
 import './FilterDropdowns.css';
 
 interface FilterDropdownsProps {
   genres: TagGenre[];
-  moods: TagMoodVibe[];
   themes: TagTheme[];
   selectedGenreIds: number[];
-  selectedMoodIds: number[];
   selectedThemeIds: number[];
   onGenreChange: (ids: number[]) => void;
-  onMoodChange: (ids: number[]) => void;
   onThemeChange: (ids: number[]) => void;
   isLoading?: boolean;
 }
 
-type DropdownType = 'genre' | 'mood' | 'theme' | null;
+type DropdownType = 'genre' | 'theme' | null;
 
 export function FilterDropdowns({
   genres,
-  moods,
   themes,
   selectedGenreIds,
-  selectedMoodIds,
   selectedThemeIds,
   onGenreChange,
-  onMoodChange,
   onThemeChange,
   isLoading = false,
 }: FilterDropdownsProps) {
@@ -56,14 +50,6 @@ export function FilterDropdowns({
     }
   };
 
-  const toggleMood = (id: number) => {
-    if (selectedMoodIds.includes(id)) {
-      onMoodChange(selectedMoodIds.filter((i) => i !== id));
-    } else {
-      onMoodChange([...selectedMoodIds, id]);
-    }
-  };
-
   const toggleTheme = (id: number) => {
     if (selectedThemeIds.includes(id)) {
       onThemeChange(selectedThemeIds.filter((i) => i !== id));
@@ -75,7 +61,6 @@ export function FilterDropdowns({
   const getDropdownLabel = (type: DropdownType, count: number): string => {
     const labels = {
       genre: 'Genre',
-      mood: 'Mood',
       theme: 'Theme',
     };
 
@@ -118,37 +103,6 @@ export function FilterDropdowns({
                     onChange={() => toggleGenre(genre.id)}
                   />
                   <span>{genre.Genre}</span>
-                </label>
-              ))
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Mood Dropdown */}
-      <div className="filter-dropdowns__item">
-        <button
-          type="button"
-          className={`filter-dropdowns__button ${selectedMoodIds.length > 0 ? 'filter-dropdowns__button--active' : ''}`}
-          onClick={() => toggleDropdown('mood')}
-        >
-          {getDropdownLabel('mood', selectedMoodIds.length)}
-          <span className="filter-dropdowns__arrow">{openDropdown === 'mood' ? '▲' : '▼'}</span>
-        </button>
-
-        {openDropdown === 'mood' && (
-          <div className="filter-dropdowns__dropdown">
-            {moods.length === 0 ? (
-              <div className="filter-dropdowns__empty">No moods available</div>
-            ) : (
-              moods.map((mood) => (
-                <label key={mood.id} className="filter-dropdowns__option">
-                  <input
-                    type="checkbox"
-                    checked={selectedMoodIds.includes(mood.id)}
-                    onChange={() => toggleMood(mood.id)}
-                  />
-                  <span>{mood.Mood_or_Vibe}</span>
                 </label>
               ))
             )}
