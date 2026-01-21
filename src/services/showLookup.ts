@@ -10,7 +10,31 @@ import type { Show } from '../types/show';
 
 // Cache for show lookup map
 let showLookupCache: Map<string, ShowReference> | null = null;
+let normalizedLookupCache: Map<string, ShowReference> | null = null;
 let fuseMatcher: Fuse<ShowReference> | null = null;
+
+/**
+ * Normalize a string for comparison by:
+ * - Converting to lowercase
+ * - Normalizing various apostrophe/quote characters to standard ASCII
+ * - Removing extra whitespace
+ * - Normalizing dashes and hyphens
+ */
+function normalizeForComparison(str: string): string {
+  return str
+    .toLowerCase()
+    // Normalize various apostrophe types to standard single quote
+    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035`]/g, "'")
+    // Normalize various quote types to standard double quote
+    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+    // Normalize various dash types to standard hyphen
+    .replace(/[\u2010\u2011\u2012\u2013\u2014\u2015\u2212]/g, '-')
+    // Normalize ellipsis
+    .replace(/\u2026/g, '...')
+    // Normalize whitespace (multiple spaces, tabs, etc. to single space)
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 /**
  * Convert a Show to a ShowReference
@@ -40,6 +64,7 @@ export async function buildShowLookup(): Promise<Map<string, ShowReference>> {
     const shows = await fetchAllShows();
 
     showLookupCache = new Map();
+    normalizedLookupCache = new Map();
     const references: ShowReference[] = [];
 
     shows.forEach((show) => {
@@ -51,6 +76,9 @@ export async function buildShowLookup(): Promise<Map<string, ShowReference>> {
 
       // Also index by lowercase name for direct name matching
       showLookupCache!.set(show.ShowName.toLowerCase(), ref);
+
+      // Index by normalized name for matching with special characters
+      normalizedLookupCache!.set(normalizeForComparison(show.ShowName), ref);
     });
 
     // Setup Fuse.js for fuzzy matching
@@ -78,7 +106,7 @@ export function findShowBySlug(
 }
 
 /**
- * Find a show by name (with fuzzy matching fallback)
+ * Find a show by name (with normalized and fuzzy matching fallbacks)
  * @param eventSummary - The calendar event summary/title
  * @param lookup - The show lookup map
  * @returns ShowReference if found, undefined otherwise
@@ -93,7 +121,15 @@ export function findShowByName(
     return exact;
   }
 
-  // Try fuzzy match
+  // Try normalized match (handles apostrophes, quotes, dashes, etc.)
+  if (normalizedLookupCache) {
+    const normalized = normalizedLookupCache.get(normalizeForComparison(eventSummary));
+    if (normalized) {
+      return normalized;
+    }
+  }
+
+  // Try fuzzy match as last resort
   if (fuseMatcher) {
     const results = fuseMatcher.search(eventSummary);
     if (results.length > 0 && results[0].score !== undefined && results[0].score < 0.3) {
@@ -106,7 +142,7 @@ export function findShowByName(
 
 /**
  * Check if a calendar event summary matches a specific show name
- * Uses the same fuzzy matching logic as findShowByName but in reverse
+ * Uses the same matching logic as findShowByName
  * @param eventSummary - The calendar event summary/title
  * @param showName - The show name to match against
  * @param showSlug - The show slug (used for exact extended property matching)
@@ -119,6 +155,11 @@ export function doesEventMatchShow(
 ): boolean {
   // Exact name match (case-insensitive)
   if (eventSummary.toLowerCase() === showName.toLowerCase()) {
+    return true;
+  }
+
+  // Normalized match (handles apostrophes, quotes, dashes, etc.)
+  if (normalizeForComparison(eventSummary) === normalizeForComparison(showName)) {
     return true;
   }
 
@@ -140,5 +181,6 @@ export function doesEventMatchShow(
  */
 export function clearShowLookupCache(): void {
   showLookupCache = null;
+  normalizedLookupCache = null;
   fuseMatcher = null;
 }
