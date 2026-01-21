@@ -1,0 +1,30 @@
+{
+  "name": "Sister Midnight FM",
+  "short_name": "SMFM",
+  "description": "Sister Midnight FM Radio - Community radio from Melbourne",
+  "theme_color": "#322824",
+  "background_color": "#C0B7AF",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
