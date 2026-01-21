@@ -9,10 +9,15 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['SmfmLogo.png', 'Images/**/*', 'icons/**/*'],
+      includeAssets: ['SmfmLogo.png', 'Images/**/*', 'icons/**/*', 'offline.html'],
       manifest: false, // We're using our own manifest.json in public/
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
+        navigateFallback: '/offline.html',
+        navigateFallbackDenylist: [
+          /^\/api/,
+          /\.(png|jpg|jpeg|webp|svg|gif|mp3|wav|ogg)$/i,
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.strapi\.cloud/,
@@ -33,6 +38,28 @@ export default defineConfig({
               expiration: {
                 maxEntries: 200,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-stylesheets',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-webfonts',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
               },
             },
           },

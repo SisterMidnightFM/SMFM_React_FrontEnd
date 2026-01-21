@@ -1,12 +1,20 @@
 {
+  "id": "/",
   "name": "Sister Midnight FM",
   "short_name": "SMFM",
-  "description": "Sister Midnight FM Radio - Community radio from Melbourne",
+  "description": "Sister Midnight FM Radio - Community radio from Catford, SE London.",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["music", "entertainment"],
   "theme_color": "#322824",
   "background_color": "#C0B7AF",
   "display": "standalone",
+  "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
   "icons": [
     {
       "src": "/pwa-192x192.png",
