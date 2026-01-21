@@ -111,6 +111,35 @@
   color: var(--Colour1);
 }
 
+/* Social Links */
+.show-detail__social {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.show-detail__social-link {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--Colour2);
+  color: var(--Colour1);
+  text-decoration: none;
+  border-radius: 12px;
+  font-family: var(--Font1);
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.show-detail__social-link:hover {
+  transform: translateY(-2px);
+}
+
+.show-detail__social-icon {
+  flex-shrink: 0;
+}
+
 .show-detail__host-section {
   display: flex;
   flex-direction: column;

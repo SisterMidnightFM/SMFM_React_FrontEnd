@@ -10,6 +10,20 @@ interface ShowDetailProps {
   show: Show;
 }
 
+// Helper function to convert Instagram handle to URL
+const getInstagramUrl = (handle: string): string => {
+  // Remove @ symbol if present and any whitespace
+  const cleanHandle = handle.replace(/^@/, '').trim();
+
+  // If it's already a full URL, return as is
+  if (cleanHandle.startsWith('http://') || cleanHandle.startsWith('https://')) {
+    return cleanHandle;
+  }
+
+  // Otherwise, construct Instagram URL
+  return `https://www.instagram.com/${cleanHandle}/`;
+};
+
 export function ShowDetail({ show }: ShowDetailProps) {
   const queryClient = useQueryClient();
 
@@ -93,6 +107,45 @@ export function ShowDetail({ show }: ShowDetailProps) {
               <span className="show-detail__next-broadcast-datetime">
                 {nextBroadcast.formattedDate} at {nextBroadcast.formattedTime}
               </span>
+            </div>
+          )}
+
+          {/* Social Links */}
+          {(show.Show_Instagram || show.WebLink1 || show.WebLink2) && (
+            <div className="show-detail__social">
+              {show.Show_Instagram && (
+                <a
+                  href={getInstagramUrl(show.Show_Instagram)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="show-detail__social-link show-detail__social-link--instagram"
+                >
+                  <img src="/icons/instagram.svg" width="16" height="16" alt="" className="show-detail__social-icon" />
+                  {show.Show_Instagram}
+                </a>
+              )}
+              {show.WebLink1 && (
+                <a
+                  href={show.WebLink1}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="show-detail__social-link"
+                >
+                  <img src="/icons/website.svg" width="16" height="16" alt="" className="show-detail__social-icon" />
+                  Website
+                </a>
+              )}
+              {show.WebLink2 && (
+                <a
+                  href={show.WebLink2}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="show-detail__social-link"
+                >
+                  <img src="/icons/website.svg" width="16" height="16" alt="" className="show-detail__social-icon" />
+                  Website
+                </a>
+              )}
             </div>
           )}
 

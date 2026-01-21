@@ -127,7 +127,7 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
               className="episode-detail__show-button"
               onMouseEnter={() => prefetchShow(episode.link_episode_to_show!.ShowSlug)}
             >
-              View Show Page
+              View {episode.link_episode_to_show.ShowName} show page
             </Link>
           )}
         </div>
