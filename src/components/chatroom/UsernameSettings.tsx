@@ -26,6 +26,8 @@ export function UsernameSettings() {
 
   const displayName = username.trim() || 'Anonymous';
 
+  const isAnonymous = displayName === 'Anonymous';
+
   if (!isEditing) {
     return (
       <div className="username-settings">
@@ -40,6 +42,11 @@ export function UsernameSettings() {
             EDIT USERNAME
           </button>
         </div>
+        {isAnonymous && (
+          <div className="username-settings__tip">
+            Tip: Set a username so others know who you are!
+          </div>
+        )}
       </div>
     );
   }

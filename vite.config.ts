@@ -13,11 +13,8 @@ export default defineConfig({
       manifest: false, // We're using our own manifest.json in public/
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
-        navigateFallback: '/offline.html',
-        navigateFallbackDenylist: [
-          /^\/api/,
-          /\.(png|jpg|jpeg|webp|svg|gif|mp3|wav|ogg)$/i,
-        ],
+        // Don't use navigateFallback - it serves offline.html even when online
+        // Instead, we'll use the offline.html page's JS to detect and redirect
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.strapi\.cloud/,

@@ -138,3 +138,15 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.username-settings__tip {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--Colour1);
+  color: var(--Colour2);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: var(--Font1);
+  font-style: italic;
+  opacity: 0.9;
+}
