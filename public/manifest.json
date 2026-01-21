@@ -34,5 +34,49 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-homepage.png",
+      "sizes": "3104x1832",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Sister Midnight FM homepage on desktop"
+    },
+    {
+      "src": "/screenshots/desktop-schedule.png",
+      "sizes": "3104x1832",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Weekly schedule on desktop"
+    },
+    {
+      "src": "/screenshots/desktop-show.png",
+      "sizes": "3104x1832",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Show page on desktop"
+    },
+    {
+      "src": "/screenshots/mobile-homepage.png",
+      "sizes": "672x1188",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Sister Midnight FM homepage on mobile"
+    },
+    {
+      "src": "/screenshots/mobile-schedule.png",
+      "sizes": "672x1188",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Weekly schedule on mobile"
+    },
+    {
+      "src": "/screenshots/mobile-show.png",
+      "sizes": "672x1188",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Show page on mobile"
+    }
   ]
 }
