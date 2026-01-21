@@ -148,6 +148,39 @@
   color: var(--Colour1);
 }
 
+/* Episode-specific slot styling (for past dates) */
+.schedule-view__slot--episode .schedule-view__show-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.schedule-view__episode-link {
+  font-family: var(--Font1);
+  font-size: 1.25rem;
+  color: var(--Colour1);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  display: inline-block;
+}
+
+.schedule-view__episode-link:hover {
+  opacity: 0.7;
+}
+
+.schedule-view__show-subtext {
+  font-family: var(--Font1);
+  font-size: 0.9rem;
+  color: var(--Colour1);
+  opacity: 0.7;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.schedule-view__show-subtext:hover {
+  opacity: 0.5;
+}
+
 /* Loading, Error, and Empty States */
 .schedule-view__loading,
 .schedule-view__error,
@@ -198,8 +231,13 @@
   }
 
   .schedule-view__show-link,
-  .schedule-view__show-name {
+  .schedule-view__show-name,
+  .schedule-view__episode-link {
     font-size: 1.1rem;
+  }
+
+  .schedule-view__show-subtext {
+    font-size: 0.85rem;
   }
 }
 
@@ -265,8 +303,13 @@
   }
 
   .schedule-view__show-link,
-  .schedule-view__show-name {
+  .schedule-view__show-name,
+  .schedule-view__episode-link {
     font-size: 1rem;
+  }
+
+  .schedule-view__show-subtext {
+    font-size: 0.8rem;
   }
 
   .schedule-view__today-btn {

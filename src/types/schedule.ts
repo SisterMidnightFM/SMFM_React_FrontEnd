@@ -5,12 +5,22 @@
 import type { StrapiTimestamps } from './strapi';
 import type { ShowReference } from './show';
 
+// Episode data for past schedule slots
+export interface ScheduleEpisode {
+  EpisodeTitle: string;
+  EpisodeSlug: string;
+  showName: string;
+  showSlug?: string;
+}
+
 // Show slot component within a schedule
 export interface ShowSlot {
   id: number;
   Show_Name?: ShowReference;
   Start_Time: string; // Time format: HH:mm:ss.SSS
   End_Time: string; // Time format: HH:mm:ss.SSS
+  // Episode data (only populated for past dates)
+  episode?: ScheduleEpisode;
 }
 
 // Schedule entry

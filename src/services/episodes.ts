@@ -129,6 +129,49 @@ export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
 /**
  * Fetch episodes filtered by a specific tag
  */
+/**
+ * Fetch episodes that were broadcast on a specific date
+ * @param date - Date in YYYY-MM-DD format
+ * @returns Array of episodes broadcast on that date, sorted by broadcast time
+ */
+export async function fetchEpisodesByDate(date: string): Promise<Episode[]> {
+  try {
+    const url = new URL(`${STRAPI_URL}/api/episodes`);
+
+    // Filter for episodes broadcast on this specific date
+    // BroadcastDateTime is a datetime, so we need $gte and $lte to get the full day
+    const startOfDay = `${date}T00:00:00.000Z`;
+    const endOfDay = `${date}T23:59:59.999Z`;
+
+    url.searchParams.append('filters[BroadcastDateTime][$gte]', startOfDay);
+    url.searchParams.append('filters[BroadcastDateTime][$lte]', endOfDay);
+
+    // Populate show relation for display
+    url.searchParams.append('populate[link_episode_to_show][fields][0]', 'ShowName');
+    url.searchParams.append('populate[link_episode_to_show][fields][1]', 'ShowSlug');
+
+    // Sort by broadcast time (earliest first)
+    url.searchParams.append('sort', 'BroadcastDateTime:asc');
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch episodes for date: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Episode> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error(`Error fetching episodes for date ${date}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch episodes filtered by a specific tag
+ */
 export async function fetchEpisodesByTag(
   tagType: 'genre' | 'theme',
   tagValue: string

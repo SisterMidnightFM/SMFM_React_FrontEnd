@@ -3,11 +3,13 @@
  * Fetches schedule data from Google Calendar and transforms it to the Schedule type
  */
 
-import type { Schedule, ShowSlot, UpcomingShow } from '../types/schedule';
+import type { Schedule, ShowSlot, UpcomingShow, ScheduleEpisode } from '../types/schedule';
 import type { ShowReference } from '../types/show';
 import type { GoogleCalendarEvent } from '../types/googleCalendar';
+import type { Episode } from '../types/episode';
 import { fetchCalendarEventsForDate, fetchCalendarEvents } from './googleCalendar';
 import { buildShowLookup, findShowByName, findShowBySlug, doesEventMatchShow } from './showLookup';
+import { fetchEpisodesByDate } from './episodes';
 
 /**
  * Get today's date in YYYY-MM-DD format
@@ -50,6 +52,52 @@ function hashStringToNumber(str: string): number {
 function dateToNumericId(date: string): number {
   // Convert YYYY-MM-DD to a number (e.g., 20240115)
   return parseInt(date.replace(/-/g, ''), 10);
+}
+
+/**
+ * Check if a date is in the past (before today)
+ * @param dateString - Date in YYYY-MM-DD format
+ * @returns true if date is before today
+ */
+function isDateInPast(dateString: string): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const targetDate = new Date(dateString + 'T00:00:00');
+  return targetDate < today;
+}
+
+/**
+ * Transform an Episode to a ShowSlot with episode data
+ */
+function transformEpisodeToShowSlot(episode: Episode, index: number): ShowSlot {
+  const showRef = episode.link_episode_to_show;
+  const broadcastTime = extractTimeFromISO(episode.BroadcastDateTime);
+
+  // Estimate end time as 2 hours after start (typical radio show duration)
+  const startDate = new Date(episode.BroadcastDateTime);
+  const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+  const endTime = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}:00.000`;
+
+  const episodeData: ScheduleEpisode = {
+    EpisodeTitle: episode.EpisodeTitle,
+    EpisodeSlug: episode.EpisodeSlug,
+    showName: showRef?.ShowName || 'Unknown Show',
+    showSlug: showRef?.ShowSlug,
+  };
+
+  return {
+    id: episode.id || index,
+    Show_Name: showRef ? {
+      id: showRef.id,
+      ShowName: showRef.ShowName,
+      ShowSlug: showRef.ShowSlug,
+      Show_Instagram: null,
+    } : undefined,
+    Start_Time: broadcastTime,
+    End_Time: endTime,
+    episode: episodeData,
+  };
 }
 
 /**
@@ -100,36 +148,66 @@ export async function fetchScheduleForToday(): Promise<Schedule | null> {
 
 /**
  * Fetch the schedule for a specific date
- * Returns the schedule if there are events for that date, otherwise null
+ * - For past dates: fetches episodes from Strapi
+ * - For future/today dates: fetches events from Google Calendar
+ * Returns the schedule if there are events/episodes for that date, otherwise null
  */
 export async function fetchScheduleByDate(date: string): Promise<Schedule | null> {
   try {
-    // Fetch calendar events and show lookup in parallel
-    const [events, showLookup] = await Promise.all([
-      fetchCalendarEventsForDate(date),
-      buildShowLookup(),
-    ]);
+    const isPast = isDateInPast(date);
 
-    // Return null if no events for this date
-    if (!events || events.length === 0) {
-      return null;
+    if (isPast) {
+      // Fetch past episodes from Strapi
+      const episodes = await fetchEpisodesByDate(date);
+
+      // Return null if no episodes for this date
+      if (!episodes || episodes.length === 0) {
+        return null;
+      }
+
+      // Transform episodes to show slots with episode data
+      const showSlots: ShowSlot[] = episodes.map((episode, index) =>
+        transformEpisodeToShowSlot(episode, index)
+      );
+
+      // Create and return the schedule
+      const now = new Date().toISOString();
+      return {
+        id: dateToNumericId(date),
+        Date: date,
+        Show_Slots: showSlots,
+        createdAt: now,
+        updatedAt: now,
+        publishedAt: now,
+      };
+    } else {
+      // Fetch future schedule from Google Calendar (existing logic)
+      const [events, showLookup] = await Promise.all([
+        fetchCalendarEventsForDate(date),
+        buildShowLookup(),
+      ]);
+
+      // Return null if no events for this date
+      if (!events || events.length === 0) {
+        return null;
+      }
+
+      // Transform events to show slots
+      const showSlots: ShowSlot[] = events.map((event, index) =>
+        transformCalendarEventToShowSlot(event, showLookup, index)
+      );
+
+      // Create and return the schedule
+      const now = new Date().toISOString();
+      return {
+        id: dateToNumericId(date),
+        Date: date,
+        Show_Slots: showSlots,
+        createdAt: now,
+        updatedAt: now,
+        publishedAt: now,
+      };
     }
-
-    // Transform events to show slots
-    const showSlots: ShowSlot[] = events.map((event, index) =>
-      transformCalendarEventToShowSlot(event, showLookup, index)
-    );
-
-    // Create and return the schedule
-    const now = new Date().toISOString();
-    return {
-      id: dateToNumericId(date),
-      Date: date,
-      Show_Slots: showSlots,
-      createdAt: now,
-      updatedAt: now,
-      publishedAt: now,
-    };
   } catch (error) {
     console.error('Error fetching schedule:', error);
     throw error;

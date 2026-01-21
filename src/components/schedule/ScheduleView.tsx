@@ -52,6 +52,16 @@ function isToday(dateString: string): boolean {
   return dateString === today;
 }
 
+/**
+ * Check if a date is in the past (before today)
+ */
+function isDateInPast(dateString: string): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const targetDate = new Date(dateString + 'T00:00:00');
+  return targetDate < today;
+}
+
 export function ScheduleView() {
   const [selectedDate, setSelectedDate] = useState<string>(formatDateISO(new Date()));
   const { schedule, isLoading, error, prefetchAdjacentDays } = useSchedule(selectedDate);
@@ -124,12 +134,21 @@ export function ScheduleView() {
 
         {!isLoading && !error && !schedule && (
           <div className="schedule-view__empty">
-            <p>
-              SMFM broadcasts Tuesday to Thursday. There's nothing to see here but check out the{' '}
-              <Link to="/episodes" className="schedule-view__archive-link">
-                episode archive
-              </Link>
-            </p>
+            {isDateInPast(selectedDate) ? (
+              <p>
+                No episodes were recorded for this date. Check out the{' '}
+                <Link to="/episodes" className="schedule-view__archive-link">
+                  episode archive
+                </Link>
+              </p>
+            ) : (
+              <p>
+                SMFM broadcasts Tuesday to Thursday. There's nothing to see here but check out the{' '}
+                <Link to="/episodes" className="schedule-view__archive-link">
+                  episode archive
+                </Link>
+              </p>
+            )}
           </div>
         )}
 
@@ -137,10 +156,42 @@ export function ScheduleView() {
           <div className="schedule-view__schedule">
             <ul className="schedule-view__slots">
               {schedule.Show_Slots.map((slot) => {
-                const showName = slot.Show_Name?.ShowName || 'Unknown Show';
-                const showSlug = slot.Show_Name?.ShowSlug;
                 const startTime = slot.Start_Time ? formatTime(slot.Start_Time) : '';
                 const endTime = slot.End_Time ? formatTime(slot.End_Time) : '';
+
+                // For past dates with episode data (no times shown)
+                if (slot.episode) {
+                  return (
+                    <li key={slot.id} className="schedule-view__slot schedule-view__slot--episode">
+                      <div className="schedule-view__show-info">
+                        <Link
+                          to="/episodes/$slug"
+                          params={{ slug: slot.episode.EpisodeSlug }}
+                          className="schedule-view__episode-link"
+                        >
+                          {slot.episode.EpisodeTitle}
+                        </Link>
+                        {slot.episode.showSlug ? (
+                          <Link
+                            to="/shows/$slug"
+                            params={{ slug: slot.episode.showSlug }}
+                            className="schedule-view__show-subtext"
+                          >
+                            {slot.episode.showName}
+                          </Link>
+                        ) : (
+                          <span className="schedule-view__show-subtext">
+                            {slot.episode.showName}
+                          </span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                }
+
+                // For future dates (show name only)
+                const showName = slot.Show_Name?.ShowName || 'Unknown Show';
+                const showSlug = slot.Show_Name?.ShowSlug;
 
                 return (
                   <li key={slot.id} className="schedule-view__slot">
