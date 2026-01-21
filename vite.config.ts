@@ -13,6 +13,7 @@ export default defineConfig({
       manifest: false, // We're using our own manifest.json in public/
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
+        globIgnores: ['screenshots/**/*'],
         // Don't use navigateFallback - it serves offline.html even when online
         // Instead, we'll use the offline.html page's JS to detect and redirect
         runtimeCaching: [
