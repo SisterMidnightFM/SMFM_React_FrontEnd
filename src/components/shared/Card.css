@@ -229,10 +229,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Limit to 2 lines with ellipsis */
+  /* Limit to 1 line with ellipsis */
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -264,8 +264,10 @@
 /* Tags Section */
 .card__tags {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
+  overflow: hidden;
+  min-width: 0;
 }
 
 /* When there's no footer link, tags should be at the bottom */
@@ -282,6 +284,15 @@
   border-radius: 16px;
   display: inline-block;
   font-weight: 500;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.card__tag--more {
+  background-color: transparent;
+  color: var(--Colour1);
+  border: 1px solid var(--Colour1);
+  opacity: 0.8;
 }
 
 /* Footer Link */

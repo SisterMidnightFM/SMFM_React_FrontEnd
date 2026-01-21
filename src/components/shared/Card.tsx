@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { useState, useRef, useEffect } from 'react';
 import type { StrapiImage } from '../../types/strapi';
 import { NewBadge } from './NewBadge';
 import './Card.css';
@@ -160,6 +161,48 @@ export function Card({
   const displayTags = tags?.slice(0, maxTags);
   const hasNoImage = !fullImageUrl;
 
+  // Tag overflow detection
+  const tagsContainerRef = useRef<HTMLDivElement>(null);
+  const [visibleTagCount, setVisibleTagCount] = useState(displayTags?.length || 0);
+
+  useEffect(() => {
+    const container = tagsContainerRef.current;
+    if (!container || !displayTags?.length) return;
+
+    const calculateVisibleTags = () => {
+      const containerWidth = container.offsetWidth;
+      const tags = container.querySelectorAll('.card__tag:not(.card__tag--more)');
+      let totalWidth = 0;
+      let count = 0;
+      const gap = 8; // 0.5rem gap
+      const plusIndicatorWidth = 40; // approximate width for "+N" indicator
+
+      for (let i = 0; i < tags.length; i++) {
+        const tagWidth = (tags[i] as HTMLElement).offsetWidth;
+        const nextWidth = totalWidth + tagWidth + (count > 0 ? gap : 0);
+
+        // Reserve space for +N indicator if not all tags will fit
+        const reserveSpace = i < tags.length - 1 ? plusIndicatorWidth + gap : 0;
+
+        if (nextWidth + reserveSpace <= containerWidth) {
+          totalWidth = nextWidth;
+          count++;
+        } else {
+          break;
+        }
+      }
+
+      setVisibleTagCount(Math.max(1, count)); // Show at least 1 tag
+    };
+
+    // Reset to show all tags for measurement, then calculate
+    setVisibleTagCount(displayTags.length);
+    requestAnimationFrame(calculateVisibleTags);
+  }, [displayTags]);
+
+  const visibleTags = displayTags?.slice(0, visibleTagCount);
+  const hiddenCount = (displayTags?.length || 0) - visibleTagCount;
+
   return (
     <div className="card-wrapper">
       {/* New Badge (spiky circle) - Outside the Link to avoid clipping */}
@@ -222,12 +265,15 @@ export function Card({
 
         {/* Tags */}
         {displayTags && displayTags.length > 0 && (
-          <div className="card__tags">
-            {displayTags.map((tag) => (
+          <div className="card__tags" ref={tagsContainerRef}>
+            {visibleTags?.map((tag) => (
               <span key={tag.id} className="card__tag">
                 {tag.label}
               </span>
             ))}
+            {hiddenCount > 0 && (
+              <span className="card__tag card__tag--more">+{hiddenCount}</span>
+            )}
           </div>
         )}
 
