@@ -1,0 +1,59 @@
+/* Artist Card — Overrides */
+
+/* Circular image — larger and centred */
+.artist-card .card__image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.artist-card .card__image {
+  width: 90%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.artist-card .card__placeholder {
+  width: 90%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
+
+.artist-card .card__header {
+  margin-bottom: -0.5rem;
+}
+
+.artist-card .card__location {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.artist-card .card__text-secondary {
+  text-transform: none;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin: 0;
+}
+
+
+/* Mobile */
+@media (max-width: 767px) {
+  .artist-card .card__image-container {
+    aspect-ratio: unset;
+    padding: 1.5rem;
+  }
+
+  .artist-card .card__image {
+    width: 75%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .artist-card .card__placeholder {
+    width: 75%;
+    aspect-ratio: 1 / 1;
+  }
+}

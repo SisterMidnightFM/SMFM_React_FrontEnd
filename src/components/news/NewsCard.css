@@ -1,0 +1,16 @@
+/* News Card — Overrides */
+
+.news-card .card__header {
+  margin-bottom: -0.5rem;
+}
+
+.news-card .card__text {
+  margin: 0;
+}
+
+.news-card .card__text-secondary {
+  text-transform: none;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin: 0;
+}

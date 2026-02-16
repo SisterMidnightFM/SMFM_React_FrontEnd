@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '../shared/Card';
+import './ArtistCard.css';
 import type { Artist } from '../../types/artist';
 import { truncateText } from '../../utils/cardHelpers';
 import { shouldShowArtistBadge } from '../../utils/badgeHelpers';
@@ -35,6 +36,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
       descriptiveText2={truncateText(artist.ArtistBio, 120)}
       newBadge={shouldShowArtistBadge(artist)}
       onMouseEnter={handleMouseEnter}
+      className="artist-card"
     />
   );
 }

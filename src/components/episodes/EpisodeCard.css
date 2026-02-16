@@ -1,0 +1,56 @@
+/* Episode Card — Overrides */
+
+.episode-card .card__header {
+  margin-bottom: 1.3rem;
+}
+
+.episode-card .card__text,
+.episode-card .card__text-secondary {
+  text-transform: uppercase;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  margin: 0;
+}
+
+.episode-card .card__text-secondary {
+  margin-top: -0.7rem;
+}
+
+/* Tags — fully rounded pills */
+.episode-card .card__tags {
+  margin-top: auto;
+}
+
+.episode-card .card__tag {
+  border-radius: 2.375rem;
+  min-height: 1.85rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.episode-card .card__tag--more {
+  background-color: transparent;
+  color: var(--Colour1);
+  border: 1px solid var(--Colour1);
+}
+
+
+/* Mobile */
+@media (max-width: 767px) {
+  .episode-card .card__header {
+    margin-bottom: 0.2rem;
+  }
+
+  .episode-card .card__tags {
+    justify-content: center;
+  }
+
+  .episode-card .card__tag {
+    min-height: 1.5rem;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.65rem;
+  }
+}

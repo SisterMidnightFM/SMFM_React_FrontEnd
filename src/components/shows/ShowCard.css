@@ -1,0 +1,38 @@
+/* Show Card — Overrides */
+
+.show-card .card__header {
+  margin-bottom: -0.5rem;
+}
+
+.show-card .card__text,
+.show-card .card__text-secondary {
+  text-transform: uppercase;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  margin: 0;
+}
+
+/* Description — allow 3 lines, not uppercased */
+.show-card .card__text-secondary {
+  margin-top: 0.5rem;
+  text-transform: none;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* Footer link — pushed to bottom */
+.show-card .card__footer-link {
+  margin-top: auto;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  opacity: 1;
+  color: var(--Colour1);
+}
+
+
+/* Mobile */
+@media (max-width: 767px) {
+  .show-card .card__footer-link {
+    justify-content: center;
+  }
+}

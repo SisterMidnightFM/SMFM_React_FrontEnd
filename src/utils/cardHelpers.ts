@@ -5,16 +5,29 @@
 import type { StrapiRichText } from '../types/strapi';
 
 /**
- * Format episode broadcast date
- * Returns formatted string like "Jan 15, 2024"
+ * Get ordinal suffix for a day number (1st, 2nd, 3rd, 4th, etc.)
  */
-export function formatEpisodeDateTime(dateString: string): string {
+function getOrdinalSuffix(day: number): string {
+  if (day >= 11 && day <= 13) return 'th';
+  switch (day % 10) {
+    case 1: return 'st';
+    case 2: return 'nd';
+    case 3: return 'rd';
+    default: return 'th';
+  }
+}
+
+/**
+ * Format date string with ordinal day
+ * Returns formatted string like "5th Feb 2026"
+ */
+export function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const day = date.getDate();
+  const suffix = getOrdinalSuffix(day);
+  const month = date.toLocaleDateString('en-GB', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}${suffix} ${month} ${year}`;
 }
 
 /**

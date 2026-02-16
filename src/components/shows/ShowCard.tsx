@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '../shared/Card';
+import './ShowCard.css';
 import type { Show } from '../../types/show';
 import { extractRichText, truncateText } from '../../utils/cardHelpers';
 import { shouldShowShowBadge } from '../../utils/badgeHelpers';
@@ -42,6 +43,7 @@ export function ShowCard({ show }: ShowCardProps) {
       }}
       newBadge={shouldShowShowBadge(show)}
       onMouseEnter={handleMouseEnter}
+      className="show-card"
     />
   );
 }
