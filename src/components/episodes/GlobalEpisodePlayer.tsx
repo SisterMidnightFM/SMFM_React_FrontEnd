@@ -10,6 +10,7 @@ export function GlobalEpisodePlayer() {
 
   return (
     <EpisodePlayer
+      key={activePlayer.key}
       type={activePlayer.type}
       url={activePlayer.url}
       episodeTitle={activePlayer.episodeTitle}

@@ -1,8 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useEpisodeBySlug } from '../../hooks/useEpisodeBySlug';
 import { EpisodeDetail } from '../../components/episodes/EpisodeDetail';
+import { fetchEpisodeBySlug } from '../../services/episodes';
 
 export const Route = createFileRoute('/episodes/$slug')({
+  loader: async ({ context: { queryClient }, params: { slug } }) => {
+    await queryClient.ensureQueryData({
+      queryKey: ['episodes', slug],
+      queryFn: () => fetchEpisodeBySlug(slug),
+    });
+  },
+  pendingComponent: () => null,
   component: EpisodeDetailPage,
 });
 

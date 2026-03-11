@@ -228,6 +228,7 @@ export function Card({
             src={fullImageUrl}
             alt={image?.alternativeText || headerText}
             className="card__image"
+            loading="lazy"
           />
         ) : (
           <div className="card__placeholder card__placeholder--logo">

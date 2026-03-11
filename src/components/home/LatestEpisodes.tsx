@@ -1,33 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { LatestShowCard } from './LatestShowCard';
 import { useEpisodes } from '../../hooks/useEpisodes';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './HomeSection.css';
 
 export const LatestEpisodes: React.FC = () => {
   const { episodes, isLoading, error } = useEpisodes();
-  const [visibleCount, setVisibleCount] = useState(10);
 
-  useEffect(() => {
-    function updateVisibleCount() {
-      const width = window.innerWidth;
-      if (width < 480) {
-        setVisibleCount(10);
-      } else if (width < 768) {
-        setVisibleCount(12);
-      } else if (width < 1200) {
-        setVisibleCount(15);
-      } else if (width < 1600) {
-        setVisibleCount(20);
-      } else {
-        setVisibleCount(30);
-      }
-    }
+  const isMin480 = useMediaQuery('(min-width: 480px)');
+  const isMin768 = useMediaQuery('(min-width: 768px)');
+  const isMin1200 = useMediaQuery('(min-width: 1200px)');
+  const isMin1600 = useMediaQuery('(min-width: 1600px)');
 
-    updateVisibleCount();
-    window.addEventListener('resize', updateVisibleCount);
-    return () => window.removeEventListener('resize', updateVisibleCount);
-  }, []);
+  const visibleCount = !isMin480 ? 10 : !isMin768 ? 12 : !isMin1200 ? 15 : !isMin1600 ? 20 : 30;
 
   return (
     <section className="home-section">

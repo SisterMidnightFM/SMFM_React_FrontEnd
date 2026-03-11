@@ -1,8 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useArtistBySlug } from '../../hooks/useArtistBySlug';
 import { ArtistDetail } from '../../components/artists/ArtistDetail';
+import { fetchArtistBySlug } from '../../services/artists';
 
 export const Route = createFileRoute('/artists/$slug')({
+  loader: async ({ context: { queryClient }, params: { slug } }) => {
+    await queryClient.ensureQueryData({
+      queryKey: ['artists', slug],
+      queryFn: () => fetchArtistBySlug(slug),
+    });
+  },
+  pendingComponent: () => null,
   component: ArtistDetailPage,
 });
 

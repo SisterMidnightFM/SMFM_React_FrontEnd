@@ -1,31 +1,10 @@
-import { useEffect, useState } from 'react';
-import { fetchAboutPage } from '../../services/about';
+import { useAbout } from '../../hooks/useAbout';
 import { renderRichText } from '../../utils/renderRichText';
 import { PageHeader } from '../shared/PageHeader';
-import type { AboutPage as AboutPageType } from '../../types/about';
 import './AboutPage.css';
 
 export function AboutPage() {
-  const [aboutData, setAboutData] = useState<AboutPageType | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadAboutPage() {
-      try {
-        setIsLoading(true);
-        const data = await fetchAboutPage();
-        setAboutData(data);
-      } catch (err) {
-        console.error('Failed to load about page:', err);
-        setError('Failed to load about page content');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadAboutPage();
-  }, []);
+  const { data: aboutData, isLoading, error } = useAbout();
 
   if (isLoading) {
     return (
@@ -39,7 +18,7 @@ export function AboutPage() {
     return (
       <div className="about-page">
         <div className="about-page__error">
-          {error || 'No about page content available'}
+          {error?.message || 'No about page content available'}
         </div>
       </div>
     );

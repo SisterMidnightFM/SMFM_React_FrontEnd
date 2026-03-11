@@ -11,18 +11,8 @@ import './index.css'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
-// Create a new router instance
-const router = createRouter({ routeTree })
-
-// Register the router instance for type safety
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
-
 // Create a QueryClient instance with optimized configuration
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes - data considered fresh
@@ -32,6 +22,19 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+// Create a new router instance with queryClient in context
+const router = createRouter({
+  routeTree,
+  context: { queryClient },
+})
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

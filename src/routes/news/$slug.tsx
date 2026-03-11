@@ -1,40 +1,22 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
-import { fetchNewsBySlug } from '../../services/news';
+import { useNewsBySlug } from '../../hooks/useNewsBySlug';
 import { NewsDetail } from '../../components/news/NewsDetail';
-import type { News } from '../../types/news';
+import { fetchNewsBySlug } from '../../services/news';
 
 export const Route = createFileRoute('/news/$slug')({
+  loader: async ({ context: { queryClient }, params: { slug } }) => {
+    await queryClient.ensureQueryData({
+      queryKey: ['news', slug],
+      queryFn: () => fetchNewsBySlug(slug),
+    });
+  },
+  pendingComponent: () => null,
   component: NewsDetailPage,
 });
 
 function NewsDetailPage() {
   const { slug } = Route.useParams();
-  const [news, setNews] = useState<News | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    async function loadNews() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const data = await fetchNewsBySlug(slug);
-
-        if (!data) {
-          throw new Error('News not found');
-        }
-
-        setNews(data);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to load news'));
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadNews();
-  }, [slug]);
+  const { data: news, isLoading, error } = useNewsBySlug(slug);
 
   if (isLoading) {
     return (

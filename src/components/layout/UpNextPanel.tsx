@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from '@tanstack/react-router';
-import { fetchRecentNews } from '../../services/news';
-import { fetchScheduleForToday, fetchNextUpcomingShow } from '../../services/schedule';
-import type { News } from '../../types/news';
-import type { Schedule, UpcomingShow } from '../../types/schedule';
+import { useRecentNews } from '../../hooks/useRecentNews';
+import { useTodaySchedule, useNextUpcomingShow } from '../../hooks/useUpNext';
 import './UpNextPanel.css';
 
 /**
@@ -25,50 +23,12 @@ function formatTime(timeString: string): string {
 }
 
 export const UpNextPanel: React.FC = () => {
-  const [news, setNews] = useState<News[]>([]);
-  const [schedule, setSchedule] = useState<Schedule | null>(null);
-  const [nextShow, setNextShow] = useState<UpcomingShow | null>(null);
-  const [isLoadingNews, setIsLoadingNews] = useState(true);
-  const [isLoadingSchedule, setIsLoadingSchedule] = useState(true);
-  const [newsError, setNewsError] = useState<string | null>(null);
-  const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const { data: news = [], isLoading: isLoadingNews, error: newsError } = useRecentNews(4);
+  const { data: schedule, isLoading: isLoadingSchedule, error: scheduleError } = useTodaySchedule();
 
-  useEffect(() => {
-    async function loadNews() {
-      try {
-        setIsLoadingNews(true);
-        const data = await fetchRecentNews(4);
-        setNews(data);
-      } catch (err) {
-        console.error('Failed to load news:', err);
-        setNewsError('Failed to load news');
-      } finally {
-        setIsLoadingNews(false);
-      }
-    }
-
-    async function loadSchedule() {
-      try {
-        setIsLoadingSchedule(true);
-        const data = await fetchScheduleForToday();
-        setSchedule(data);
-
-        // If no schedule for today, fetch the next upcoming show
-        if (!data || !data.Show_Slots || data.Show_Slots.length === 0) {
-          const upcoming = await fetchNextUpcomingShow();
-          setNextShow(upcoming);
-        }
-      } catch (err) {
-        console.error('Failed to load schedule:', err);
-        setScheduleError('Failed to load schedule');
-      } finally {
-        setIsLoadingSchedule(false);
-      }
-    }
-
-    loadNews();
-    loadSchedule();
-  }, []);
+  const scheduleSlots = schedule?.Show_Slots ?? [];
+  const hasScheduleSlots = scheduleSlots.length > 0;
+  const { data: nextShow } = useNextUpcomingShow(!hasScheduleSlots && !isLoadingSchedule);
 
   return (
     <div className="up-next-panel">
@@ -79,13 +39,12 @@ export const UpNextPanel: React.FC = () => {
           <h3 className="up-next-panel__subtitle">RADIO SCHEDULE</h3>
         </Link>
         {isLoadingSchedule && <p className="up-next-panel__loading">Loading schedule...</p>}
-        {scheduleError && <p className="up-next-panel__error">{scheduleError}</p>}
-        {!isLoadingSchedule && !scheduleError && schedule && schedule.Show_Slots && schedule.Show_Slots.length > 0 ? (
+        {scheduleError && <p className="up-next-panel__error">Failed to load schedule</p>}
+        {!isLoadingSchedule && !scheduleError && hasScheduleSlots ? (
           <ul className="up-next-panel__schedule">
-            {schedule.Show_Slots.map((slot) => {
+            {scheduleSlots.map((slot) => {
               const showName = slot.Show_Name?.ShowName || 'Unknown Show';
               const showSlug = slot.Show_Name?.ShowSlug;
-              // Format time from HH:mm:ss.SSS to a readable format (e.g., "2pm")
               const startTime = slot.Start_Time ? formatTime(slot.Start_Time) : '';
 
               return (
@@ -140,7 +99,7 @@ export const UpNextPanel: React.FC = () => {
           <h3 className="up-next-panel__subtitle">NEWS</h3>
         </Link>
         {isLoadingNews && <p className="up-next-panel__loading">Loading news...</p>}
-        {newsError && <p className="up-next-panel__error">{newsError}</p>}
+        {newsError && <p className="up-next-panel__error">Failed to load news</p>}
         {!isLoadingNews && !newsError && (
           <ul className="up-next-panel__news">
             {news.map((item) => (
