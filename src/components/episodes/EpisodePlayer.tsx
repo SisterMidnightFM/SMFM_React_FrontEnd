@@ -85,7 +85,7 @@ export function EpisodePlayer({ type, url, episodeTitle, onClose, savedPosition,
           // Only save every ~5s to avoid thrashing localStorage
           if (Math.abs(e.currentPosition - lastSaved) > 5000) {
             lastSaved = e.currentPosition;
-            onPositionUpdate(e.currentPosition);
+            onPositionUpdate?.(e.currentPosition);
           }
         });
       });
