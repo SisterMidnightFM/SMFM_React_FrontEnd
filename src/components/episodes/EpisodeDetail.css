@@ -204,6 +204,7 @@
 
 .episode-detail__play-button--soundcloud {
   background-color: #ff5500;
+  color: var(--Colour2);
 }
 
 .episode-detail__play-button--soundcloud:hover {
@@ -212,6 +213,7 @@
 
 .episode-detail__play-button--mixcloud {
   background-color: #8b5cf6;
+  color: var(--Colour2);
 }
 
 .episode-detail__play-button--mixcloud:hover {

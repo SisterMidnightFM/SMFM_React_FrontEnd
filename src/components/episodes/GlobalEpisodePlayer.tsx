@@ -2,7 +2,7 @@ import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
 import { EpisodePlayer } from './EpisodePlayer';
 
 export function GlobalEpisodePlayer() {
-  const { activePlayer, closePlayer } = useEpisodePlayer();
+  const { activePlayer, closePlayer, savedPosition, savePosition } = useEpisodePlayer();
 
   if (!activePlayer) {
     return null;
@@ -16,6 +16,8 @@ export function GlobalEpisodePlayer() {
       episodeTitle={activePlayer.episodeTitle}
       showName={activePlayer.showName}
       onClose={closePlayer}
+      savedPosition={savedPosition}
+      onPositionUpdate={savePosition}
     />
   );
 }

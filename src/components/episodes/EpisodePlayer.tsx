@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './EpisodePlayer.css';
 
 interface EpisodePlayerProps {
@@ -7,11 +7,14 @@ interface EpisodePlayerProps {
   episodeTitle: string;
   showName?: string;
   onClose: () => void;
+  savedPosition?: number | null;
+  onPositionUpdate?: (ms: number) => void;
 }
 
-export function EpisodePlayer({ type, url, episodeTitle, onClose }: EpisodePlayerProps) {
+export function EpisodePlayer({ type, url, episodeTitle, onClose, savedPosition, onPositionUpdate }: EpisodePlayerProps) {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Detect if mobile device
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -59,11 +62,52 @@ export function EpisodePlayer({ type, url, episodeTitle, onClose }: EpisodePlaye
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [onClose, isMinimized]);
 
+  // SoundCloud Widget API: track position + seek to saved position on reload
+  useEffect(() => {
+    if (type !== 'soundcloud' || !onPositionUpdate) return;
+
+    let widget: any;
+    let lastSaved = 0;
+
+    function init() {
+      const SC = (window as any).SC;
+      if (!SC?.Widget || !iframeRef.current) return;
+
+      widget = SC.Widget(iframeRef.current);
+      widget.bind(SC.Widget.Events.READY, () => {
+        // Seek to saved position if we have one
+        if (savedPosition && savedPosition > 0) {
+          widget.seekTo(savedPosition);
+        }
+
+        // Periodically save position via PLAY_PROGRESS
+        widget.bind(SC.Widget.Events.PLAY_PROGRESS, (e: { currentPosition: number }) => {
+          // Only save every ~5s to avoid thrashing localStorage
+          if (Math.abs(e.currentPosition - lastSaved) > 5000) {
+            lastSaved = e.currentPosition;
+            onPositionUpdate(e.currentPosition);
+          }
+        });
+      });
+    }
+
+    // Load SC Widget API script if not already loaded
+    if ((window as any).SC?.Widget) {
+      init();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://w.soundcloud.com/player/api.js';
+      script.onload = init;
+      document.head.appendChild(script);
+    }
+  }, [type, savedPosition, onPositionUpdate]);
+
   return (
     <div className={`episode-player ${isMinimized ? 'episode-player--minimized' : ''} ${isClosing ? 'episode-player--closing' : ''}`}>
       <div className="episode-player__content">
         <div className={`episode-player__iframe-wrapper ${isMinimized ? 'episode-player__iframe-wrapper--hidden' : ''}`}>
           <iframe
+            ref={iframeRef}
             width="100%"
             height="120"
             scrolling="no"
