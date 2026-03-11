@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 
 interface EpisodePlayerState {
   type: 'soundcloud' | 'mixcloud';
   url: string;
   episodeTitle: string;
   showName?: string;
+  key: number; // Forces remount on player switch
 }
 
 interface EpisodePlayerContextType {
@@ -15,25 +16,19 @@ interface EpisodePlayerContextType {
 
 const EpisodePlayerContext = createContext<EpisodePlayerContextType | undefined>(undefined);
 
+let playerKey = 0;
+
 export const EpisodePlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [activePlayer, setActivePlayer] = useState<EpisodePlayerState | null>(null);
 
-  const openPlayer = (type: 'soundcloud' | 'mixcloud', url: string, episodeTitle: string, showName?: string) => {
-    // If a player is already open, close it first
-    if (activePlayer) {
-      setActivePlayer(null);
-      // Wait for unmount before opening new player
-      setTimeout(() => {
-        setActivePlayer({ type, url, episodeTitle, showName });
-      }, 100);
-    } else {
-      setActivePlayer({ type, url, episodeTitle, showName });
-    }
-  };
+  const openPlayer = useCallback((type: 'soundcloud' | 'mixcloud', url: string, episodeTitle: string, showName?: string) => {
+    playerKey++;
+    setActivePlayer({ type, url, episodeTitle, showName, key: playerKey });
+  }, []);
 
-  const closePlayer = () => {
+  const closePlayer = useCallback(() => {
     setActivePlayer(null);
-  };
+  }, []);
 
   return (
     <EpisodePlayerContext.Provider

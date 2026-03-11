@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { EpisodeCard } from '../episodes/EpisodeCard';
 import { useStaffPicks } from '../../hooks/useStaffPicks';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './HomeSection.css';
 
 export const SMFMPicks: React.FC = () => {
   const { data: episodes, isLoading, error } = useStaffPicks();
-  const [visibleCount, setVisibleCount] = useState(10);
 
-  useEffect(() => {
-    function updateVisibleCount() {
-      const width = window.innerWidth;
-      if (width < 768) {
-        setVisibleCount(6);
-      } else if (width < 1200) {
-        setVisibleCount(8);
-      } else if (width < 1600) {
-        setVisibleCount(10);
-      } else {
-        setVisibleCount(12);
-      }
-    }
+  const isMin768 = useMediaQuery('(min-width: 768px)');
+  const isMin1200 = useMediaQuery('(min-width: 1200px)');
+  const isMin1600 = useMediaQuery('(min-width: 1600px)');
 
-    updateVisibleCount();
-    window.addEventListener('resize', updateVisibleCount);
-    return () => window.removeEventListener('resize', updateVisibleCount);
-  }, []);
+  const visibleCount = !isMin768 ? 6 : !isMin1200 ? 8 : !isMin1600 ? 10 : 12;
 
   return (
     <section className="home-section">

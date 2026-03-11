@@ -1,11 +1,13 @@
-import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { createRootRouteWithContext, Outlet, useLocation } from '@tanstack/react-router'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import type { QueryClient } from '@tanstack/react-query'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { SidePanel } from '../components/layout/SidePanel'
 import { ExplorePanel } from '../components/layout/ExplorePanel'
 import { UpNextPanel } from '../components/layout/UpNextPanel'
 import { CardClipPaths } from '../components/shared/Card'
+import { useIsDesktop } from '../hooks/useMediaQuery'
 import './root.css'
 
 // Star images for decorative elements
@@ -32,41 +34,43 @@ function RootComponent() {
   const isHomePage = location.pathname === '/'
   const [isExploreOpen, setIsExploreOpen] = useState(false)
   const [isUpNextOpen, setIsUpNextOpen] = useState(false)
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024)
-  const [stars] = useState(getRandomStars())
+  const isDesktop = useIsDesktop()
+  const [stars] = useState(getRandomStars)
+  const rafRef = useRef<number>(0)
 
-  // Handle responsive behavior for Up Next panel
+  // Auto-open/close Up Next based on desktop/mobile and page
   useEffect(() => {
-    const handleResize = () => {
-      const desktop = window.innerWidth >= 1024
-      setIsDesktop(desktop)
-      // Auto-open Up Next on desktop (unless homepage), auto-close on mobile
-      if (!isHomePage) {
-        setIsUpNextOpen(desktop)
-      }
+    if (!isHomePage) {
+      setIsUpNextOpen(isDesktop)
+    } else {
+      setIsUpNextOpen(false)
     }
+  }, [isDesktop, isHomePage])
 
-    handleResize() // Set initial state
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [isHomePage])
+  // Throttled scroll handler for homepage Up Next panel
+  const handleScroll = useCallback(() => {
+    if (rafRef.current) return
+    rafRef.current = requestAnimationFrame(() => {
+      const scrollThreshold = window.innerHeight * 0.7
+      setIsUpNextOpen(window.scrollY > scrollThreshold)
+      rafRef.current = 0
+    })
+  }, [])
 
-  // Handle scroll behavior for Up Next panel on homepage
   useEffect(() => {
     if (!isHomePage || !isDesktop) return
 
-    const handleScroll = () => {
-      const scrollThreshold = window.innerHeight * 0.7
-      const shouldOpen = window.scrollY > scrollThreshold
-      setIsUpNextOpen(shouldOpen)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = 0
+      }
     }
+  }, [isHomePage, isDesktop, handleScroll])
 
-    // Set initial state - closed on homepage
-    setIsUpNextOpen(false)
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isHomePage, isDesktop])
+  const isMobile = !isDesktop
 
   return (
     <div className={`app-container ${isUpNextOpen && isDesktop ? 'app-container--up-next-open' : ''} ${isExploreOpen ? 'app-container--explore-open' : ''} ${isHomePage && !isUpNextOpen && isDesktop ? 'app-container--homepage-up-next-closed' : ''}`}>
@@ -118,6 +122,7 @@ function RootComponent() {
           isOpen={isExploreOpen}
           onClose={() => setIsExploreOpen(false)}
           side="left"
+          isMobile={isMobile}
         >
           <ExplorePanel onClose={() => setIsExploreOpen(false)} />
         </SidePanel>
@@ -127,6 +132,7 @@ function RootComponent() {
           isOpen={isUpNextOpen}
           onClose={() => setIsUpNextOpen(false)}
           side="right"
+          isMobile={isMobile}
         >
           <UpNextPanel />
         </SidePanel>
@@ -139,7 +145,7 @@ function RootComponent() {
             aria-hidden="true"
           />
         )}
-        {isUpNextOpen && !isDesktop && (
+        {isUpNextOpen && isMobile && (
           <div
             className="overlay"
             onClick={() => setIsUpNextOpen(false)}
@@ -151,7 +157,7 @@ function RootComponent() {
   )
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   component: RootComponent,
   notFoundComponent: () => (
     <div>

@@ -1,8 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useShowBySlug } from '../../hooks/useShowBySlug';
 import { ShowDetail } from '../../components/shows/ShowDetail';
+import { fetchShowBySlug } from '../../services/shows';
 
 export const Route = createFileRoute('/shows/$slug')({
+  loader: async ({ context: { queryClient }, params: { slug } }) => {
+    await queryClient.ensureQueryData({
+      queryKey: ['shows', slug],
+      queryFn: () => fetchShowBySlug(slug),
+    });
+  },
+  pendingComponent: () => null,
   component: ShowDetailPage,
 });
 
