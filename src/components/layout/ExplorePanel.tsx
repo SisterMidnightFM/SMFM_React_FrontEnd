@@ -52,32 +52,34 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
 
   return (
     <nav className="explore-panel">
-      <div className="explore-panel__home">
-        <Link to="/" className="explore-panel__home-button" onClick={onClose}>HOME</Link>
-      </div>
-
-      <div className="explore-panel__home">
-        <Link to="/chatroom" className="explore-panel__home-button" onClick={onClose}>CHAT ROOM</Link>
-      </div>
-
       <div className="explore-panel__section">
-        <button
-          className="explore-panel__heading explore-panel__heading--clickable"
-          onClick={toggleArchive}
-          aria-expanded={isArchiveExpanded}
-        >
-          <span>EXPLORE ARCHIVE</span>
-          <span className="explore-panel__heading-icon">{isArchiveExpanded ? '−' : '+'}</span>
-        </button>
-        {isArchiveExpanded && (
-          <ul className="explore-panel__list">
-            <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchStaffPicks}>• SMFM PICKS</Link></li>
-            <li><Link to="/episodes" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchEpisodes}>• EPISODES</Link></li>
-            <li><Link to="/shows" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchShows}>• SHOWS</Link></li>
-            <li><Link to="/artists" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchArtists}>• ARTISTS</Link></li>
-            <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
-          </ul>
-        )}
+        <div className="explore-panel__home">
+          <Link to="/" className="explore-panel__home-button" onClick={onClose}>HOME</Link>
+        </div>
+
+        <div className="explore-panel__chatroom">
+          <Link to="/chatroom" className="explore-panel__main-link" onClick={onClose}>CHAT ROOM</Link>
+        </div>
+
+        <div className="explore-panel__explore">
+          <button
+            className="explore-panel__heading explore-panel__heading--clickable"
+            onClick={toggleArchive}
+            aria-expanded={isArchiveExpanded}
+          >
+            <span>EXPLORE ARCHIVE</span>
+            <span className="explore-panel__heading-icon">{isArchiveExpanded ? '−' : '+'}</span>
+          </button>
+          {isArchiveExpanded && (
+            <ul className="explore-panel__list">
+              <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchStaffPicks}>• SMFM PICKS</Link></li>
+              <li><Link to="/episodes" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchEpisodes}>• EPISODES</Link></li>
+              <li><Link to="/shows" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchShows}>• SHOWS</Link></li>
+              <li><Link to="/artists" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchArtists}>• ARTISTS</Link></li>
+              <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="explore-panel__section">
@@ -98,7 +100,6 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
           </li>
         </ul>
       </div>
-
     </nav>
   );
 };
