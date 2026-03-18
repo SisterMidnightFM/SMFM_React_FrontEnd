@@ -38,6 +38,17 @@
   font-family: 'ReworkText-Bold', sans-serif;
 }
 
+.footer__disclaimer {
+  max-width: 600px;
+  margin: 1rem auto 0;
+  text-align: center;
+  color: var(--Colour2);
+  font-size: 0.5625rem;
+  font-family: 'ReworkText-Bold', sans-serif;
+  opacity: 0.6;
+  line-height: 1.5;
+}
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .footer {
