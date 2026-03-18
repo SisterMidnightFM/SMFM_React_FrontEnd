@@ -37,6 +37,13 @@ export function Footer() {
       <p className="footer__copyright">
         &copy; {currentYear} Sister Midnight
       </p>
+      <p className="footer__disclaimer">
+        Sister Midnight FM is a community radio station that platforms a wide
+        range of voices, music, and perspectives from across South East London
+        and beyond. The views and opinions expressed by presenters, guests, and
+        contributors are their own, and do not represent the views of Sister
+        Midnight Community Venues Limited, its Workers, Board, or Committee.
+      </p>
     </footer>
   )
 }
