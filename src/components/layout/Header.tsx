@@ -63,12 +63,22 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      <Link
-        to="/chatroom"
-        className="header__chat-button"
-      >
-        <span>CHAT ROOM</span>
-      </Link>
+      <div className="header__buttons">
+        <Link
+          to="/chatroom"
+          className="header__chat-button"
+        >
+          <span>CHAT ROOM</span>
+        </Link>
+        <a
+          href="https://sistermidnightfm.setmore.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="header__book-button"
+        >
+          <span>BOOK STUDIO</span>
+        </a>
+      </div>
     </header>
   );
 };

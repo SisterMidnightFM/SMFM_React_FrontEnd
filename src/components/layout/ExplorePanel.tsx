@@ -90,6 +90,16 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
           <li><Link to="/contact" className="explore-panel__main-link" onClick={onClose}>CONTACT</Link></li>
           <li>
             <a
+              href="https://sistermidnightfm.setmore.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="explore-panel__main-link"
+            >
+              BOOK THE STUDIO&nbsp;↗
+            </a>
+          </li>
+          <li>
+            <a
               href="https://www.sistermidnight.org/"
               target="_blank"
               rel="noopener noreferrer"
