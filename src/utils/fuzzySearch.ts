@@ -80,6 +80,57 @@ export function fuzzySearchArtists(artists: Artist[], query: string): Artist[] {
 }
 
 /**
+ * Fuzzy search episodes, returning each item paired with its match score (0-100).
+ */
+export function fuzzySearchEpisodesWithScores(
+  episodes: Episode[],
+  query: string
+): { item: Episode; score: number }[] {
+  if (!query.trim()) {
+    return episodes.map(item => ({ item, score: 50 }));
+  }
+  const fuse = new Fuse(episodes, episodeSearchOptions);
+  return fuse.search(query).map(result => ({
+    item: result.item,
+    score: Math.round((1 - (result.score ?? 1)) * 100),
+  }));
+}
+
+/**
+ * Fuzzy search shows, returning each item paired with its match score (0-100).
+ */
+export function fuzzySearchShowsWithScores(
+  shows: Show[],
+  query: string
+): { item: Show; score: number }[] {
+  if (!query.trim()) {
+    return shows.map(item => ({ item, score: 50 }));
+  }
+  const fuse = new Fuse(shows, showSearchOptions);
+  return fuse.search(query).map(result => ({
+    item: result.item,
+    score: Math.round((1 - (result.score ?? 1)) * 100),
+  }));
+}
+
+/**
+ * Fuzzy search artists, returning each item paired with its match score (0-100).
+ */
+export function fuzzySearchArtistsWithScores(
+  artists: Artist[],
+  query: string
+): { item: Artist; score: number }[] {
+  if (!query.trim()) {
+    return artists.map(item => ({ item, score: 50 }));
+  }
+  const fuse = new Fuse(artists, artistSearchOptions);
+  return fuse.search(query).map(result => ({
+    item: result.item,
+    score: Math.round((1 - (result.score ?? 1)) * 100),
+  }));
+}
+
+/**
  * Calculate fuzzy match score for an item (0-100, higher is better)
  */
 export function calculateFuzzyScore<T>(item: T, query: string, options: IFuseOptions<T>): number {

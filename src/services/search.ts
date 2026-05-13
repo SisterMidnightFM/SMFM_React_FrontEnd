@@ -4,8 +4,8 @@ import type { Artist } from '../types/artist';
 import type { SearchFilters, SearchResults, SearchResultItem, ContentType } from '../types/search';
 import type { StrapiCollectionResponse } from '../types/strapi';
 import { buildEpisodeSearchQuery, buildShowSearchQuery, buildArtistSearchQuery } from '../utils/buildSearchQuery';
-import { calculateEpisodeRelevance, calculateShowRelevance, calculateArtistRelevance } from '../utils/calculateRelevance';
-import { fuzzySearchEpisodes, fuzzySearchShows, fuzzySearchArtists } from '../utils/fuzzySearch';
+import { calculateEpisodeRelevance, calculateShowRelevance, calculateArtistRelevance, calculateEpisodeTagBonus, calculateArtistTagBonus } from '../utils/calculateRelevance';
+import { fuzzySearchEpisodesWithScores, fuzzySearchShowsWithScores, fuzzySearchArtistsWithScores } from '../utils/fuzzySearch';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
 const API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -38,18 +38,24 @@ async function searchEpisodes(
 
     const data: StrapiCollectionResponse<Episode> = await response.json();
 
-    // Apply fuzzy search if there's a query
-    let episodes = data.data;
+    // When a query is present, use fuzzy scores as the primary ranking signal.
+    // Tag/date bonuses are added on top. Without a query, fall back to the
+    // tag/date-only relevance scoring.
+    let items: SearchResultItem[];
     if (filters.query.trim()) {
-      episodes = fuzzySearchEpisodes(episodes, filters.query);
+      const scored = fuzzySearchEpisodesWithScores(data.data, filters.query);
+      items = scored.map(({ item: episode, score: fuzzyScore }) => ({
+        type: 'episodes' as ContentType,
+        data: episode,
+        relevanceScore: fuzzyScore + calculateEpisodeTagBonus(episode, filters),
+      }));
+    } else {
+      items = data.data.map((episode) => ({
+        type: 'episodes' as ContentType,
+        data: episode,
+        relevanceScore: calculateEpisodeRelevance(episode, filters),
+      }));
     }
-
-    // Calculate relevance scores for each episode
-    const items: SearchResultItem[] = episodes.map((episode) => ({
-      type: 'episodes' as ContentType,
-      data: episode,
-      relevanceScore: calculateEpisodeRelevance(episode, filters),
-    }));
 
     return {
       items,
@@ -85,18 +91,21 @@ async function searchShows(
 
     const data: StrapiCollectionResponse<Show> = await response.json();
 
-    // Apply fuzzy search if there's a query
-    let shows = data.data;
+    let items: SearchResultItem[];
     if (filters.query.trim()) {
-      shows = fuzzySearchShows(shows, filters.query);
+      const scored = fuzzySearchShowsWithScores(data.data, filters.query);
+      items = scored.map(({ item: show, score: fuzzyScore }) => ({
+        type: 'shows' as ContentType,
+        data: show,
+        relevanceScore: fuzzyScore,
+      }));
+    } else {
+      items = data.data.map((show) => ({
+        type: 'shows' as ContentType,
+        data: show,
+        relevanceScore: calculateShowRelevance(show, filters),
+      }));
     }
-
-    // Calculate relevance scores for each show
-    const items: SearchResultItem[] = shows.map((show) => ({
-      type: 'shows' as ContentType,
-      data: show,
-      relevanceScore: calculateShowRelevance(show, filters),
-    }));
 
     return {
       items,
@@ -132,18 +141,21 @@ async function searchArtists(
 
     const data: StrapiCollectionResponse<Artist> = await response.json();
 
-    // Apply fuzzy search if there's a query
-    let artists = data.data;
+    let items: SearchResultItem[];
     if (filters.query.trim()) {
-      artists = fuzzySearchArtists(artists, filters.query);
+      const scored = fuzzySearchArtistsWithScores(data.data, filters.query);
+      items = scored.map(({ item: artist, score: fuzzyScore }) => ({
+        type: 'artists' as ContentType,
+        data: artist,
+        relevanceScore: fuzzyScore + calculateArtistTagBonus(artist, filters),
+      }));
+    } else {
+      items = data.data.map((artist) => ({
+        type: 'artists' as ContentType,
+        data: artist,
+        relevanceScore: calculateArtistRelevance(artist, filters),
+      }));
     }
-
-    // Calculate relevance scores for each artist
-    const items: SearchResultItem[] = artists.map((artist) => ({
-      type: 'artists' as ContentType,
-      data: artist,
-      relevanceScore: calculateArtistRelevance(artist, filters),
-    }));
 
     return {
       items,

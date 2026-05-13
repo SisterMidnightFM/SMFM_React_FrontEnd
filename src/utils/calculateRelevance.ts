@@ -58,6 +58,54 @@ export function calculateEpisodeRelevance(
 }
 
 /**
+ * Tag/date bonus for an episode when a text query is handling relevance separately.
+ * Returns only the genre, theme, and date-range component of the score.
+ */
+export function calculateEpisodeTagBonus(
+  episode: Episode,
+  filters: SearchFilters
+): number {
+  let score = 0;
+
+  if (filters.genreIds.length > 0 && episode.tag_genres) {
+    const episodeGenreIds = episode.tag_genres.map((g) => g.id);
+    score += filters.genreIds.filter((id) => episodeGenreIds.includes(id)).length * 3;
+  }
+
+  if (filters.themeIds.length > 0 && episode.tag_themes) {
+    const episodeThemeIds = episode.tag_themes.map((t) => t.id);
+    score += filters.themeIds.filter((id) => episodeThemeIds.includes(id)).length * 3;
+  }
+
+  if (filters.dateRange.start || filters.dateRange.end) {
+    const broadcastDate = new Date(episode.BroadcastDateTime);
+    const inRange =
+      (!filters.dateRange.start || broadcastDate >= new Date(filters.dateRange.start)) &&
+      (!filters.dateRange.end || broadcastDate <= new Date(filters.dateRange.end));
+    if (inRange) score += 2;
+  }
+
+  return score;
+}
+
+/**
+ * Tag bonus for an artist when a text query is handling relevance separately.
+ */
+export function calculateArtistTagBonus(
+  artist: Artist,
+  filters: SearchFilters
+): number {
+  let score = 0;
+
+  if (filters.locationIds.length > 0 && artist.tag_locations) {
+    const artistLocationIds = artist.tag_locations.map((l) => l.id);
+    score += filters.locationIds.filter((id) => artistLocationIds.includes(id)).length * 3;
+  }
+
+  return score;
+}
+
+/**
  * Calculate relevance score for a show based on search filters.
  * Higher score = more criteria matched.
  */

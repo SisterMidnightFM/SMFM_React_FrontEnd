@@ -20,14 +20,14 @@ export function buildEpisodeSearchQuery(
   // Sort by broadcast date (newest first)
   params.append('sort', 'BroadcastDateTime:desc');
 
-  // Increase page size for fuzzy search to have more items to work with
+  // When a text query is present, filter on the server so all matching episodes
+  // are returned regardless of date (not just the newest 1000).
+  // Fuzzy search then handles ranking and catches minor typos within these results.
   if (filters.query.trim()) {
-    params.set('pagination[pageSize]', '1000'); // Get many more results for fuzzy matching
+    params.set('pagination[pageSize]', '200');
+    params.append('filters[$or][0][EpisodeTitle][$containsi]', filters.query);
+    params.append('filters[$or][1][EpisodeDescription][$containsi]', filters.query);
   }
-
-  // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
-  // This allows fuzzy matching to work on typos and partial matches
-  // (Server-side containsi filter would exclude results before fuzzy search sees them)
 
   // Date range filter (only for episodes)
   if (filters.dateRange.start) {
@@ -73,12 +73,11 @@ export function buildShowSearchQuery(
   // Sort alphabetically
   params.append('sort', 'ShowName:asc');
 
-  // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    params.set('pagination[pageSize]', '1000'); // Get many more results for fuzzy matching
+    params.set('pagination[pageSize]', '200');
+    params.append('filters[$or][0][ShowName][$containsi]', filters.query);
+    params.append('filters[$or][1][ShowDescription][$containsi]', filters.query);
   }
-
-  // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
 
   return params;
 }
@@ -103,12 +102,11 @@ export function buildArtistSearchQuery(
   // Sort alphabetically
   params.append('sort', 'ArtistName:asc');
 
-  // Increase page size for fuzzy search to have more items to work with
   if (filters.query.trim()) {
-    params.set('pagination[pageSize]', '1000'); // Get many more results for fuzzy matching
+    params.set('pagination[pageSize]', '200');
+    params.append('filters[$or][0][ArtistName][$containsi]', filters.query);
+    params.append('filters[$or][1][ArtistBio][$containsi]', filters.query);
   }
-
-  // For fuzzy search: Don't filter by text on server, let client-side fuzzy search handle it
 
   // Location filter (only for artists)
   if (filters.locationIds.length > 0) {
