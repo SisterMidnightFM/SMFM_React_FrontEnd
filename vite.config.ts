@@ -4,6 +4,17 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('stream-chat')) return 'vendor-stream-chat';
+          if (id.includes('@tanstack/')) return 'vendor-tanstack';
+          if (id.includes('react-dom') || id.includes('node_modules/react/')) return 'vendor-react';
+        },
+      },
+    },
+  },
   plugins: [
     TanStackRouterVite(),  // ← Must be FIRST
     react(),

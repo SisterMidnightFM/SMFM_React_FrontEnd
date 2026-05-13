@@ -30,32 +30,32 @@ const SmfmPicksRoute = SmfmPicksRouteImport.update({
   id: '/smfm-picks',
   path: '/smfm-picks',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/smfm-picks.lazy').then((d) => d.Route))
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/search.lazy').then((d) => d.Route))
 const ScheduleRoute = ScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/schedule.lazy').then((d) => d.Route))
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/contact.lazy').then((d) => d.Route))
 const ChatroomRoute = ChatroomRouteImport.update({
   id: '/chatroom',
   path: '/chatroom',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/chatroom.lazy').then((d) => d.Route))
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -65,47 +65,53 @@ const ShowsIndexRoute = ShowsIndexRouteImport.update({
   id: '/shows/',
   path: '/shows/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/shows/index.lazy').then((d) => d.Route))
 const NewsIndexRoute = NewsIndexRouteImport.update({
   id: '/news/',
   path: '/news/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/news/index.lazy').then((d) => d.Route))
 const EpisodesIndexRoute = EpisodesIndexRouteImport.update({
   id: '/episodes/',
   path: '/episodes/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/episodes/index.lazy').then((d) => d.Route),
+)
 const ArtistsIndexRoute = ArtistsIndexRouteImport.update({
   id: '/artists/',
   path: '/artists/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/artists/index.lazy').then((d) => d.Route))
 const ShowsSlugRoute = ShowsSlugRouteImport.update({
   id: '/shows/$slug',
   path: '/shows/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/shows/$slug.lazy').then((d) => d.Route))
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
   path: '/news/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/news/$slug.lazy').then((d) => d.Route))
 const EpisodesSlugRoute = EpisodesSlugRouteImport.update({
   id: '/episodes/$slug',
   path: '/episodes/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/episodes/$slug.lazy').then((d) => d.Route),
+)
 const ArtistsSlugRoute = ArtistsSlugRouteImport.update({
   id: '/artists/$slug',
   path: '/artists/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/artists/$slug.lazy').then((d) => d.Route))
 const TagsTypeValueRoute = TagsTypeValueRouteImport.update({
   id: '/tags/$type/$value',
   path: '/tags/$type/$value',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/tags/$type.$value.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
