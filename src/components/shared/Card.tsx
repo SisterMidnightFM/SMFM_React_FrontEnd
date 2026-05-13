@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useMemo } from 'react';
 import type { StrapiImage } from '../../types/strapi';
 import { NewBadge } from './NewBadge';
 import './Card.css';
@@ -158,50 +158,87 @@ export function Card({
   };
 
   const fullImageUrl = getImageUrl();
-  const displayTags = tags?.slice(0, maxTags);
+  // Memoised so the reference only changes when tags/maxTags actually change,
+  // preventing the useEffect below from firing on every render.
+  const displayTags = useMemo(() => tags?.slice(0, maxTags), [tags, maxTags]);
   const hasNoImage = !fullImageUrl;
 
   // Tag overflow detection
+  // null = "needs measurement" (render all tags so we can measure them)
   const tagsContainerRef = useRef<HTMLDivElement>(null);
-  const [visibleTagCount, setVisibleTagCount] = useState(displayTags?.length || 0);
+  const [visibleTagCount, setVisibleTagCount] = useState<number | null>(null);
 
+  // When displayTags changes, mark as needing re-measurement
   useEffect(() => {
-    const container = tagsContainerRef.current;
-    if (!container || !displayTags?.length) return;
-
-    const calculateVisibleTags = () => {
-      const containerWidth = container.offsetWidth;
-      const tags = container.querySelectorAll('.card__tag:not(.card__tag--more)');
-      let totalWidth = 0;
-      let count = 0;
-      const gap = 8; // 0.5rem gap
-      const plusIndicatorWidth = 40; // approximate width for "+N" indicator
-
-      for (let i = 0; i < tags.length; i++) {
-        const tagWidth = (tags[i] as HTMLElement).offsetWidth;
-        const nextWidth = totalWidth + tagWidth + (count > 0 ? gap : 0);
-
-        // Reserve space for +N indicator if not all tags will fit
-        const reserveSpace = i < tags.length - 1 ? plusIndicatorWidth + gap : 0;
-
-        if (nextWidth + reserveSpace <= containerWidth) {
-          totalWidth = nextWidth;
-          count++;
-        } else {
-          break;
-        }
-      }
-
-      setVisibleTagCount(count);
-    };
-
-    // Reset to show all tags for measurement, then calculate
-    setVisibleTagCount(displayTags.length);
-    requestAnimationFrame(calculateVisibleTags);
+    setVisibleTagCount(null);
   }, [displayTags]);
 
-  const visibleTags = displayTags?.slice(0, visibleTagCount);
-  const hiddenCount = (displayTags?.length || 0) - visibleTagCount;
+  // Measure synchronously before paint (useLayoutEffect) so the user never
+  // sees a flash of too many tags
+  useLayoutEffect(() => {
+    if (visibleTagCount !== null) return; // already measured
+
+    const container = tagsContainerRef.current;
+    if (!container || !displayTags?.length) {
+      setVisibleTagCount(displayTags?.length ?? 0);
+      return;
+    }
+
+    const containerWidth = container.offsetWidth;
+    if (!containerWidth) {
+      setVisibleTagCount(displayTags.length);
+      return;
+    }
+
+    const tagEls = container.querySelectorAll<HTMLElement>('.card__tag:not(.card__tag--more)');
+    if (!tagEls.length) {
+      setVisibleTagCount(displayTags.length);
+      return;
+    }
+
+    const gap = 8; // 0.5rem
+    const plusIndicatorWidth = 52; // conservative "+N" badge width
+    let totalWidth = 0;
+    let count = 0;
+
+    for (let i = 0; i < tagEls.length; i++) {
+      const tagWidth = tagEls[i].offsetWidth;
+      const nextWidth = totalWidth + tagWidth + (count > 0 ? gap : 0);
+      const reserveSpace = i < tagEls.length - 1 ? plusIndicatorWidth + gap : 0;
+
+      if (nextWidth + reserveSpace <= containerWidth) {
+        totalWidth = nextWidth;
+        count++;
+      } else {
+        break;
+      }
+    }
+
+    setVisibleTagCount(count);
+  }, [visibleTagCount, displayTags]);
+
+  // Re-measure when the container is resized (e.g. sidebar opens/closes)
+  useEffect(() => {
+    const container = tagsContainerRef.current;
+    if (!container) return;
+    const observer = new ResizeObserver(() => setVisibleTagCount(null));
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  const displayCount = visibleTagCount ?? (displayTags?.length ?? 0);
+  const charBasedCount = (() => {
+    if (!displayTags?.length) return 0;
+    let total = 0;
+    for (let i = 0; i < displayTags.length; i++) {
+      total += displayTags[i].label.length;
+      if (total > 15) return Math.max(1, i);
+    }
+    return displayTags.length;
+  })();
+  const charLimitedCount = Math.min(displayCount, charBasedCount);
+  const visibleTags = displayTags?.slice(0, charLimitedCount);
+  const hiddenCount = (displayTags?.length ?? 0) - charLimitedCount;
 
   return (
     <div className="card-wrapper">
