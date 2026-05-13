@@ -163,7 +163,7 @@
 }
 
 .header__book-button {
-  background-color: var(--Colour3);
+  background-color: var(--Colour2);
   color: var(--Colour1);
   border: none;
   padding: 0.75rem 1.5rem;
@@ -184,7 +184,7 @@
 }
 
 .header__book-button:hover {
-  background-color: var(--Colour2);
+  background-color: var(--Colour3);
 }
 
 /* Narrow desktop with Up Next panel - stack header to prevent overlap */

@@ -192,7 +192,7 @@ export function Card({
         }
       }
 
-      setVisibleTagCount(Math.max(1, count)); // Show at least 1 tag
+      setVisibleTagCount(count);
     };
 
     // Reset to show all tags for measurement, then calculate
