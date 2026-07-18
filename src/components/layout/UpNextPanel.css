@@ -27,7 +27,7 @@
   font-weight: bold;
   color: var(--Colour1);
   margin: 0;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--Font1-tracking);
 }
 
 .up-next-panel__subtitle-link {
@@ -92,7 +92,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.75rem;
 }
 
 .up-next-panel__news-item {

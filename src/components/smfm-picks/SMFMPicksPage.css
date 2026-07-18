@@ -25,7 +25,8 @@
   font-weight: bold;
   color: var(--Colour2);
   margin: 0;
-  letter-spacing: 0.05em;
+  line-height: var(--Font2-leading);
+  letter-spacing: var(--Font2-tracking);
 }
 
 /* Loading and Error States */

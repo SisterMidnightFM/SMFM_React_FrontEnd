@@ -72,11 +72,11 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
           </button>
           {isArchiveExpanded && (
             <ul className="explore-panel__list">
-              <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchStaffPicks}>• SMFM PICKS</Link></li>
-              <li><Link to="/episodes" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchEpisodes}>• EPISODES</Link></li>
-              <li><Link to="/shows" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchShows}>• SHOWS</Link></li>
-              <li><Link to="/artists" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchArtists}>• ARTISTS</Link></li>
-              <li><Link to="/search" className="explore-panel__link" onClick={onClose}>• SMART SEARCH</Link></li>
+              <li><Link to="/smfm-picks" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchStaffPicks}>→ SMFM PICKS</Link></li>
+              <li><Link to="/episodes" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchEpisodes}>→ EPISODES</Link></li>
+              <li><Link to="/shows" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchShows}>→ SHOWS</Link></li>
+              <li><Link to="/artists" className="explore-panel__link" onClick={onClose} onMouseEnter={prefetchArtists}>→ ARTISTS</Link></li>
+              <li><Link to="/search" className="explore-panel__link" onClick={onClose}>→ SMART SEARCH</Link></li>
             </ul>
           )}
         </div>

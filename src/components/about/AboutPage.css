@@ -19,8 +19,8 @@
   font-weight: bold;
   color: var(--Colour2);
   margin: 0;
-  line-height: 1.2;
-  letter-spacing: 0.05em;
+  line-height: var(--Font2-leading);
+  letter-spacing: var(--Font2-tracking);
 }
 
 /* Content */
@@ -44,7 +44,8 @@
   color: var(--Colour2);
   margin-top: 2rem;
   margin-bottom: 1rem;
-  line-height: 1.3;
+  line-height: var(--Font2-leading);
+  letter-spacing: var(--Font2-tracking);
 }
 
 .about-page__content h1 {

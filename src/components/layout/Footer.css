@@ -17,7 +17,7 @@
   align-items: center;
   gap: 1.5rem;
   font-size: 0.875rem;
-  font-family: 'ReworkText-Bold', sans-serif;
+  font-family: var(--Font1);
 }
 
 .footer__link {
@@ -35,7 +35,7 @@
   text-align: center;
   color: var(--Colour2);
   font-size: 0.75rem;
-  font-family: 'ReworkText-Bold', sans-serif;
+  font-family: var(--Font1);
 }
 
 .footer__disclaimer {
@@ -44,9 +44,10 @@
   text-align: center;
   color: var(--Colour2);
   font-size: 0.5625rem;
-  font-family: 'ReworkText-Bold', sans-serif;
+  font-family: var(--Font1);
   opacity: 0.6;
   line-height: 1.5;
+  letter-spacing: 0.02em;
 }
 
 /* Responsive adjustments */
