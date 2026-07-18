@@ -77,6 +77,7 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
             <img
               src={fullImageUrl}
               alt={episodeImage?.alternativeText || episode.EpisodeTitle}
+              fetchPriority="high"
             />
           ) : (
             <div className="episode-detail__placeholder episode-detail__placeholder--logo">
@@ -203,6 +204,7 @@ export function EpisodeDetail({ episode }: EpisodeDetailProps) {
                       <img
                         src={`${STRAPI_URL}${artist.ArtistImage.formats?.small?.url || artist.ArtistImage.url}`}
                         alt={artist.ArtistImage.alternativeText || artist.ArtistName}
+                        loading="lazy"
                       />
                     ) : (
                       <div className="episode-detail__guest-placeholder">

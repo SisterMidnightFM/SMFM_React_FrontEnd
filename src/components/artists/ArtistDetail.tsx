@@ -59,6 +59,7 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
             <img
               src={fullImageUrl}
               alt={artist.ArtistImage?.alternativeText || artist.ArtistName}
+              fetchPriority="high"
             />
           ) : (
             <div className="artist-detail__placeholder">
@@ -139,6 +140,7 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
                     <img
                       src={`${STRAPI_URL}${show.ShowImage.formats?.small?.url || show.ShowImage.url}`}
                       alt={show.ShowImage.alternativeText || show.ShowName}
+                      loading="lazy"
                     />
                   </div>
                 )}
@@ -217,6 +219,7 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
                           ? blog.CoverImage[0]?.alternativeText || blog.News_Title
                           : blog.CoverImage.alternativeText || blog.News_Title
                       }
+                      loading="lazy"
                     />
                   </div>
                 )}

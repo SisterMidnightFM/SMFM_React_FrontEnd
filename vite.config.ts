@@ -5,10 +5,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   build: {
+    // The stream-chat SDK (~1.4 MB) rides in the lazy chatroom chunk by design
+    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('stream-chat')) return 'vendor-stream-chat';
           if (id.includes('@tanstack/')) return 'vendor-tanstack';
           if (id.includes('react-dom') || id.includes('node_modules/react/')) return 'vendor-react';
         },
@@ -20,10 +21,10 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['SmfmLogo.png', 'Images/**/*', 'icons/**/*', 'offline.html'],
+      includeAssets: ['SmfmLogo.png', 'Images/**/*', 'icons/**/*', 'fonts/**/*', 'offline.html'],
       manifest: false, // We're using our own manifest.json in public/
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2,otf,ttf}'],
         globIgnores: ['screenshots/**/*'],
         // Don't use navigateFallback - it serves offline.html even when online
         // Instead, we'll use the offline.html page's JS to detect and redirect

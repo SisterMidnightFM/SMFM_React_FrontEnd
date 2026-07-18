@@ -76,6 +76,7 @@ export function ShowDetail({ show }: ShowDetailProps) {
             <img
               src={fullImageUrl}
               alt={show.ShowImage?.alternativeText || show.ShowName}
+              fetchPriority="high"
             />
           ) : (
             <div className="show-detail__placeholder show-detail__placeholder--logo">
@@ -170,6 +171,7 @@ export function ShowDetail({ show }: ShowDetailProps) {
                           <img
                             src={`${STRAPI_URL}${host.ArtistImage.formats?.small?.url || host.ArtistImage.url}`}
                             alt={host.ArtistImage.alternativeText || host.ArtistName}
+                            loading="lazy"
                           />
                         </div>
                       )}

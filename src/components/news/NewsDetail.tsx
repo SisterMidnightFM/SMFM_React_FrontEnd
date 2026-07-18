@@ -242,6 +242,7 @@ export function NewsDetail({ news }: NewsDetailProps) {
             <img
               src={fullImageUrl}
               alt={coverImage?.alternativeText || news.News_Title}
+              fetchPriority="high"
             />
           </div>
         )}
@@ -264,6 +265,7 @@ export function NewsDetail({ news }: NewsDetailProps) {
                 <img
                   src={`${STRAPI_URL}${image.formats?.medium?.url || image.url}`}
                   alt={image.alternativeText || ''}
+                  loading="lazy"
                 />
               </div>
             ))}
