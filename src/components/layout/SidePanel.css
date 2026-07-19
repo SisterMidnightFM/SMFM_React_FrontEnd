@@ -100,6 +100,8 @@
 
   .side-panel__content {
     padding: 1.5rem;
-    padding-top: calc(1.5rem + 100px); /* Add space for header */
+    /* Panel overlays the header (z-index 250 vs 100), so only the notch
+       safe-area needs clearing, not the header height */
+    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
   }
 }

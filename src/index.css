@@ -68,6 +68,21 @@ body {
   position: relative;
 }
 
+/* Opaque cap over the iOS status bar / notch area.
+   Sticky headers repaint late during momentum scroll on iOS, letting content
+   flash in the notch region; a fixed cap can never lag. Zero-height on
+   devices without a safe-area inset. */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background-color: var(--Colour1);
+  z-index: 200; /* above the header (100), below the side panels (251) */
+}
+
 /* Paper noise texture pseudo-element */
 body::before {
   content: '';
