@@ -122,7 +122,7 @@ If you accidentally committed sensitive data, see "Emergency: Token Exposed" bel
 
 This app connects to these external services:
 - **Strapi (Your Backend)** - Content management system
-- **Radio.co** - Live stream and station status (public API, no auth needed)
+- **Radio Cult** - Live stream and station status (public API, no auth needed)
 - **SoundCloud** - Episode embeds (public embeds)
 - **MixCloud** - Episode embeds (public embeds)
 - **Discord** - Chat room link (no integration, just a link)

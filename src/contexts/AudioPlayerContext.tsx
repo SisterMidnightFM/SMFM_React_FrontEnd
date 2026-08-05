@@ -1,22 +1,20 @@
 import React, { createContext, useContext, useState, useRef, useEffect, type ReactNode } from 'react';
 
-interface RadioStatus {
-  status: string;
-}
-
-interface CurrentTrackData {
-  title: string;
-  start_time: string;
-  artwork_urls: {
-    standard: string;
-    large: string;
+interface LiveNowResponse {
+  success: boolean;
+  result?: {
+    // 'schedule' | 'defaultPlaylist' | 'offAir'
+    status: string;
+    content?: {
+      title?: string;
+      startDateUtc?: string;
+      endDateUtc?: string;
+    } | null;
+    metadata?: {
+      title?: string;
+      artist?: string | null;
+    } | null;
   };
-  track_artist: string;
-  track_title: string;
-}
-
-interface CurrentTrackResponse {
-  data: CurrentTrackData;
 }
 
 interface AudioPlayerContextType {
@@ -31,15 +29,9 @@ interface AudioPlayerContextType {
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
 
-const STREAM_URLS = {
-  standard: 'https://stream.radio.co/s35e4926a1/listen',
-  mobile: 'https://stream.radio.co/s35e4926a1/low',
-};
-
-// Detect if mobile device (for stream selection)
-const isMobileDevice = (): boolean => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-};
+// Radio Cult serves a single Icecast stream (no separate low-bitrate mobile URL)
+const STREAM_URL = 'https://sister-midnight-fm.radiocult.fm/stream';
+const LIVE_NOW_URL = 'https://api.radiocult.fm/api/station/sister-midnight-fm/schedule/live';
 
 export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -50,8 +42,7 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   // Initialize audio element
   useEffect(() => {
-    const streamUrl = isMobileDevice() ? STREAM_URLS.mobile : STREAM_URLS.standard;
-    const audio = new Audio(streamUrl);
+    const audio = new Audio(STREAM_URL);
     audio.preload = 'none';
     audioRef.current = audio;
 
@@ -86,40 +77,25 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   }, []);
 
-  // Fetch station status
+  // Fetch station status and current show (one Radio Cult endpoint covers both)
   useEffect(() => {
-    const fetchStatus = async () => {
+    const fetchLiveNow = async () => {
       try {
-        const response = await fetch('https://public.radio.co/stations/s35e4926a1/status');
-        const data: RadioStatus = await response.json();
-        setIsOnline(data.status === 'online');
+        const response = await fetch(LIVE_NOW_URL);
+        const data: LiveNowResponse = await response.json();
+        const live = data.result;
+
+        setIsOnline(data.success === true && live?.status !== 'offAir');
+        setCurrentShow(live?.content?.title || live?.metadata?.title || 'Sister Midnight FM');
       } catch (error) {
-        console.error('Error fetching station status:', error);
+        console.error('Error fetching live now:', error);
         setIsOnline(false);
-      }
-    };
-
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 30000); // Update every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch current track/show
-  useEffect(() => {
-    const fetchCurrentTrack = async () => {
-      try {
-        const response = await fetch('https://public.radio.co/api/v2/s35e4926a1/track/current');
-        const result: CurrentTrackResponse = await response.json();
-        setCurrentShow(result.data.title || 'Sister Midnight FM');
-      } catch (error) {
-        console.error('Error fetching current track:', error);
         setCurrentShow('Sister Midnight FM');
       }
     };
 
-    fetchCurrentTrack();
-    const interval = setInterval(fetchCurrentTrack, 10000); // Update every 10 seconds
+    fetchLiveNow();
+    const interval = setInterval(fetchLiveNow, 30000); // Update every 30 seconds
 
     return () => clearInterval(interval);
   }, []);
