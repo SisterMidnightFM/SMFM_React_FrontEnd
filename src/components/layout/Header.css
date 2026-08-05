@@ -51,13 +51,16 @@
   flex-direction: column;
   gap: 0.125rem;
   min-width: 0;
-  overflow: hidden;
 }
 
 .header__show-name {
   font-family: var(--Font1);
   font-size: 1rem;
   font-weight: bold;
+  /* The global 0.9 leading and negative tracking sit inside the glyphs, so
+     overflow: hidden shaves descenders and the last letter without this */
+  line-height: 1.25;
+  padding-right: 0.12em;
   color: var(--Colour2);
   white-space: nowrap;
   overflow: hidden;
@@ -105,7 +108,7 @@
 .header__live-label {
   font-family: var(--Font1);
   font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--Font1-tracking);
   color: var(--Colour2);
   display: flex;
   align-items: center;
