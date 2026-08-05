@@ -5,8 +5,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   build: {
-    // The stream-chat SDK (~1.4 MB) rides in the lazy chatroom chunk by design
-    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
         manualChunks(id) {

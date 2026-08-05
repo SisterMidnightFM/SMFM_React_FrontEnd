@@ -1,109 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { PageHeader } from '../shared/PageHeader';
-import type { StreamChat } from 'stream-chat';
-import type { Channel } from 'stream-chat';
-import { Chat, Channel as ChannelComponent, Window, MessageList, MessageInput, Thread } from 'stream-chat-react';
-import { initializeChatClient, getOrCreateChannel, disconnectChat } from '../../services/chat';
-import { UsernameSettings } from './UsernameSettings';
 import './ChatroomPage.css';
-import 'stream-chat-react/dist/css/v2/index.css';
-import './ChatroomTheme.css';
+
+const CHAT_EMBED_URL =
+  'https://app.radiocult.fm/embed/chat/sister-midnight-fm?theme=custom&primaryColor=%23C2B9B0&corners=rounded&playerDisplay=metadata&ptc=%23ffffff&stc=%23fffaf7&bc=%23342924&inmc=%23C2B9B0&outmc=%23C2B9B0&stationmc=%23C2B9B0&sepc=%23C2B9B0';
+
+// Breathing room left below the chat so the footer hints at more page below
+const BOTTOM_GAP = 24;
+
+// How far the element sits from the top of the page, independent of how far
+// whichever ancestor is doing the scrolling (window or .main-content) is scrolled
+function getUnscrolledTop(el: HTMLElement): number {
+  let scrolled = window.scrollY;
+  for (let node = el.parentElement; node; node = node.parentElement) {
+    scrolled += node.scrollTop;
+  }
+  return el.getBoundingClientRect().top + scrolled;
+}
 
 export function ChatroomPage() {
-  const [client, setClient] = useState<StreamChat | null>(null);
-  const [channel, setChannel] = useState<Channel | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
+  // Size the chat to whatever viewport height is left below the page title,
+  // rather than guessing with a fixed calc(). Adapts to short laptops, tall
+  // phones, mobile browser chrome appearing/disappearing, and panel resizes.
   useEffect(() => {
-    let isMounted = true;
-    let chatClient: StreamChat | null = null;
+    const el = contentRef.current;
+    if (!el) return;
 
-    const initChat = async () => {
-      try {
-        // Connect as guest user for public chatroom
-        chatClient = await initializeChatClient();
-
-        if (!isMounted) {
-          // Component unmounted during init, just return
-          return;
-        }
-
-        const chatChannel = await getOrCreateChannel(chatClient, 'MainChat');
-
-        if (!isMounted) {
-          // Component unmounted during channel creation, just return
-          return;
-        }
-
-        setClient(chatClient);
-        setChannel(chatChannel);
-        setIsLoading(false);
-      } catch (err) {
-        console.error('Error initializing chat:', err);
-        if (isMounted) {
-          setError(err instanceof Error ? err.message : 'Failed to load chatroom');
-          setIsLoading(false);
-        }
-      }
+    const update = () => {
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const available = viewportHeight - getUnscrolledTop(el) - BOTTOM_GAP;
+      el.style.setProperty('--chatroom-height', `${Math.round(available)}px`);
     };
 
-    initChat();
+    update();
+
+    const observer = new ResizeObserver(update);
+    // The title block above can reflow (font loading, wrapping) and shift us down
+    if (el.parentElement) observer.observe(el.parentElement);
+
+    window.addEventListener('resize', update);
+    window.addEventListener('orientationchange', update);
+    window.visualViewport?.addEventListener('resize', update);
 
     return () => {
-      isMounted = false;
-      // Don't disconnect here - the singleton client may be reused
-      // Disconnect will happen on window unload or when truly leaving the app
+      observer.disconnect();
+      window.removeEventListener('resize', update);
+      window.removeEventListener('orientationchange', update);
+      window.visualViewport?.removeEventListener('resize', update);
     };
   }, []);
-
-  // Disconnect on window unload
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (client) {
-        disconnectChat(client);
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [client]);
-
-  if (isLoading) {
-    return (
-      <div className="chatroom-page">
-        <div className="chatroom-page__loading">Loading chatroom...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="chatroom-page">
-        <PageHeader
-          title="CHATROOM"
-          iconSrc="/Images/Star1_Dark.webp"
-        />
-        <div className="chatroom-page__error">
-          <p>Error loading chatroom: {error}</p>
-          <p className="chatroom-page__error-hint">
-            Make sure you have configured your Stream.io API key in the .env file
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!client || !channel) {
-    return (
-      <div className="chatroom-page">
-        <div className="chatroom-page__error">Unable to connect to chat</div>
-      </div>
-    );
-  }
 
   return (
     <div className="chatroom-page">
@@ -112,17 +59,15 @@ export function ChatroomPage() {
         iconSrc="/Images/Star1_Dark.webp"
       />
 
-      <div className="chatroom-page__content">
-        <UsernameSettings />
-        <Chat client={client}>
-          <ChannelComponent channel={channel}>
-            <Window>
-              <MessageList />
-              <MessageInput />
-            </Window>
-            <Thread />
-          </ChannelComponent>
-        </Chat>
+      <div className="chatroom-page__content" ref={contentRef}>
+        <iframe
+          className="chatroom-page__embed"
+          title="Sister Midnight FM chat room"
+          src={CHAT_EMBED_URL}
+          scrolling="no"
+          frameBorder="0"
+          allowTransparency
+        />
       </div>
     </div>
   );
