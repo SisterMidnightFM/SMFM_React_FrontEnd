@@ -127,6 +127,40 @@ export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
 }
 
 /**
+ * Fetch episodes belonging to the "Guest Show" show
+ */
+export async function fetchGuestShowEpisodes(limit: number = 30): Promise<Episode[]> {
+  try {
+    const url = new URL(`${STRAPI_URL}/api/episodes`);
+
+    // Filter for episodes linked to the Guest Show (case-insensitive)
+    url.searchParams.append('filters[link_episode_to_show][ShowName][$eqi]', 'Guest Show');
+
+    // Populate everything
+    url.searchParams.append('populate', '*');
+
+    // Sort by broadcast date (newest first)
+    url.searchParams.append('sort', 'BroadcastDateTime:desc');
+
+    url.searchParams.append('pagination[limit]', limit.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch guest show episodes: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Episode> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching guest show episodes:', error);
+    throw error;
+  }
+}
+
+/**
  * Fetch episodes filtered by a specific tag
  */
 /**

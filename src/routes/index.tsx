@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { HeroLogo } from '../components/home/HeroLogo'
 import { SMFMPicks } from '../components/home/SMFMPicks'
+import { GuestShows } from '../components/home/GuestShows'
 import { LatestEpisodes } from '../components/home/LatestEpisodes'
 
 export const Route = createFileRoute('/')({
@@ -12,6 +13,7 @@ function HomePage() {
     <div>
       <HeroLogo />
       <SMFMPicks />
+      <GuestShows />
       <LatestEpisodes />
     </div>
   )

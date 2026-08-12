@@ -1,0 +1,40 @@
+/* Guest Shows Page Container */
+.guest-shows-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Loading and Error States */
+.guest-shows-page__loading,
+.guest-shows-page__error {
+  font-family: var(--Font1);
+  font-size: 1.2rem;
+  color: var(--Colour2);
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.guest-shows-page__error {
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .guest-shows-page {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .guest-shows-page {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .guest-shows-page {
+    padding: 0.75rem;
+  }
+}
