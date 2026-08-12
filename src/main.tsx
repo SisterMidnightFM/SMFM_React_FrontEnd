@@ -28,6 +28,9 @@ const router = createRouter({
   routeTree,
   context: { queryClient },
   defaultPreload: 'intent',
+  // Scroll to the top on new navigations (episode/artist/show pages etc.),
+  // and restore the previous position on back/forward
+  scrollRestoration: true,
 })
 
 // Register the router instance for type safety
