@@ -17,7 +17,7 @@ export const SMFMPicks: React.FC = () => {
   return (
     <section className="home-section">
       <div className="home-section__header">
-        <img src="/Images/Hand1_Dark.webp" alt="" className="home-section__icon" />
+        <img src="/Images/GuitarMan_Dark.webp" alt="" className="home-section__icon" />
         <Link to="/smfm-picks" className="home-section__title-link">
           <h2 className="home-section__title">SMFM PICKS</h2>
         </Link>
