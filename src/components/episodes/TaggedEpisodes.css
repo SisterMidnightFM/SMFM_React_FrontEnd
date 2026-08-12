@@ -27,6 +27,7 @@
   font-family: var(--Font1);
   font-size: 1.2rem;
   font-weight: bold;
+  text-transform: uppercase;
   margin-bottom: 1rem;
 }
 
