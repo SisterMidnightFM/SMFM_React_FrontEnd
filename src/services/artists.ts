@@ -52,6 +52,42 @@ export async function fetchArtists(page: number = 1, pageSize: number = 10): Pro
 }
 
 /**
+ * Fetch artists flagged as residents (Resident boolean in Strapi)
+ */
+export async function fetchResidentArtists(limit: number = 100): Promise<Artist[]> {
+  try {
+    const url = new URL(`${STRAPI_URL}/api/artists`);
+
+    // Only residents
+    url.searchParams.append('filters[Resident][$eq]', 'true');
+
+    // Populate the fields the artist card needs (image, location, badge logic)
+    url.searchParams.append('populate[0]', 'ArtistImage');
+    url.searchParams.append('populate[1]', 'tag_locations');
+    url.searchParams.append('populate[2]', 'Main_host');
+    url.searchParams.append('populate[3]', 'Main_host.Show_Episodes');
+    url.searchParams.append('populate[4]', 'episodes_guest_featured');
+
+    url.searchParams.append('sort', 'ArtistName:asc');
+    url.searchParams.append('pagination[pageSize]', limit.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch resident artists: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Artist> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching resident artists:', error);
+    throw error;
+  }
+}
+
+/**
  * Fetch all artists (legacy - for backwards compatibility)
  */
 export async function fetchAllArtists(): Promise<Artist[]> {
