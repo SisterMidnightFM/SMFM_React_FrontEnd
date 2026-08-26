@@ -1,21 +1,5 @@
 import React, { createContext, useContext, useState, useRef, useEffect, type ReactNode } from 'react';
-
-interface LiveNowResponse {
-  success: boolean;
-  result?: {
-    // 'schedule' | 'defaultPlaylist' | 'offAir'
-    status: string;
-    content?: {
-      title?: string;
-      startDateUtc?: string;
-      endDateUtc?: string;
-    } | null;
-    metadata?: {
-      title?: string;
-      artist?: string | null;
-    } | null;
-  };
-}
+import { useLiveNow } from '../hooks/useLiveNow';
 
 interface AudioPlayerContextType {
   isPlaying: boolean;
@@ -31,14 +15,14 @@ const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(und
 
 // Radio Cult serves a single Icecast stream (no separate low-bitrate mobile URL)
 const STREAM_URL = 'https://sister-midnight-fm.radiocult.fm/stream';
-const LIVE_NOW_URL = 'https://api.radiocult.fm/api/station/sister-midnight-fm/schedule/live';
 
 export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
-  const [currentShow, setCurrentShow] = useState('');
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Station status and current show name (cached and polled by TanStack Query)
+  const { isOnline, showName: currentShow } = useLiveNow();
 
   // Initialize audio element
   useEffect(() => {
@@ -75,29 +59,6 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
       audio.pause();
       audio.src = '';
     };
-  }, []);
-
-  // Fetch station status and current show (one Radio Cult endpoint covers both)
-  useEffect(() => {
-    const fetchLiveNow = async () => {
-      try {
-        const response = await fetch(LIVE_NOW_URL);
-        const data: LiveNowResponse = await response.json();
-        const live = data.result;
-
-        setIsOnline(data.success === true && live?.status !== 'offAir');
-        setCurrentShow(live?.content?.title || live?.metadata?.title || 'Sister Midnight FM');
-      } catch (error) {
-        console.error('Error fetching live now:', error);
-        setIsOnline(false);
-        setCurrentShow('Sister Midnight FM');
-      }
-    };
-
-    fetchLiveNow();
-    const interval = setInterval(fetchLiveNow, 30000); // Update every 30 seconds
-
-    return () => clearInterval(interval);
   }, []);
 
   const play = () => {

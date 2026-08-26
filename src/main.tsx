@@ -23,6 +23,13 @@ export const queryClient = new QueryClient({
   },
 })
 
+// Expose the query client in dev so things like the header's live-now state can
+// be driven from the browser console:
+//   queryClient.setQueryData(['live-now'], { isOnline: true, showName: 'Test Show' })
+if (import.meta.env.DEV) {
+  (window as Window & { queryClient?: QueryClient }).queryClient = queryClient
+}
+
 // Create a new router instance with queryClient in context
 const router = createRouter({
   routeTree,
