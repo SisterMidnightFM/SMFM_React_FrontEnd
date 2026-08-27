@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArtistCard } from '../artists/ArtistCard';
+import { SeeMoreCard } from './SeeMoreCard';
 import { useResidentArtists } from '../../hooks/useResidentArtists';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import type { Artist } from '../../types/artist';
@@ -35,7 +36,7 @@ export const Residents: React.FC = () => {
     <section className="home-section">
       <div className="home-section__header">
         <img src="/Images/Star1_Dark.webp" alt="" className="home-section__icon" />
-        <Link to="/artists" className="home-section__title-link">
+        <Link to="/residents" className="home-section__title-link">
           <h2 className="home-section__title">RESIDENTS</h2>
         </Link>
       </div>
@@ -48,6 +49,9 @@ export const Residents: React.FC = () => {
             artist={artist}
           />
         ))}
+        {!isLoading && !error && randomisedArtists.length > 0 && (
+          <SeeMoreCard to="/residents" ariaLabel="See more residents" />
+        )}
       </div>
     </section>
   );

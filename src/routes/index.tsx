@@ -15,8 +15,8 @@ function HomePage() {
       <HeroLogo />
       <SMFMPicks />
       <LatestEpisodes />
-      <GuestShows />
       <Residents />
+      <GuestShows />
     </div>
   )
 }

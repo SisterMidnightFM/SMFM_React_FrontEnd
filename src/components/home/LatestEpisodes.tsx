@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { LatestShowCard } from './LatestShowCard';
+import { SeeMoreCard } from './SeeMoreCard';
 import { useEpisodes } from '../../hooks/useEpisodes';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './HomeSection.css';
@@ -32,6 +33,9 @@ export const LatestEpisodes: React.FC = () => {
             episode={episode}
           />
         ))}
+        {!isLoading && !error && episodes.length > 0 && (
+          <SeeMoreCard to="/episodes" ariaLabel="See more episodes" />
+        )}
       </div>
     </section>
   );

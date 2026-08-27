@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { EpisodeCard } from '../episodes/EpisodeCard';
+import { SeeMoreCard } from './SeeMoreCard';
 import { useStaffPicks } from '../../hooks/useStaffPicks';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './HomeSection.css';
@@ -31,6 +32,9 @@ export const SMFMPicks: React.FC = () => {
             episode={episode}
           />
         ))}
+        {!isLoading && !error && episodes && episodes.length > 0 && (
+          <SeeMoreCard to="/smfm-picks" ariaLabel="See more SMFM picks" />
+        )}
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { EpisodeCard } from '../episodes/EpisodeCard';
+import { SeeMoreCard } from './SeeMoreCard';
 import { useGuestShows } from '../../hooks/useGuestShows';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './HomeSection.css';
@@ -31,6 +32,9 @@ export const GuestShows: React.FC = () => {
             episode={episode}
           />
         ))}
+        {!isLoading && !error && episodes && episodes.length > 0 && (
+          <SeeMoreCard to="/guest-shows" ariaLabel="See more guest shows" />
+        )}
       </div>
     </section>
   );
