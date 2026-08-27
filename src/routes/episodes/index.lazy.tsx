@@ -25,6 +25,7 @@ function EpisodesPage() {
         error={error}
         hasMore={hasMore}
         onLoadMore={fetchNextPage}
+        catalogueShuffle
       />
     </div>
   );

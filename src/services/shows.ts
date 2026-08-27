@@ -1,5 +1,6 @@
 import type { Show } from '../types/show';
 import type { StrapiCollectionResponse } from '../types/strapi';
+import { appendIdFilter, orderByIds } from './ids';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
 const API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -46,6 +47,42 @@ export async function fetchShows(page: number = 1, pageSize: number = 10): Promi
     };
   } catch (error) {
     console.error('Error fetching shows:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch a specific set of shows by id, in the order the ids were given.
+ * Used by the catalogue-wide shuffle.
+ */
+export async function fetchShowsByIds(ids: number[]): Promise<Show[]> {
+  if (ids.length === 0) return [];
+
+  try {
+    const url = new URL(`${STRAPI_URL}/api/shows`);
+
+    appendIdFilter(url, ids);
+
+    // Same fields the show cards need
+    url.searchParams.append('populate[0]', 'ShowImage');
+    url.searchParams.append('populate[1]', 'Main_Host');
+    url.searchParams.append('populate[2]', 'Main_Host.ArtistImage');
+    url.searchParams.append('populate[3]', 'Show_Episodes');
+
+    url.searchParams.append('pagination[pageSize]', ids.length.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch shows by id: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Show> = await response.json();
+    return orderByIds(data.data, ids);
+  } catch (error) {
+    console.error('Error fetching shows by id:', error);
     throw error;
   }
 }

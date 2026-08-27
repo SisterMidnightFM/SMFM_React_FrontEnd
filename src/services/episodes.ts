@@ -1,5 +1,6 @@
 import type { Episode } from '../types/episode';
 import type { StrapiCollectionResponse } from '../types/strapi';
+import { appendIdFilter, orderByIds } from './ids';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
 const API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -43,6 +44,38 @@ export async function fetchEpisodes(page: number = 1, pageSize: number = 10): Pr
     };
   } catch (error) {
     console.error('Error fetching episodes:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch a specific set of episodes by id, in the order the ids were given.
+ * Used by the catalogue-wide shuffle.
+ */
+export async function fetchEpisodesByIds(ids: number[]): Promise<Episode[]> {
+  if (ids.length === 0) return [];
+
+  try {
+    const url = new URL(`${STRAPI_URL}/api/episodes`);
+
+    appendIdFilter(url, ids);
+
+    // Same populate as the paginated list
+    url.searchParams.append('populate', '*');
+    url.searchParams.append('pagination[pageSize]', ids.length.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch episodes by id: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Episode> = await response.json();
+    return orderByIds(data.data, ids);
+  } catch (error) {
+    console.error('Error fetching episodes by id:', error);
     throw error;
   }
 }

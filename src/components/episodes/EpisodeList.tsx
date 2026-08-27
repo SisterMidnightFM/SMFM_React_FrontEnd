@@ -3,6 +3,8 @@ import type { Episode } from '../../types/episode';
 import { EpisodeCard } from './EpisodeCard';
 import { CardGrid } from '../shared/CardGrid';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { useShuffledCollection } from '../../hooks/useShuffledCollection';
+import { fetchEpisodesByIds } from '../../services/episodes';
 import './EpisodeList.css';
 
 interface EpisodeListProps {
@@ -12,6 +14,11 @@ interface EpisodeListProps {
   error?: Error | null;
   hasMore?: boolean;
   onLoadMore?: () => void;
+  /**
+   * Shuffle across the whole episode catalogue rather than only the
+   * episodes already paged in.
+   */
+  catalogueShuffle?: boolean;
 }
 
 type SortMode = 'recent' | 'alphabetical' | 'reverse-alphabetical' | 'random';
@@ -22,14 +29,32 @@ export function EpisodeList({
   isLoadingMore,
   error,
   hasMore,
-  onLoadMore
+  onLoadMore,
+  catalogueShuffle = false
 }: EpisodeListProps) {
   const [sortMode, setSortMode] = useState<SortMode>('recent');
-  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore || false, hasMore || false);
+  const [shuffleSeed, setShuffleSeed] = useState(() => Date.now());
+
+  // A shuffle of the full catalogue, paged in as the user scrolls
+  const isCatalogueShuffle = catalogueShuffle && sortMode === 'random';
+  const shuffled = useShuffledCollection<Episode>('episodes', {
+    enabled: isCatalogueShuffle,
+    seed: shuffleSeed,
+    fetchByIds: fetchEpisodesByIds,
+  });
+
+  const sourceEpisodes = isCatalogueShuffle ? shuffled.items : episodes;
+  const listIsLoading = isCatalogueShuffle ? shuffled.isLoading : isLoading;
+  const listIsLoadingMore = isCatalogueShuffle ? shuffled.isLoadingMore : isLoadingMore;
+  const listError = isCatalogueShuffle ? shuffled.error : error;
+  const listHasMore = isCatalogueShuffle ? shuffled.hasMore : hasMore;
+  const listLoadMore = isCatalogueShuffle ? shuffled.fetchNextPage : onLoadMore;
+
+  const sentinelRef = useInfiniteScroll(listLoadMore, listIsLoadingMore || false, listHasMore || false);
 
   // Sort episodes based on the current sort mode
   const sortedEpisodes = useMemo(() => {
-    const episodesCopy = [...episodes];
+    const episodesCopy = [...sourceEpisodes];
 
     switch (sortMode) {
       case 'recent':
@@ -47,7 +72,9 @@ export function EpisodeList({
           b.EpisodeTitle.localeCompare(a.EpisodeTitle)
         );
       case 'random':
-        // Shuffle array using Fisher-Yates algorithm
+        // A catalogue shuffle already arrives in random order
+        if (isCatalogueShuffle) return episodesCopy;
+        // Otherwise shuffle what's on screen, using Fisher-Yates
         for (let i = episodesCopy.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [episodesCopy[i], episodesCopy[j]] = [episodesCopy[j], episodesCopy[i]];
@@ -56,7 +83,9 @@ export function EpisodeList({
       default:
         return episodesCopy;
     }
-  }, [episodes, sortMode]);
+    // shuffleSeed so a second click on shuffle reorders an on-screen shuffle too
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceEpisodes, sortMode, isCatalogueShuffle, shuffleSeed]);
 
   const handleAlphabeticalClick = () => {
     if (sortMode === 'alphabetical') {
@@ -67,6 +96,8 @@ export function EpisodeList({
   };
 
   const handleRandomClick = () => {
+    // Clicking shuffle again draws a fresh selection rather than doing nothing
+    setShuffleSeed((seed) => seed + 1);
     setSortMode('random');
   };
 
@@ -74,7 +105,7 @@ export function EpisodeList({
     setSortMode('recent');
   };
 
-  if (isLoading && episodes.length === 0) {
+  if (listIsLoading && sortedEpisodes.length === 0) {
     return (
       <div className="episode-list">
         <div className="episode-list__loading">
@@ -84,18 +115,18 @@ export function EpisodeList({
     );
   }
 
-  if (error && episodes.length === 0) {
+  if (listError && sortedEpisodes.length === 0) {
     return (
       <div className="episode-list">
         <div className="episode-list__error">
           <h3>Error loading episodes</h3>
-          <p>{error.message}</p>
+          <p>{listError.message}</p>
         </div>
       </div>
     );
   }
 
-  if (episodes.length === 0) {
+  if (sortedEpisodes.length === 0) {
     return (
       <div className="episode-list">
         <div className="episode-list__empty">
@@ -155,12 +186,12 @@ export function EpisodeList({
       </CardGrid>
 
       {/* Infinite scroll sentinel */}
-      {hasMore && onLoadMore && (
+      {listHasMore && listLoadMore && (
         <div ref={sentinelRef} className="episode-list__sentinel" aria-hidden="true" />
       )}
 
       {/* Loading indicator for load more */}
-      {isLoadingMore && (
+      {listIsLoadingMore && (
         <div className="episode-list__loading-more">
           <p>Loading more episodes...</p>
         </div>
