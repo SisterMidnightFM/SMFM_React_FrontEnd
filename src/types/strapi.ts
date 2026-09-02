@@ -46,18 +46,67 @@ export interface StrapiImage extends StrapiTimestamps {
   folderPath: string;
 }
 
-// Rich text node (used for descriptions, tracklists, etc.)
+// Rich text nodes (used for descriptions, tracklists, news bodies, etc.)
+
+// A run of text, optionally carrying any combination of formatting marks
 export interface StrapiTextNode {
-  type: 'text';
+  type?: 'text';
   text: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  code?: boolean;
 }
 
-export interface StrapiParagraph {
-  type: 'paragraph';
+export interface StrapiLinkNode {
+  type: 'link';
+  url: string;
   children: StrapiTextNode[];
 }
 
-export type StrapiRichText = StrapiParagraph[];
+export type StrapiInlineNode = StrapiTextNode | StrapiLinkNode;
+
+export interface StrapiParagraph {
+  type: 'paragraph';
+  children: StrapiInlineNode[];
+}
+
+export interface StrapiHeading {
+  type: 'heading';
+  level: number;
+  children: StrapiInlineNode[];
+}
+
+export interface StrapiListItem {
+  type: 'list-item';
+  children: StrapiInlineNode[];
+}
+
+export interface StrapiList {
+  type: 'list';
+  format?: 'ordered' | 'unordered';
+  children: StrapiListItem[];
+}
+
+export interface StrapiQuote {
+  type: 'quote';
+  children: StrapiInlineNode[];
+}
+
+export interface StrapiCodeBlock {
+  type: 'code';
+  children: StrapiTextNode[];
+}
+
+export type StrapiBlockNode =
+  | StrapiParagraph
+  | StrapiHeading
+  | StrapiList
+  | StrapiQuote
+  | StrapiCodeBlock;
+
+export type StrapiRichText = StrapiBlockNode[];
 
 // Generic Strapi response wrapper
 export interface StrapiResponse<T> {

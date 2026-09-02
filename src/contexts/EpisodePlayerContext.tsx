@@ -1,22 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-
-interface EpisodePlayerState {
-  type: 'soundcloud' | 'mixcloud';
-  url: string;
-  episodeTitle: string;
-  showName?: string;
-  key: number; // Forces remount on player switch
-}
-
-interface EpisodePlayerContextType {
-  activePlayer: EpisodePlayerState | null;
-  openPlayer: (type: 'soundcloud' | 'mixcloud', url: string, episodeTitle: string, showName?: string) => void;
-  closePlayer: () => void;
-  savedPosition: number | null;
-  savePosition: (ms: number) => void;
-}
-
-const EpisodePlayerContext = createContext<EpisodePlayerContextType | undefined>(undefined);
+import React, { useState, useCallback, type ReactNode } from 'react';
+import { EpisodePlayerContext, type EpisodePlayerState } from '../hooks/useEpisodePlayer';
 
 const STORAGE_KEY = 'smfm_episode_player';
 let playerKey = 0;
@@ -75,12 +58,4 @@ export const EpisodePlayerProvider: React.FC<{ children: ReactNode }> = ({ child
       {children}
     </EpisodePlayerContext.Provider>
   );
-};
-
-export const useEpisodePlayer = (): EpisodePlayerContextType => {
-  const context = useContext(EpisodePlayerContext);
-  if (context === undefined) {
-    throw new Error('useEpisodePlayer must be used within an EpisodePlayerProvider');
-  }
-  return context;
 };

@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Episode } from '../../types/episode';
-import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
-import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
+import { useAudioPlayer } from '../../hooks/useAudioPlayer';
+import { useEpisodePlayer } from '../../hooks/useEpisodePlayer';
 import { fetchShowBySlug } from '../../services/shows';
 import { fetchArtistBySlug } from '../../services/artists';
 import './EpisodeDetail.css';

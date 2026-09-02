@@ -1,4 +1,4 @@
-import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
+import { useEpisodePlayer } from '../../hooks/useEpisodePlayer';
 import { EpisodePlayer } from './EpisodePlayer';
 
 export function GlobalEpisodePlayer() {

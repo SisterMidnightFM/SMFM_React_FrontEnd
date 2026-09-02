@@ -5,6 +5,7 @@ import type { Show } from '../../types/show';
 import { fetchArtistBySlug } from '../../services/artists';
 import { fetchEpisodeBySlug } from '../../services/episodes';
 import { useNextBroadcast } from '../../hooks/useNextBroadcast';
+import { richTextToPlainText } from '../../utils/cardHelpers';
 import './ShowDetail.css';
 
 interface ShowDetailProps {
@@ -43,9 +44,7 @@ export function ShowDetail({ show }: ShowDetailProps) {
   const fullImageUrl = imageUrl ? `${STRAPI_URL}${imageUrl}` : null;
 
   // Extract description text from StrapiRichText
-  const descriptionText = show.ShowDescription?.map(paragraph =>
-    paragraph.children.map(child => child.text).join('')
-  ).join('\n\n');
+  const descriptionText = richTextToPlainText(show.ShowDescription);
 
   // Format broadcast schedule
   const broadcastSchedule = show.Broadcast_Day && show.Broadcast_Time && show.Broadcast_AmPm

@@ -1,48 +1,34 @@
 import React from 'react';
-import type { StrapiRichText } from '../types/strapi';
+import type { StrapiInlineNode, StrapiRichText } from '../types/strapi';
 
 // Helper function to render rich text nodes (inline elements)
-function renderRichTextNode(node: any, index: number): React.ReactNode {
+function renderRichTextNode(node: StrapiInlineNode | undefined, index: number): React.ReactNode {
   if (!node) return null;
 
-  const { type, text, bold, italic, underline, strikethrough, code } = node;
-
   // Handle link nodes (process before text to support formatted links)
-  if (type === 'link') {
-    const linkUrl = node.url;
-    if (linkUrl) {
+  if (node.type === 'link') {
+    if (node.url) {
       return (
-        <a key={index} href={linkUrl} target="_blank" rel="noopener noreferrer">
-          {node.children?.map((child: any, i: number) => renderRichTextNode(child, i))}
+        <a key={index} href={node.url} target="_blank" rel="noopener noreferrer">
+          {node.children?.map((child, i) => renderRichTextNode(child, i))}
         </a>
       );
     }
+    return null;
   }
 
   // Handle text nodes with formatting
-  if (type === 'text' || text !== undefined) {
-    let content: React.ReactNode = text || '';
+  const { text, bold, italic, underline, strikethrough, code } = node;
+  let content: React.ReactNode = text || '';
 
-    // Apply text formatting (can be nested/combined)
-    if (bold) content = <strong>{content}</strong>;
-    if (italic) content = <em>{content}</em>;
-    if (underline) content = <u>{content}</u>;
-    if (strikethrough) content = <s>{content}</s>;
-    if (code) content = <code>{content}</code>;
+  // Apply text formatting (can be nested/combined)
+  if (bold) content = <strong>{content}</strong>;
+  if (italic) content = <em>{content}</em>;
+  if (underline) content = <u>{content}</u>;
+  if (strikethrough) content = <s>{content}</s>;
+  if (code) content = <code>{content}</code>;
 
-    return <span key={index}>{content}</span>;
-  }
-
-  // If node has children but no specific type handler, try to render children
-  if (node.children && Array.isArray(node.children)) {
-    return (
-      <span key={index}>
-        {node.children.map((child: any, i: number) => renderRichTextNode(child, i))}
-      </span>
-    );
-  }
-
-  return null;
+  return <span key={index}>{content}</span>;
 }
 
 // Helper function to parse Markdown formatting in a string
@@ -107,30 +93,27 @@ export function renderRichText(richText: StrapiRichText | string | null | undefi
   }
 
   if (Array.isArray(richText)) {
-    return richText.map((paragraph: any, pIndex) => {
-      const { children, type } = paragraph;
-
+    return richText.map((block, pIndex) => {
       // Handle different block types
 
       // Handle headings
-      if (type === 'heading' && paragraph.level) {
-        const level = paragraph.level;
-        const Tag = `h${Math.min(level, 6)}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+      if (block.type === 'heading' && block.level) {
+        const Tag = `h${Math.min(block.level, 6)}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
         return (
           <Tag key={pIndex}>
-            {children?.map((child: any, cIndex: number) => renderRichTextNode(child, cIndex))}
+            {block.children?.map((child, cIndex) => renderRichTextNode(child, cIndex))}
           </Tag>
         );
       }
 
       // Handle lists
-      if (type === 'list') {
-        const ListTag = paragraph.format === 'ordered' ? 'ol' : 'ul';
+      if (block.type === 'list') {
+        const ListTag = block.format === 'ordered' ? 'ol' : 'ul';
         return (
           <ListTag key={pIndex}>
-            {children?.map((item: any, iIndex: number) => (
+            {block.children?.map((item, iIndex) => (
               <li key={iIndex}>
-                {item.children?.map((child: any, cIndex: number) => renderRichTextNode(child, cIndex))}
+                {item.children?.map((child, cIndex) => renderRichTextNode(child, cIndex))}
               </li>
             ))}
           </ListTag>
@@ -138,17 +121,17 @@ export function renderRichText(richText: StrapiRichText | string | null | undefi
       }
 
       // Handle quotes
-      if (type === 'quote') {
+      if (block.type === 'quote') {
         return (
           <blockquote key={pIndex}>
-            {children?.map((child: any, cIndex: number) => renderRichTextNode(child, cIndex))}
+            {block.children?.map((child, cIndex) => renderRichTextNode(child, cIndex))}
           </blockquote>
         );
       }
 
       // Handle code blocks
-      if (type === 'code') {
-        const codeText = children?.map((child: any) => child.text).join('') || '';
+      if (block.type === 'code') {
+        const codeText = block.children?.map((child) => child.text).join('') || '';
         return (
           <pre key={pIndex}>
             <code>{codeText}</code>
@@ -157,10 +140,10 @@ export function renderRichText(richText: StrapiRichText | string | null | undefi
       }
 
       // Default to paragraph (also handles type === 'paragraph')
-      if (children && children.length > 0) {
+      if (block.children && block.children.length > 0) {
         return (
           <p key={pIndex}>
-            {children.map((child: any, cIndex: number) => renderRichTextNode(child, cIndex))}
+            {block.children.map((child, cIndex) => renderRichTextNode(child, cIndex))}
           </p>
         );
       }

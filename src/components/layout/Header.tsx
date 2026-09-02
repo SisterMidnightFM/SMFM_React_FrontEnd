@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
-import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
+import { useAudioPlayer } from '../../hooks/useAudioPlayer';
+import { useEpisodePlayer } from '../../hooks/useEpisodePlayer';
 import './Header.css';
 
 /** Keep in sync with the show-name animation duration in Header.css */

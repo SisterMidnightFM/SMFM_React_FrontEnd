@@ -1,17 +1,6 @@
-import React, { createContext, useContext, useState, useRef, useEffect, type ReactNode } from 'react';
+import React, { useState, useRef, useEffect, type ReactNode } from 'react';
 import { useLiveNow } from '../hooks/useLiveNow';
-
-interface AudioPlayerContextType {
-  isPlaying: boolean;
-  isLoading: boolean;
-  isOnline: boolean;
-  currentShow: string;
-  play: () => void;
-  pause: () => void;
-  toggle: () => void;
-}
-
-const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
+import { AudioPlayerContext } from '../hooks/useAudioPlayer';
 
 // Radio Cult serves a single Icecast stream (no separate low-bitrate mobile URL)
 const STREAM_URL = 'https://sister-midnight-fm.radiocult.fm/stream';
@@ -100,12 +89,4 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
       {children}
     </AudioPlayerContext.Provider>
   );
-};
-
-export const useAudioPlayer = (): AudioPlayerContextType => {
-  const context = useContext(AudioPlayerContext);
-  if (context === undefined) {
-    throw new Error('useAudioPlayer must be used within an AudioPlayerProvider');
-  }
-  return context;
 };

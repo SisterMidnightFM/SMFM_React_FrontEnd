@@ -3,6 +3,18 @@ import { useCallback } from 'react';
 import type { SearchFilters, ContentType } from '../types/search';
 import { defaultSearchFilters } from '../types/search';
 
+// The /search route passes its query string through unvalidated, so describe
+// the params we actually read off it here
+interface SearchQueryParams {
+  q?: string;
+  types?: string;
+  dateStart?: string;
+  dateEnd?: string;
+  genres?: string;
+  themes?: string;
+  locations?: string;
+}
+
 /**
  * Hook to manage search filters in URL query parameters
  * Provides methods to read and update search state from/to URL
@@ -15,13 +27,13 @@ export function useSearchParams() {
    * Parse search filters from URL query parameters
    */
   const getFiltersFromUrl = useCallback((): SearchFilters => {
-    const params = searchParams as any;
+    const params = searchParams as SearchQueryParams;
 
     return {
       query: params.q || defaultSearchFilters.query,
 
       contentTypes: params.types
-        ? (params.types as string).split(',').filter((t): t is ContentType =>
+        ? params.types.split(',').filter((t): t is ContentType =>
             ['episodes', 'shows', 'artists'].includes(t)
           )
         : defaultSearchFilters.contentTypes,
@@ -32,15 +44,15 @@ export function useSearchParams() {
       },
 
       genreIds: params.genres
-        ? (params.genres as string).split(',').map(Number).filter((n) => !isNaN(n))
+        ? params.genres.split(',').map(Number).filter((n) => !isNaN(n))
         : defaultSearchFilters.genreIds,
 
       themeIds: params.themes
-        ? (params.themes as string).split(',').map(Number).filter((n) => !isNaN(n))
+        ? params.themes.split(',').map(Number).filter((n) => !isNaN(n))
         : defaultSearchFilters.themeIds,
 
       locationIds: params.locations
-        ? (params.locations as string).split(',').map(Number).filter((n) => !isNaN(n))
+        ? params.locations.split(',').map(Number).filter((n) => !isNaN(n))
         : defaultSearchFilters.locationIds,
     };
   }, [searchParams]);

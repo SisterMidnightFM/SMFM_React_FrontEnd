@@ -1,5 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './EpisodePlayer.css';
+
+// Minimal typing for the SoundCloud Widget API, loaded at runtime from
+// w.soundcloud.com/player/api.js (no official types package)
+interface SCWidget {
+  bind(event: string, listener: (e: { currentPosition: number }) => void): void;
+  seekTo(milliseconds: number): void;
+}
+
+interface SCWidgetApi {
+  (iframe: HTMLIFrameElement): SCWidget;
+  Events: { READY: string; PLAY_PROGRESS: string };
+}
+
+declare global {
+  interface Window {
+    SC?: { Widget: SCWidgetApi };
+  }
+}
 
 interface EpisodePlayerProps {
   type: 'soundcloud' | 'mixcloud';
@@ -36,17 +54,17 @@ export function EpisodePlayer({ type, url, episodeTitle, onClose, savedPosition,
 
   const embedUrl = getEmbedUrl(type, url);
 
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
-  };
+  const toggleMinimize = useCallback(() => {
+    setIsMinimized((minimized) => !minimized);
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsClosing(true);
     // Wait for animation to complete before actually closing
     setTimeout(() => {
       onClose();
     }, 300); // Match the slideDown animation duration
-  };
+  }, [onClose]);
 
   // Handle escape key to close and M key to minimize
   useEffect(() => {
@@ -60,17 +78,17 @@ export function EpisodePlayer({ type, url, episodeTitle, onClose, savedPosition,
 
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [onClose, isMinimized]);
+  }, [handleClose, toggleMinimize]);
 
   // SoundCloud Widget API: track position + seek to saved position on reload
   useEffect(() => {
     if (type !== 'soundcloud' || !onPositionUpdate) return;
 
-    let widget: any;
+    let widget: SCWidget;
     let lastSaved = 0;
 
     function init() {
-      const SC = (window as any).SC;
+      const SC = window.SC;
       if (!SC?.Widget || !iframeRef.current) return;
 
       widget = SC.Widget(iframeRef.current);
@@ -92,7 +110,7 @@ export function EpisodePlayer({ type, url, episodeTitle, onClose, savedPosition,
     }
 
     // Load SC Widget API script if not already loaded
-    if ((window as any).SC?.Widget) {
+    if (window.SC?.Widget) {
       init();
     } else {
       const script = document.createElement('script');

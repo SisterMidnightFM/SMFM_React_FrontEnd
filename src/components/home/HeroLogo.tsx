@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
+import { useAudioPlayer } from '../../hooks/useAudioPlayer';
 import './HeroLogo.css';
 
 // Possible rotation angles for stop-motion effect

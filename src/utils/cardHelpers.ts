@@ -2,7 +2,7 @@
  * Utility functions for Card component data transformation
  */
 
-import type { StrapiRichText } from '../types/strapi';
+import type { StrapiInlineNode, StrapiListItem, StrapiRichText } from '../types/strapi';
 
 /**
  * Get ordinal suffix for a day number (1st, 2nd, 3rd, 4th, etc.)
@@ -45,13 +45,34 @@ export function extractRichText(richText: StrapiRichText | string | undefined): 
     // Get first paragraph's text
     const firstParagraph = richText[0];
     if (firstParagraph?.children && firstParagraph.children.length > 0) {
-      return firstParagraph.children
-        .map((child) => child.text || '')
-        .join('');
+      return flattenInlineNodes(firstParagraph.children);
     }
   }
 
   return '';
+}
+
+/**
+ * Flatten inline rich text nodes to plain text, descending into links and list
+ * items so their wrapped text isn't dropped
+ */
+function flattenInlineNodes(nodes: Array<StrapiInlineNode | StrapiListItem>): string {
+  return nodes
+    .map((node) => ('text' in node ? node.text || '' : flattenInlineNodes(node.children)))
+    .join('');
+}
+
+/**
+ * Extract plain text from every block of a Strapi rich text value
+ */
+export function richTextToPlainText(
+  richText: StrapiRichText | string | undefined,
+  separator = '\n\n'
+): string {
+  if (!richText) return '';
+  if (typeof richText === 'string') return richText;
+
+  return richText.map((block) => flattenInlineNodes(block.children)).join(separator);
 }
 
 /**
