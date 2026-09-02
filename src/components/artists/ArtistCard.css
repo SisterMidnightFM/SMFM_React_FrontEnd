@@ -1,6 +1,6 @@
 /* Artist Card — Overrides */
 
-/* Circular image — larger and centred */
+/* Circular image */
 .artist-card .card__image-container {
   display: flex;
   align-items: center;
@@ -8,23 +8,13 @@
   padding: 0.75rem;
 }
 
-.artist-card .card__image {
-  width: 90%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
+.artist-card .card__image,
 .artist-card .card__placeholder {
   width: 90%;
   height: auto;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-}
-
-.artist-card .card__header {
-  margin-bottom: -0.5rem;
+  object-fit: cover;
 }
 
 .artist-card .card__location {
@@ -34,26 +24,105 @@
 
 .artist-card .card__text-secondary {
   text-transform: none;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
   margin: 0;
+  /* Hyphenate rather than leave big rags in a narrow column
+     (relies on lang="en" on <html>) */
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
 }
 
 
-/* Mobile */
+/* Desktop / tablet — large circle bleeding off the left edge of the card.
+   The image is lifted out of the card's two-column grid and positioned so its
+   left side runs past the card edge (the card's own overflow:hidden does the
+   cutting), and the text sits in a straight column to the right of it. */
+@media (min-width: 768px) {
+  .card.artist-card {
+    grid-template-columns: 1fr;
+  }
+
+  .artist-card .card__image-container {
+    position: absolute;
+    left: -3.25rem; /* the slice the card edge cuts off */
+    top: 0.5rem;
+    width: 13rem;
+    height: 13rem;
+    padding: 0;
+    overflow: visible;
+    background-color: transparent;
+    z-index: 1;
+  }
+
+  .artist-card .card__image,
+  .artist-card .card__placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .artist-card .card__placeholder--logo {
+    padding: 2.25rem;
+  }
+
+  /* Left padding clears the visible part of the circle. The tighter gap buys
+     the bio an extra line before it clamps. */
+  .artist-card .card__content {
+    padding: 1.25rem 1.5rem 1.25rem 10.75rem;
+    gap: 0.4rem;
+  }
+
+  .artist-card .card__text-secondary {
+    font-size: 1rem;
+    line-height: 1.3;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    margin-top: 0.5rem; /* breathing room under the name / location */
+  }
+}
+
+
+/* Mobile — keeps the stacked layout, just a bigger circle and bigger bio */
 @media (max-width: 767px) {
   .artist-card .card__image-container {
     aspect-ratio: unset;
-    padding: 1.5rem;
+    padding: 1rem 1rem 0.25rem; /* tight under the circle — the name sits close */
   }
 
-  .artist-card .card__image {
-    width: 75%;
-    aspect-ratio: 1 / 1;
-  }
-
+  .artist-card .card__image,
   .artist-card .card__placeholder {
-    width: 75%;
+    width: 85%;
     aspect-ratio: 1 / 1;
+  }
+
+  /* Uniform card height (same method as the episode cards): every row below
+     the image is a fixed size, so the total height doesn't shift with the
+     length of the name, a missing location or a short bio. The image is a
+     fixed proportion of the card width, so the cards match overall. */
+  .artist-card .card__content {
+    gap: 0; /* rows space themselves, so the pin can sit tight under the name */
+    padding-top: 0.5rem;
+    min-height: 9.8rem; /* reserves the location row on artists without one */
+  }
+
+  /* No min-height here: a one-line name would push the pin a whole line down.
+     The card's uniform height comes from the content min-height above instead,
+     which parks the slack at the bottom of the column. */
+  .artist-card .card__header {
+    margin-bottom: 0;
+  }
+
+  /* Pin sits directly beneath the artist name */
+  .artist-card .card__location {
+    margin-top: 0.1rem;
+    min-height: 1.15rem;
+  }
+
+  .artist-card .card__text-secondary {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    min-height: 3.36rem; /* 3 lines at 0.8rem / 1.4 line-height */
+    margin-top: 0.6rem; /* small break between the pin and the bio */
   }
 }

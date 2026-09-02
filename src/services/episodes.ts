@@ -1,5 +1,6 @@
 import type { Episode } from '../types/episode';
 import type { StrapiCollectionResponse } from '../types/strapi';
+import { appendIdFilter, orderByIds } from './ids';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
 const API_TOKEN = import.meta.env.VITE_STRAPI_API_TOKEN;
@@ -43,6 +44,38 @@ export async function fetchEpisodes(page: number = 1, pageSize: number = 10): Pr
     };
   } catch (error) {
     console.error('Error fetching episodes:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch a specific set of episodes by id, in the order the ids were given.
+ * Used by the catalogue-wide shuffle.
+ */
+export async function fetchEpisodesByIds(ids: number[]): Promise<Episode[]> {
+  if (ids.length === 0) return [];
+
+  try {
+    const url = new URL(`${STRAPI_URL}/api/episodes`);
+
+    appendIdFilter(url, ids);
+
+    // Same populate as the paginated list
+    url.searchParams.append('populate', '*');
+    url.searchParams.append('pagination[pageSize]', ids.length.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch episodes by id: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Episode> = await response.json();
+    return orderByIds(data.data, ids);
+  } catch (error) {
+    console.error('Error fetching episodes by id:', error);
     throw error;
   }
 }
@@ -122,6 +155,40 @@ export async function fetchStaffPickEpisodes(): Promise<Episode[]> {
     return data.data;
   } catch (error) {
     console.error('Error fetching station pick episodes:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch episodes belonging to the "Guest Show" show
+ */
+export async function fetchGuestShowEpisodes(limit: number = 30): Promise<Episode[]> {
+  try {
+    const url = new URL(`${STRAPI_URL}/api/episodes`);
+
+    // Filter for episodes linked to the Guest Show (case-insensitive)
+    url.searchParams.append('filters[link_episode_to_show][ShowName][$eqi]', 'Guest Show');
+
+    // Populate everything
+    url.searchParams.append('populate', '*');
+
+    // Sort by broadcast date (newest first)
+    url.searchParams.append('sort', 'BroadcastDateTime:desc');
+
+    url.searchParams.append('pagination[limit]', limit.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch guest show episodes: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Episode> = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching guest show episodes:', error);
     throw error;
   }
 }
@@ -211,6 +278,52 @@ export async function fetchEpisodesByTag(
     return data.data;
   } catch (error) {
     console.error(`Error fetching episodes for ${tagType} tag "${tagValue}":`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch episodes an artist appeared on, either as the main host of the show
+ * or as a featured guest, most recent first.
+ */
+export async function fetchEpisodesByArtist(
+  artistId: number,
+  page: number = 1,
+  pageSize: number = 4
+): Promise<{ episodes: Episode[]; hasMore: boolean; total: number }> {
+  try {
+    const url = new URL(`${STRAPI_URL}/api/episodes`);
+
+    // Host of the show the episode belongs to, or a guest on the episode
+    url.searchParams.append('filters[$or][0][link_episode_to_show][Main_Host][id][$eq]', artistId.toString());
+    url.searchParams.append('filters[$or][1][guest_artists][id][$eq]', artistId.toString());
+
+    // Populate everything the episode card needs
+    url.searchParams.append('populate', '*');
+
+    // Sort by broadcast date (newest first)
+    url.searchParams.append('sort', 'BroadcastDateTime:desc');
+
+    url.searchParams.append('pagination[page]', page.toString());
+    url.searchParams.append('pagination[pageSize]', pageSize.toString());
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Strapi error response:', errorText);
+      throw new Error(`Failed to fetch episodes for artist: ${response.statusText}`);
+    }
+
+    const data: StrapiCollectionResponse<Episode> = await response.json();
+
+    return {
+      episodes: data.data,
+      hasMore: data.meta.pagination.page < data.meta.pagination.pageCount,
+      total: data.meta.pagination.total
+    };
+  } catch (error) {
+    console.error(`Error fetching episodes for artist ${artistId}:`, error);
     throw error;
   }
 }

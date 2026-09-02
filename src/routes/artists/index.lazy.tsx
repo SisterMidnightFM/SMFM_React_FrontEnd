@@ -25,6 +25,7 @@ function ArtistsPage() {
         error={error}
         hasMore={hasMore}
         onLoadMore={fetchNextPage}
+        catalogueShuffle
       />
     </div>
   );

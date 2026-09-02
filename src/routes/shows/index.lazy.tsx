@@ -25,6 +25,7 @@ function ShowsPage() {
         error={error}
         hasMore={hasMore}
         onLoadMore={fetchNextPage}
+        catalogueShuffle
       />
     </div>
   );

@@ -215,6 +215,76 @@ export async function fetchScheduleByDate(date: string): Promise<Schedule | null
 }
 
 /**
+ * Cache for the calendar events used by fetchCurrentCalendarShow
+ * The header polls frequently, but the calendar itself changes rarely
+ */
+const CURRENT_SHOW_CACHE_MS = 1000 * 60 * 5;
+let currentShowEventsCache: { events: GoogleCalendarEvent[]; fetchedAt: number } | null = null;
+
+/**
+ * Get the date offset from today by a number of days, in YYYY-MM-DD format
+ */
+function getDateOffset(days: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/**
+ * Fetch the name of the show scheduled in Google Calendar right now
+ * Uses the same show matching as the schedule page, so the CMS show name wins
+ * over the raw calendar event title where a match is found.
+ * @returns The show name, or null if nothing is scheduled at the current time
+ */
+export async function fetchCurrentCalendarShow(): Promise<string | null> {
+  try {
+    const now = Date.now();
+
+    if (!currentShowEventsCache || now - currentShowEventsCache.fetchedAt > CURRENT_SHOW_CACHE_MS) {
+      // Yesterday through today, so shows running over midnight are still found
+      const [events] = await Promise.all([
+        fetchCalendarEvents(getDateOffset(-1), getDateOffset(0)),
+        buildShowLookup(),
+      ]);
+      currentShowEventsCache = { events, fetchedAt: now };
+    }
+
+    const showLookup = await buildShowLookup();
+
+    const currentEvent = currentShowEventsCache.events.find((event) => {
+      if (!event.start?.dateTime || !event.end?.dateTime) {
+        return false;
+      }
+      const start = new Date(event.start.dateTime).getTime();
+      const end = new Date(event.end.dateTime).getTime();
+      return start <= now && now < end;
+    });
+
+    if (!currentEvent) {
+      return null;
+    }
+
+    let showRef: ShowReference | undefined;
+
+    const extendedSlug = currentEvent.extendedProperties?.shared?.showSlug;
+    if (extendedSlug) {
+      showRef = findShowBySlug(extendedSlug, showLookup);
+    }
+    if (!showRef && currentEvent.summary) {
+      showRef = findShowByName(currentEvent.summary, showLookup);
+    }
+
+    return showRef?.ShowName || currentEvent.summary || null;
+  } catch (error) {
+    console.error('Error fetching current calendar show:', error);
+    return null;
+  }
+}
+
+/**
  * Fetch schedules within a date range
  * Returns array of schedules sorted by date (newest first)
  */

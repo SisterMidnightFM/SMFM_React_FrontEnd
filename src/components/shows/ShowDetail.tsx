@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import type { Show } from '../../types/show';
@@ -9,6 +10,9 @@ import './ShowDetail.css';
 interface ShowDetailProps {
   show: Show;
 }
+
+// How many episodes to show initially, and how many more each "Load More"
+const EPISODES_PAGE_SIZE = 10;
 
 // Helper function to convert Instagram handle to URL
 const getInstagramUrl = (handle: string): string => {
@@ -27,6 +31,9 @@ const getInstagramUrl = (handle: string): string => {
 export function ShowDetail({ show }: ShowDetailProps) {
   const queryClient = useQueryClient();
 
+  // How many episodes are currently visible
+  const [visibleEpisodes, setVisibleEpisodes] = useState(EPISODES_PAGE_SIZE);
+
   // Fetch next broadcast for this show
   const { data: nextBroadcast } = useNextBroadcast(show.ShowName, show.ShowSlug);
 
@@ -44,6 +51,15 @@ export function ShowDetail({ show }: ShowDetailProps) {
   const broadcastSchedule = show.Broadcast_Day && show.Broadcast_Time && show.Broadcast_AmPm
     ? `${show.Broadcast_Day}s at ${show.Broadcast_Time}${show.Broadcast_AmPm}`
     : null;
+
+  // Episodes, most recent first
+  const sortedEpisodes = useMemo(() => {
+    return [...(show.Show_Episodes ?? [])].sort((a, b) => {
+      const dateA = a.BroadcastDateTime ? new Date(a.BroadcastDateTime).getTime() : 0;
+      const dateB = b.BroadcastDateTime ? new Date(b.BroadcastDateTime).getTime() : 0;
+      return dateB - dateA;
+    });
+  }, [show.Show_Episodes]);
 
   // Main_Host is an array of hosts
   const mainHosts = show.Main_Host && show.Main_Host.length > 0 ? show.Main_Host : [];
@@ -194,11 +210,11 @@ export function ShowDetail({ show }: ShowDetailProps) {
       )}
 
       {/* Episodes Section */}
-      {show.Show_Episodes && show.Show_Episodes.length > 0 && (
+      {sortedEpisodes.length > 0 && (
         <section className="show-detail__section">
           <h2 className="show-detail__section-title">Recent Episodes</h2>
           <div className="show-detail__episodes">
-            {show.Show_Episodes.slice(0, 12).map((episode) => (
+            {sortedEpisodes.slice(0, visibleEpisodes).map((episode) => (
               <Link
                 key={episode.id}
                 to="/episodes/$slug"
@@ -224,6 +240,18 @@ export function ShowDetail({ show }: ShowDetailProps) {
               </Link>
             ))}
           </div>
+
+          {visibleEpisodes < sortedEpisodes.length && (
+            <div className="show-detail__load-more">
+              <button
+                type="button"
+                className="show-detail__load-more-btn"
+                onClick={() => setVisibleEpisodes((count) => count + EPISODES_PAGE_SIZE)}
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </section>
       )}
     </div>

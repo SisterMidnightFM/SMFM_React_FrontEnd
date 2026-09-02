@@ -16,6 +16,9 @@ export interface Artist extends StrapiTimestamps {
   Artist_Slug: string;
   ArtistBio: string | null;
 
+  // Resident toggle (set in Strapi)
+  Resident?: boolean;
+
   // Social & web presence
   ArtistInstagram: string | null;
   ArtistWebsite: string | null;

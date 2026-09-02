@@ -16,6 +16,10 @@ export function ArtistCard({ artist }: ArtistCardProps) {
   // Get the first location if available
   const location = artist.tag_locations?.[0]?.Location;
 
+  // Generous character limit so the CSS line clamp is what truncates the bio,
+  // rather than it being cut short of the last visible line
+  const bio = truncateText(artist.ArtistBio, 280);
+
   // Prefetch artist detail on hover
   const handleMouseEnter = () => {
     queryClient.prefetchQuery({
@@ -33,7 +37,7 @@ export function ArtistCard({ artist }: ArtistCardProps) {
       circularImage={true}
       headerText={artist.ArtistName}
       location={location}
-      descriptiveText2={truncateText(artist.ArtistBio, 120)}
+      descriptiveText2={bio}
       newBadge={shouldShowArtistBadge(artist)}
       onMouseEnter={handleMouseEnter}
       className="artist-card"

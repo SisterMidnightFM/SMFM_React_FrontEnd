@@ -57,14 +57,69 @@
   font-family: var(--Font1);
   font-size: 1rem;
   font-weight: bold;
+  color: var(--Colour2);
+  /* Clipping box for the scroll transition - one line tall, so the outgoing
+     name is hidden as soon as it leaves */
+  position: relative;
+  display: block;
+  height: 1.25em;
+  overflow: hidden;
+}
+
+.header__show-name-text {
+  display: block;
   /* The global 0.9 leading and negative tracking sit inside the glyphs, so
      overflow: hidden shaves descenders and the last letter without this */
   line-height: 1.25;
   padding-right: 0.12em;
-  color: var(--Colour2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* The outgoing name is taken out of flow so the incoming one can take its place */
+.header__show-name-text--out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  animation: show-name-out 450ms ease forwards;
+}
+
+.header__show-name-text--in {
+  animation: show-name-in 450ms ease;
+}
+
+@keyframes show-name-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes show-name-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header__show-name-text--out {
+    display: none;
+  }
+
+  .header__show-name-text--in {
+    animation: none;
+  }
 }
 
 .header__play-button {

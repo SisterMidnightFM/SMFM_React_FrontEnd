@@ -161,6 +161,8 @@ export function Card({
   // Memoised so the reference only changes when tags/maxTags actually change,
   // preventing the useEffect below from firing on every render.
   const displayTags = useMemo(() => tags?.slice(0, maxTags), [tags, maxTags]);
+  // Full count, including tags beyond maxTags — the "+N" must reflect all of them
+  const totalTagCount = tags?.length ?? 0;
   const hasNoImage = !fullImageUrl;
 
   // Tag overflow detection
@@ -204,7 +206,8 @@ export function Card({
     for (let i = 0; i < tagEls.length; i++) {
       const tagWidth = tagEls[i].offsetWidth;
       const nextWidth = totalWidth + tagWidth + (count > 0 ? gap : 0);
-      const reserveSpace = i < tagEls.length - 1 ? plusIndicatorWidth + gap : 0;
+      // Reserve room for "+N" whenever tags remain — including any dropped by maxTags
+      const reserveSpace = i < totalTagCount - 1 ? plusIndicatorWidth + gap : 0;
 
       if (nextWidth + reserveSpace <= containerWidth) {
         totalWidth = nextWidth;
@@ -215,7 +218,7 @@ export function Card({
     }
 
     setVisibleTagCount(count);
-  }, [visibleTagCount, displayTags]);
+  }, [visibleTagCount, displayTags, totalTagCount]);
 
   // Re-measure when the container is resized (e.g. sidebar opens/closes)
   useEffect(() => {
@@ -238,7 +241,7 @@ export function Card({
   })();
   const charLimitedCount = Math.min(displayCount, charBasedCount);
   const visibleTags = displayTags?.slice(0, charLimitedCount);
-  const hiddenCount = (displayTags?.length ?? 0) - charLimitedCount;
+  const hiddenCount = totalTagCount - charLimitedCount;
 
   return (
     <div className="card-wrapper">

@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SmfmPicksRouteImport } from './routes/smfm-picks'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ScheduleRouteImport } from './routes/schedule'
+import { Route as ResidentsRouteImport } from './routes/residents'
+import { Route as GuestShowsRouteImport } from './routes/guest-shows'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ChatroomRouteImport } from './routes/chatroom'
 import { Route as AboutRouteImport } from './routes/about'
@@ -41,6 +43,16 @@ const ScheduleRoute = ScheduleRouteImport.update({
   path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/schedule.lazy').then((d) => d.Route))
+const ResidentsRoute = ResidentsRouteImport.update({
+  id: '/residents',
+  path: '/residents',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/residents.lazy').then((d) => d.Route))
+const GuestShowsRoute = GuestShowsRouteImport.update({
+  id: '/guest-shows',
+  path: '/guest-shows',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/guest-shows.lazy').then((d) => d.Route))
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -118,6 +130,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/chatroom': typeof ChatroomRoute
   '/contact': typeof ContactRoute
+  '/guest-shows': typeof GuestShowsRoute
+  '/residents': typeof ResidentsRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
   '/smfm-picks': typeof SmfmPicksRoute
@@ -136,6 +150,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/chatroom': typeof ChatroomRoute
   '/contact': typeof ContactRoute
+  '/guest-shows': typeof GuestShowsRoute
+  '/residents': typeof ResidentsRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
   '/smfm-picks': typeof SmfmPicksRoute
@@ -155,6 +171,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/chatroom': typeof ChatroomRoute
   '/contact': typeof ContactRoute
+  '/guest-shows': typeof GuestShowsRoute
+  '/residents': typeof ResidentsRoute
   '/schedule': typeof ScheduleRoute
   '/search': typeof SearchRoute
   '/smfm-picks': typeof SmfmPicksRoute
@@ -175,6 +193,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/chatroom'
     | '/contact'
+    | '/guest-shows'
+    | '/residents'
     | '/schedule'
     | '/search'
     | '/smfm-picks'
@@ -193,6 +213,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/chatroom'
     | '/contact'
+    | '/guest-shows'
+    | '/residents'
     | '/schedule'
     | '/search'
     | '/smfm-picks'
@@ -211,6 +233,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/chatroom'
     | '/contact'
+    | '/guest-shows'
+    | '/residents'
     | '/schedule'
     | '/search'
     | '/smfm-picks'
@@ -230,6 +254,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ChatroomRoute: typeof ChatroomRoute
   ContactRoute: typeof ContactRoute
+  GuestShowsRoute: typeof GuestShowsRoute
+  ResidentsRoute: typeof ResidentsRoute
   ScheduleRoute: typeof ScheduleRoute
   SearchRoute: typeof SearchRoute
   SmfmPicksRoute: typeof SmfmPicksRoute
@@ -265,6 +291,20 @@ declare module '@tanstack/react-router' {
       path: '/schedule'
       fullPath: '/schedule'
       preLoaderRoute: typeof ScheduleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/residents': {
+      id: '/residents'
+      path: '/residents'
+      fullPath: '/residents'
+      preLoaderRoute: typeof ResidentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guest-shows': {
+      id: '/guest-shows'
+      path: '/guest-shows'
+      fullPath: '/guest-shows'
+      preLoaderRoute: typeof GuestShowsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -366,6 +406,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ChatroomRoute: ChatroomRoute,
   ContactRoute: ContactRoute,
+  GuestShowsRoute: GuestShowsRoute,
+  ResidentsRoute: ResidentsRoute,
   ScheduleRoute: ScheduleRoute,
   SearchRoute: SearchRoute,
   SmfmPicksRoute: SmfmPicksRoute,

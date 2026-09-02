@@ -1,8 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useAudioPlayer } from '../../contexts/AudioPlayerContext';
 import { useEpisodePlayer } from '../../contexts/EpisodePlayerContext';
 import './Header.css';
+
+/** Keep in sync with the show-name animation duration in Header.css */
+const SHOW_NAME_ANIMATION_MS = 450;
+
+/**
+ * The show name, scrolling the old name up and out and the new one in from
+ * below whenever what's broadcasting changes
+ */
+const ShowName: React.FC<{ name: string }> = ({ name }) => {
+  const [state, setState] = useState({ current: name, previous: null as string | null, version: 0 });
+
+  useEffect(() => {
+    setState((prev) =>
+      prev.current === name
+        ? prev
+        : { current: name, previous: prev.current, version: prev.version + 1 }
+    );
+  }, [name]);
+
+  // Drop the outgoing name once it has scrolled away
+  useEffect(() => {
+    if (state.previous === null) return;
+
+    const timeout = setTimeout(() => {
+      setState((prev) => ({ ...prev, previous: null }));
+    }, SHOW_NAME_ANIMATION_MS);
+
+    return () => clearTimeout(timeout);
+  }, [state.version, state.previous]);
+
+  return (
+    <span className="header__show-name">
+      {state.previous !== null && (
+        <span
+          key={`out-${state.version}`}
+          className="header__show-name-text header__show-name-text--out"
+          aria-hidden="true"
+        >
+          {state.previous}
+        </span>
+      )}
+      <span
+        key={`in-${state.version}`}
+        className={`header__show-name-text${state.version > 0 ? ' header__show-name-text--in' : ''}`}
+      >
+        {state.current}
+      </span>
+    </span>
+  );
+};
 
 export const Header: React.FC = () => {
   const { isPlaying, isLoading, isOnline, currentShow, toggle } = useAudioPlayer();
@@ -59,7 +109,7 @@ export const Header: React.FC = () => {
               'OFFLINE'
             )}
           </span>
-          <span className="header__show-name">{currentShow || 'Sister Midnight FM'}</span>
+          <ShowName name={currentShow || 'Sister Midnight FM'} />
         </div>
       </div>
 

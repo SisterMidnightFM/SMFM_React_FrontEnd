@@ -177,6 +177,7 @@
 .card__tag {
   font-family: var(--Font1);
   font-size: 0.75rem;
+  text-transform: uppercase;
   padding: 0.35rem 0.85rem;
   background-color: var(--Colour1);
   color: var(--Colour2);

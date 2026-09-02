@@ -145,6 +145,7 @@
   border-radius: 8px;
   font-family: var(--Font1);
   font-size: 0.85rem;
+  text-transform: uppercase;
   text-decoration: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   cursor: pointer;

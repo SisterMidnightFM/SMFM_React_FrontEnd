@@ -40,12 +40,34 @@
 
 /* Mobile */
 @media (max-width: 767px) {
+  /* Uniform card height: every row below the image is a fixed size, so
+     the total height doesn't shift with title length or tag count.
+     The image itself is a fixed aspect ratio, so cards match overall. */
   .episode-card .card__header {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0;
+    min-height: 2.76rem; /* 2 lines at 1.2rem / 1.15 line-height */
+  }
+
+  /* Tight, even spacing between title / show / date / tags */
+  .episode-card .card__content {
+    gap: 0.5rem;
+    min-height: 9.1rem; /* reserves the tags row on cards with no tags */
+  }
+
+  .episode-card .card__text,
+  .episode-card .card__text-secondary {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  /* Pull the date up tight under the show name */
+  .episode-card .card__text-secondary {
+    margin-top: -0.6rem;
   }
 
   .episode-card .card__tags {
     justify-content: center;
+    min-height: 1.5rem;
   }
 
   .episode-card .card__tag {

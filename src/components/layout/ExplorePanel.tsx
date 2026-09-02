@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { fetchEpisodes, fetchStaffPickEpisodes } from '../../services/episodes';
 import { fetchShows } from '../../services/shows';
-import { fetchArtists } from '../../services/artists';
+import { fetchArtists, fetchResidentArtists } from '../../services/artists';
 import './ExplorePanel.css';
 
 interface ExplorePanelProps {
@@ -40,6 +40,13 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
       queryKey: ['artists'],
       queryFn: () => fetchArtists(1, 10),
       initialPageParam: 1,
+    });
+  };
+
+  const prefetchResidents = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['artists', 'residents', 100],
+      queryFn: () => fetchResidentArtists(100),
     });
   };
 
@@ -86,6 +93,7 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ onClose }) => {
         <ul className="explore-panel__main-links">
           <li><Link to="/about" className="explore-panel__main-link" onClick={onClose}>ABOUT</Link></li>
           <li><Link to="/schedule" className="explore-panel__main-link" onClick={onClose}>SCHEDULE</Link></li>
+          <li><Link to="/residents" className="explore-panel__main-link" onClick={onClose} onMouseEnter={prefetchResidents}>RESIDENTS</Link></li>
           <li><Link to="/news" className="explore-panel__main-link" onClick={onClose}>NEWS</Link></li>
           <li><Link to="/contact" className="explore-panel__main-link" onClick={onClose}>CONTACT</Link></li>
           <li>

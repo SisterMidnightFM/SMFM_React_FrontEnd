@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from '@tanstack/react-router';
 import { LatestShowCard } from './LatestShowCard';
+import { SeeMoreCard } from './SeeMoreCard';
 import { useEpisodes } from '../../hooks/useEpisodes';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import './HomeSection.css';
@@ -18,7 +19,7 @@ export const LatestEpisodes: React.FC = () => {
   return (
     <section className="home-section">
       <div className="home-section__header">
-        <img src="/Images/Moon_Dark.webp" alt="" className="home-section__icon" />
+        <img src="/Images/Plant1_Dark.webp" alt="" className="home-section__icon" />
         <Link to="/episodes" className="home-section__title-link">
           <h2 className="home-section__title">LATEST EPISODES</h2>
         </Link>
@@ -32,6 +33,9 @@ export const LatestEpisodes: React.FC = () => {
             episode={episode}
           />
         ))}
+        {!isLoading && !error && episodes.length > 0 && (
+          <SeeMoreCard to="/episodes" ariaLabel="See more episodes" />
+        )}
       </div>
     </section>
   );

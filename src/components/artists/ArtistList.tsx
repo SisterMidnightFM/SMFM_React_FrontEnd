@@ -3,6 +3,8 @@ import type { Artist } from '../../types/artist';
 import { ArtistCard } from './ArtistCard';
 import { CardGrid } from '../shared/CardGrid';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { useShuffledCollection } from '../../hooks/useShuffledCollection';
+import { fetchArtistsByIds } from '../../services/artists';
 import './ArtistList.css';
 
 interface ArtistListProps {
@@ -12,6 +14,12 @@ interface ArtistListProps {
   error?: Error | null;
   hasMore?: boolean;
   onLoadMore?: () => void;
+  /**
+   * Shuffle across the whole artist catalogue rather than only the artists
+   * already paged in. Off for filtered lists (e.g. residents), where the
+   * catalogue isn't what's on screen.
+   */
+  catalogueShuffle?: boolean;
 }
 
 type SortMode = 'alphabetical' | 'reverse-alphabetical' | 'random';
@@ -22,14 +30,32 @@ export function ArtistList({
   isLoadingMore,
   error,
   hasMore,
-  onLoadMore
+  onLoadMore,
+  catalogueShuffle = false
 }: ArtistListProps) {
   const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
-  const sentinelRef = useInfiniteScroll(onLoadMore, isLoadingMore || false, hasMore || false);
+  const [shuffleSeed, setShuffleSeed] = useState(() => Date.now());
+
+  // A shuffle of the full catalogue, paged in as the user scrolls
+  const isCatalogueShuffle = catalogueShuffle && sortMode === 'random';
+  const shuffled = useShuffledCollection<Artist>('artists', {
+    enabled: isCatalogueShuffle,
+    seed: shuffleSeed,
+    fetchByIds: fetchArtistsByIds,
+  });
+
+  const sourceArtists = isCatalogueShuffle ? shuffled.items : artists;
+  const listIsLoading = isCatalogueShuffle ? shuffled.isLoading : isLoading;
+  const listIsLoadingMore = isCatalogueShuffle ? shuffled.isLoadingMore : isLoadingMore;
+  const listError = isCatalogueShuffle ? shuffled.error : error;
+  const listHasMore = isCatalogueShuffle ? shuffled.hasMore : hasMore;
+  const listLoadMore = isCatalogueShuffle ? shuffled.fetchNextPage : onLoadMore;
+
+  const sentinelRef = useInfiniteScroll(listLoadMore, listIsLoadingMore || false, listHasMore || false);
 
   // Sort artists based on the current sort mode
   const sortedArtists = useMemo(() => {
-    const artistsCopy = [...artists];
+    const artistsCopy = [...sourceArtists];
 
     switch (sortMode) {
       case 'alphabetical':
@@ -41,7 +67,9 @@ export function ArtistList({
           b.ArtistName.localeCompare(a.ArtistName)
         );
       case 'random':
-        // Shuffle array using Fisher-Yates algorithm
+        // A catalogue shuffle already arrives in random order
+        if (isCatalogueShuffle) return artistsCopy;
+        // Otherwise shuffle what's on screen, using Fisher-Yates
         for (let i = artistsCopy.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [artistsCopy[i], artistsCopy[j]] = [artistsCopy[j], artistsCopy[i]];
@@ -50,7 +78,9 @@ export function ArtistList({
       default:
         return artistsCopy;
     }
-  }, [artists, sortMode]);
+    // shuffleSeed so a second click on shuffle reorders an on-screen shuffle too
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceArtists, sortMode, isCatalogueShuffle, shuffleSeed]);
 
   const handleAlphabeticalClick = () => {
     if (sortMode === 'alphabetical') {
@@ -61,10 +91,12 @@ export function ArtistList({
   };
 
   const handleRandomClick = () => {
+    // Clicking shuffle again draws a fresh selection rather than doing nothing
+    setShuffleSeed((seed) => seed + 1);
     setSortMode('random');
   };
 
-  if (isLoading && artists.length === 0) {
+  if (listIsLoading && sortedArtists.length === 0) {
     return (
       <div className="artist-list">
         <div className="artist-list__loading">
@@ -74,18 +106,18 @@ export function ArtistList({
     );
   }
 
-  if (error && artists.length === 0) {
+  if (listError && sortedArtists.length === 0) {
     return (
       <div className="artist-list">
         <div className="artist-list__error">
           <h3>Error loading artists</h3>
-          <p>{error.message}</p>
+          <p>{listError.message}</p>
         </div>
       </div>
     );
   }
 
-  if (artists.length === 0) {
+  if (sortedArtists.length === 0) {
     return (
       <div className="artist-list">
         <div className="artist-list__empty">
@@ -135,12 +167,12 @@ export function ArtistList({
       </CardGrid>
 
       {/* Infinite scroll sentinel */}
-      {hasMore && onLoadMore && (
+      {listHasMore && listLoadMore && (
         <div ref={sentinelRef} className="artist-list__sentinel" aria-hidden="true" />
       )}
 
       {/* Loading indicator for load more */}
-      {isLoadingMore && (
+      {listIsLoadingMore && (
         <div className="artist-list__loading-more">
           <p>Loading more artists...</p>
         </div>

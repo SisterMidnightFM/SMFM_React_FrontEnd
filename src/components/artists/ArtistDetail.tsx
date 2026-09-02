@@ -4,6 +4,7 @@ import type { Artist } from '../../types/artist';
 import type { TagLocation } from '../../types/tag';
 import { fetchShowBySlug } from '../../services/shows';
 import { fetchEpisodeBySlug } from '../../services/episodes';
+import { useArtistEpisodes } from '../../hooks/useArtistEpisodes';
 import './ArtistDetail.css';
 
 interface ArtistDetailProps {
@@ -26,6 +27,15 @@ const getInstagramUrl = (handle: string): string => {
 
 export function ArtistDetail({ artist }: ArtistDetailProps) {
   const queryClient = useQueryClient();
+
+  // Episodes this artist appeared on, as host or guest, newest first
+  const {
+    episodes: recentEpisodes,
+    isLoading: episodesLoading,
+    isLoadingMore: episodesLoadingMore,
+    hasMore: hasMoreEpisodes,
+    fetchNextPage: fetchMoreEpisodes,
+  } = useArtistEpisodes(artist.id);
   // Get artist image URL
   const imageUrl = artist.ArtistImage?.formats?.large?.url || artist.ArtistImage?.url;
   const STRAPI_URL = import.meta.env.VITE_STRAPI_URL;
@@ -158,12 +168,12 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
         </section>
       )}
 
-      {/* Guest Appearances Section */}
-      {artist.episodes_guest_featured && artist.episodes_guest_featured.length > 0 && (
+      {/* Recent Episodes Section */}
+      {!episodesLoading && recentEpisodes.length > 0 && (
         <section className="artist-detail__section">
-          <h2 className="artist-detail__section-title">Guest Appearances</h2>
+          <h2 className="artist-detail__section-title">Recent Episodes</h2>
           <div className="artist-detail__episodes">
-            {artist.episodes_guest_featured.map((episode) => (
+            {recentEpisodes.map((episode) => (
               <Link
                 key={episode.id}
                 to="/episodes/$slug"
@@ -191,6 +201,19 @@ export function ArtistDetail({ artist }: ArtistDetailProps) {
               </Link>
             ))}
           </div>
+
+          {hasMoreEpisodes && (
+            <div className="artist-detail__load-more">
+              <button
+                type="button"
+                className="artist-detail__load-more-btn"
+                onClick={() => fetchMoreEpisodes()}
+                disabled={episodesLoadingMore}
+              >
+                {episodesLoadingMore ? 'Loading...' : 'Load More'}
+              </button>
+            </div>
+          )}
         </section>
       )}
 

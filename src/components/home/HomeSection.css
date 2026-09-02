@@ -10,8 +10,10 @@
 }
 
 .home-section__icon {
-  width: 2rem;
+  width: auto;
   height: 2rem;
+  flex-shrink: 0;
+  object-fit: contain;
   font-size: 2rem; /* Keep for backwards compatibility if other sections use emojis */
 }
 
@@ -39,8 +41,14 @@
   display: flex;
   gap: 1.5rem;
   overflow-x: auto;
-  overflow-y: visible;
-  padding-top: 4px;
+  /* A scroll container clips on both axes, so the NEW badge that hangs off the
+     top-left of each card needs room inside the scroll box. The padding is
+     cancelled by matching negative margins so the cards stay aligned with the
+     section title. */
+  padding-top: 20px;
+  padding-left: 20px;
+  margin-top: -16px;
+  margin-left: -20px;
   padding-bottom: 1rem;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -79,7 +87,7 @@
   }
 
   .home-section__icon {
-    width: 1.5rem;
+    width: auto;
     height: 1.5rem;
     font-size: 1.5rem;
   }
