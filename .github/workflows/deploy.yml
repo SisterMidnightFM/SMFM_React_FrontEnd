@@ -1,0 +1,41 @@
+name: Deploy frontend
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_STRAPI_URL: ${{ vars.VITE_STRAPI_URL }}
+          VITE_STRAPI_API_TOKEN: ${{ secrets.VITE_STRAPI_API_TOKEN }}
+          VITE_GOOGLE_CALENDAR_API_KEY: ${{ secrets.VITE_GOOGLE_CALENDAR_API_KEY }}
+          VITE_GOOGLE_CALENDAR_ID: ${{ vars.VITE_GOOGLE_CALENDAR_ID }}
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Upload site
+        run: rsync -az --delete dist/ ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }}:/var/www/smfm/
